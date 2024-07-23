@@ -29,7 +29,7 @@
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #00FFFF;
         }
         
         #backToTopBtn {
@@ -50,7 +50,24 @@
         #backToTopBtn:hover {
             background-color: #555;
         }
-        
+
+
+    .navbar {
+            overflow: hidden;
+            background-color: #333;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Gaya untuk tautan dalam navbar */
+        .navbar a {
+            float: left;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+    
         .dropdown {
             float: left;
             overflow: hidden;
@@ -93,7 +110,10 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        
+        .navbar a:hover, .dropdown:hover .dropbtn {
+            background-color: #555;
+            color: white;
+        }
         
     </style>
 
@@ -110,7 +130,7 @@
                 <img class="img-fluid">
             </div>
             <div class="pt-3 text-center">
-                <h5>KT Tanjung Bulan</h5>
+                <h1>KT Tanjung Bulan</h1>
                 <p>
                     Database Peserta Lomba <b>HUT RI 2024</b></b><br>
                     <br>
@@ -140,7 +160,7 @@
 
     <script>
         // * img position
-        const position = './lomba17/logotb.png';
+        const position = '/lomba17/logotb.png';
 
         // ! Don't change this line
         $(document).ready(() => {
@@ -148,6 +168,7 @@
         });
     </script>
 
+    <div class="navbar">
 <div class="dropdown">
     <button class="dropbtn">Pilih Kategori 
       <i class="fa fa-caret-down"></i>
@@ -160,7 +181,9 @@
       <a href="#balita">BALITA</a>
     </div>
   </div>
-    
+    </div>
+
+    <p></p>
     <h2 class="sd">SD</h2>
     <table>
     <thead>
@@ -249,7 +272,7 @@
     </tbody>
     </table>
     
-    
+    <p></p>
     <h2 class="smp">SMP</h2>
     <table>
     <thead>
@@ -338,7 +361,7 @@
     </tbody>
     </table>
     
-    
+    <p></p>
     <h2 class="sma">SMA</h2>
     <table>
     <thead>
@@ -427,7 +450,7 @@
     </tbody>
     </table>
     
-    
+    <p></p>
     <h2 class="ibu">IBU-IBU</h2>
     <table>
     <thead>
@@ -516,7 +539,7 @@
     </tbody>
     </table>
     
-    
+    <p></p>
     <h2 class="balita">BALITA</h2>
     <table>
     <thead>
@@ -620,7 +643,7 @@
         crossorigin="anonymous"></script>
 
 <!-- Tombol Back to Top -->
-<button id="backToTopBtn" onclick="scrollToTop()">Keatas</button>
+<button id="backToTopBtn" onclick="scrollToTop()">KeAtas</button>
 
 <script>
     // Ketika pengguna menggulir ke bawah 20px dari atas dokumen, tampilkan tombol
@@ -640,7 +663,7 @@
         document.documentElement.scrollTop = 0; // Untuk Chrome, Firefox, IE, dan Opera
     }
 </script>
-
+<p></p>
 <center>Made With ❤ by Hamba Allah</center>
 <br></body>
 
