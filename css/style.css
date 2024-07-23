@@ -32,7 +32,7 @@ ul li.border:hover a {
   color: #212529;
 }
 
-.no {
-  font-color: red;
+span .no {
+  color: red;
 }
 /*# sourceMappingURL=style.css.map */
