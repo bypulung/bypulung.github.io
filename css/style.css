@@ -32,7 +32,56 @@ ul li.border:hover a {
   color: #212529;
 }
 
-span .no {
-  color: red;
-}
+h2 {
+         font-size:30px;
+       }
+  
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #00FFFF;
+        }
+        
+        
+    .navbar {
+            position: fixed; /* Membuat navbar tetap di atas */
+            top: 0;
+            width: 100%;
+            background-color: #7FFF00;
+            overflow: hidden;
+            z-index: 1000; /* Memastikan navbar berada di atas konten lain */
+        }
+
+        /* Gaya untuk tautan dalam navbar */
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 5px 5px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+    /* Ubah warna tautan saat dihover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Tambahkan padding ke konten halaman untuk menghindari konten terpotong oleh navbar */
+        .content {
+            padding: 60px 20px;
+            height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */
+        }
+        
+
+
 /*# sourceMappingURL=style.css.map */
