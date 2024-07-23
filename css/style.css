@@ -31,4 +31,8 @@ ul li.border:hover {
 ul li.border:hover a {
   color: #212529;
 }
+
+.no {
+  color: red;
+}
 /*# sourceMappingURL=style.css.map */
