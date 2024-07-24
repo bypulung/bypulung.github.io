@@ -62,6 +62,26 @@
             padding: 60px 20px;
             height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */
         }
+
+        #backToTopBtn {
+            display: block; /* Tampilkan tombol dari awal */
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #000;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        #backToTopBtn:hover {
+            background-color: #555;
+        }
+        
         </style> 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -589,7 +609,7 @@
         crossorigin="anonymous"></script>
 
 
-
+<button id="backToTopBtn"><a href="/lomba17"><i class="fa-solid fa-house"></i></a></button>
         
 
 <p></p><br/><br/>
