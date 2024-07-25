@@ -1,4 +1,4 @@
 <?php
-header("Location: /lomba17", true, 301);
+header("Location: https://tanjungbulan.my.id/lomba17", true, 301);
 exit();
 ?>
