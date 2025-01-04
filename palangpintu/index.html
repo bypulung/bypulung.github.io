@@ -16,6 +16,26 @@
     
 
    <style>
+
+       .pp1 ::before{content:"Ris"};
+       .pp2 ::before{content:"Tio"};
+       .pp3 ::before{content:"Rifai"};
+       .tb1 ::before{content:"Rifky"};
+       .tb2 ::before{content:"Tama"};
+       .tb3 ::before{content:"Mul"};
+
+
+       .chat1 {
+           border-style: groove;
+           text-align: left;
+       }
+
+       .chat2 {
+           border-style: groove;
+           text-align: right;
+       }
+
+       
         h2 {
             width: 95%;
             font-size:30px; 
@@ -142,21 +162,12 @@
         });
     </script>
 
-<?php
 
-$pp1 = "Ris";
-$pp2 = "Tama";
-$pp3 = "Faisol";
-$tb1 = "Mul";
-$tb2 = "Rifky";
-$tb3 = "Tio";
-
-?>
   
 *Suara Musik*<br/>
-<font color="red"><?php echo $pp1; ?></font>: haha<br/>
-<font color="blue"><?php echo $tb1; ?></font>: hihi
-    
+<div class="chat1"><font color="red"><span class="pp1"></span></font>: haha</div>
+<div class="chat2"><font color="blue"><span class="tb1"></span></font>: hihi</div>
+ 
 
     <script>
         $(document).ready(() => {
