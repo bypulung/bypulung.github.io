@@ -14,6 +14,12 @@
 
 
    <style>
+
+
+       .update::before{
+           content:"Jumat 11:30 WIB, 10-01-2025";
+           }
+       
         h2 {
             width: 95%;
             font-size:30px; 
@@ -93,7 +99,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>Klasemen LigaDesa Sawojajar</title>
+    <title>Klasemen LigaDesa Season 1</title>
 </head>
 
 <body class="bg-dark text-light">
@@ -101,30 +107,26 @@
     
     <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
            
-        <!-- <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+            <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
                 data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
                 <img class="img-fluid">
             </div>
             <div class="pt-3 text-center">
-                <h5>LigaDesa Sawojajar<span style="color:#00BFFF;"><i class="fa-solid fa-circle-check"></i></span></h5><br/>
-                <p>
-                    <i class="fa-solid fa-calendar-days"></i> HUT Desa ke-23<br/>
-                     <i class="fa-solid fa-location-dot"></i> Tanjung Bulan 
-                </p>
-            </div> -->
+                <h5>Maju Bersama, Karang Taruna.</h5><br/>
+                
+            </div>
 
         
-            <ul class="list-unstyled links">
-            </ul>
+            
         </div>
 
-    <!-- Modal 
+    <!-- Modal -->
     <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="showImageLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="showImageLabel">LigaDesa Sawojajar</h5>
+                    <h5 class="modal-title" id="showImageLabel">Karang Taruna Tanjung Bulan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -142,7 +144,7 @@
         $(document).ready(() => {
             $('#profile img').attr('src', position);
         });
-    </script> -->
+    </script>
 
     <center>
 
@@ -202,7 +204,7 @@
             <th>Grup A</th>
             <th>Main</th>
             <th>Skor</th>
-            <th>Poin</th>
+            <th>Menang</th>
             
         </tr>
     </thead>
@@ -253,7 +255,7 @@
             <th>Grup B</th>
             <th>Main</th>
             <th>Skor</th>
-            <th>Poin</th>
+            <th>Menang</th>
             
         </tr>
     </thead>
@@ -309,7 +311,7 @@
             <th>Grup A</th>
             <th>Main</th>
             <th>Skor</th>
-            <th>Poin</th>
+            <th>Menang</th>
             
         </tr>
     </thead>
@@ -360,7 +362,7 @@
             <th>Grup B</th>
             <th>Main</th>
             <th>Skor</th>
-            <th>Poin</th>
+            <th>Menang</th>
             
         </tr>
     </thead>
@@ -424,8 +426,12 @@
 <center>
 
     *terakhir di update:<br/>
-        <b>7 Januari 2025</b><p></p><br/>
+        <b><span  class="update"></span></b><p></p><br/>
     <hr/>
+
+    <ul class="list-unstyled links">
+    </ul><p></p>
+    
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
