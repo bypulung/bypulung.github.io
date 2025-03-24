@@ -15,6 +15,26 @@
 
    <style>
 
+       .profil {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #333;
+  /* commented for demo
+  float: left;
+  margin-left: 125px;
+  margin-top: 20px;
+  */
+  
+  /*for demo*/
+  display:inline-block;
+  vertical-align:middle;
+}
+.profil img{
+  width:100%;
+}
+
 
        .update::before{
            content:"Senin, 24 Maret 2025";
@@ -286,15 +306,9 @@
 
     <center>
         <span class="h5">Leader</span><br/>
-        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
-                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
-
-            <li class="my-3 py-3 px-5 border border-light">
-            <img src="img/pulung.png">Pulung R.
-            </li>
-                
+        <div class="profil">
+            <img src="img/pulung.png">Pulung R.    
         </div>
-        <p></p>
         
         <span class="h5">Co-Leader</span><br/>
         Faisol<p></p>
