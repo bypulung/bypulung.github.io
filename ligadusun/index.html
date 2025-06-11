@@ -19,7 +19,7 @@
        }
   
         table {
-            width: 90%;
+            width: 98%;
             border-collapse: collapse;
         }
         th, td {
@@ -32,6 +32,97 @@
         }
         
         
+  .winner-card {
+    background: #1e1e1e;
+    color: white;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    max-width: 500px;
+  }
+
+  .winner-title {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .winner-match {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1em;
+    padding: 8px 0;
+    border-top: 1px solid #333;
+  }
+
+  .winner-medal {
+    font-size: 1.5em;
+    margin-right: 8px;
+  }
+
+  .winner-name {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+
+       
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes sparkle {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.6); }
+  }
+
+  .winner-card {
+    background: #1e1e1e;
+    color: white;
+    padding: 16px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    max-width: 500px;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+  }
+
+  .winner-title {
+    font-size: 1.2em;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .winner-match {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1em;
+    padding: 8px 0;
+    border-top: 1px solid #333;
+  }
+
+  .winner-medal {
+    font-size: 1.5em;
+    margin-right: 8px;
+    animation: sparkle 2s infinite ease-in-out;
+  }
+
+  .winner-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: gold;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
+  }
+
+
     
         </style>
 
@@ -193,28 +284,38 @@
       container.appendChild(table);
 
       // Tampilkan Final & Perebutan Juara 3
-      ['Final', 'Perebutan Juara 3'].forEach(stage => {
-        const matches = data[stage];
-        if (!matches) return;
+      const medalMap = {
+  "Final": "🥇",
+  "Perebutan Juara 3": "🥉"
+};
 
-        const div = document.createElement('div');
-        div.style.marginTop = '30px';
-        div.innerHTML = `<h3 style="color:white">${stage}</h3>`;
+['Final', 'Perebutan Juara 3'].forEach(stage => {
+  const matches = data[stage];
+  if (!matches) return;
 
-        matches.forEach(m => {
-          const [a, b] = m.score.split('-').map(Number);
-          const winner = a > b ? m.home : m.away;
-          const loser = a > b ? m.away : m.home;
+  matches.forEach(m => {
+    const [a, b] = m.score.split('-').map(Number);
+    const winner = a > b ? m.home : m.away;
+    const loser = a > b ? m.away : m.home;
+    const scoreText = `${m.home} ${a} - ${b} ${m.away}`;
 
-          const result = document.createElement('p');
-          result.style.color = 'white';
-          result.textContent = `${m.home} ${a} - ${b} ${m.away} → 🏆 Menang: ${winner}`;
-          div.appendChild(result);
-        });
+    const card = document.createElement('div');
+    card.className = 'winner-card';
 
-        container.appendChild(div);
-      });
-    });
+    card.innerHTML = `
+      <div class="winner-title">${stage}</div>
+      <div class="winner-match">
+        <span>${scoreText}</span>
+      </div>
+      <div class="winner-match" style="border-top:none;">
+        <span class="winner-medal">${medalMap[stage]}</span>
+        <span class="winner-name">${winner}</span> menang!
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+});
 </script>
 </center><br/><br/>
     <p>
