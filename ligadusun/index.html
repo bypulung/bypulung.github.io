@@ -104,23 +104,16 @@
 
 <center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
 
-<table id="standings">
-  <thead>
-    <tr>
-      <th>🏆</th><th>Tim</th><th>TP</th><th>M</th>
-      <th>K</th><th>SS</th><th>Poin</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<div id="tables"></div>
 
 <script>
   fetch('hasil.json')
-    .then(response => response.json())
-    .then(matches => {
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById('tables');
       const teams = {};
 
-      function ensureTeam(name) {
+      function ensure(name) {
         if (!teams[name]) {
           teams[name] = {
             name: name,
@@ -135,50 +128,91 @@
         return teams[name];
       }
 
-      matches.forEach(match => {
-        const [homeScore, awayScore] = match.score.split('-').map(Number);
-        const home = ensureTeam(match.home);
-        const away = ensureTeam(match.away);
+      // Proses grup utama
+      const groupName = Object.keys(data).find(name => name.startsWith('Grup'));
+      const groupMatches = data[groupName];
 
-        home.games++;
-        away.games++;
+      groupMatches.forEach(match => {
+        const [a, b] = match.score.split('-').map(Number);
+        const home = ensure(match.home);
+        const away = ensure(match.away);
 
-        home.setsFor += homeScore;
-        home.setsAgainst += awayScore;
-        away.setsFor += awayScore;
-        away.setsAgainst += homeScore;
+        home.games++; away.games++;
+        home.setsFor += a; home.setsAgainst += b;
+        away.setsFor += b; away.setsAgainst += a;
 
-        const homeWins = homeScore > awayScore;
-
-        const winner = homeWins ? home : away;
-        const loser = homeWins ? away : home;
+        const winner = a > b ? home : away;
+        const loser = a > b ? away : home;
 
         winner.wins++;
         loser.losses++;
-
-        // BO3 rule: Winner gets 2 pts, loser 0 pts
         winner.points += 2;
       });
 
-      const sorted = Object.values(teams).sort((a, b) => {
-        return (b.points - a.points) ||
-               (b.wins - a.wins) ||
-               ((b.setsFor - b.setsAgainst) - (a.setsFor - a.setsAgainst));
+      // Urutkan dan tampilkan klasemen
+      const sorted = Object.values(teams).sort((x, y) => {
+        return (y.points - x.points) ||
+               (y.wins - x.wins) ||
+               ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst));
       });
 
-      const tbody = document.querySelector('#standings tbody');
-      sorted.forEach((team, index) => {
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <caption style="text-align:left;font-weight:bold;font-size:1.2em;margin-bottom:8px;color:white;">
+          ${groupName} - Klasemen
+        </caption>
+        <thead style="background:#1e1e1e;">
+          <tr>
+            <th style="color:white">🏆</th>
+            <th style="color:white">Tim</th>
+            <th style="color:white">TP</th>
+            <th style="color:white">M</th>
+            <th style="color:white">K</th>
+            <th style="color:white">SS</th>
+            <th style="color:white">Poin</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      const tbody = table.querySelector('tbody');
+      sorted.forEach((t, i) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${team.name}</td>
-          <td>${team.games}</td>
-          <td>${team.wins}</td>
-          <td>${team.losses}</td>
-          <td>${team.setsFor}-${team.setsAgainst}</td>
-          <td>${team.points}</td>
+          <td>${i + 1}</td>
+          <td>${t.name}</td>
+          <td>${t.games}</td>
+          <td>${t.wins}</td>
+          <td>${t.losses}</td>
+          <td>${t.setsFor}-${t.setsAgainst}</td>
+          <td>${t.points}</td>
         `;
         tbody.appendChild(row);
+      });
+
+      container.appendChild(table);
+
+      // Tampilkan Final & Perebutan Juara 3
+      ['Final', 'Perebutan Juara 3'].forEach(stage => {
+        const matches = data[stage];
+        if (!matches) return;
+
+        const div = document.createElement('div');
+        div.style.marginTop = '30px';
+        div.innerHTML = `<h3 style="color:white">${stage}</h3>`;
+
+        matches.forEach(m => {
+          const [a, b] = m.score.split('-').map(Number);
+          const winner = a > b ? m.home : m.away;
+          const loser = a > b ? m.away : m.home;
+
+          const result = document.createElement('p');
+          result.style.color = 'white';
+          result.textContent = `${m.home} ${a} - ${b} ${m.away} → 🏆 Menang: ${winner}`;
+          div.appendChild(result);
+        });
+
+        container.appendChild(div);
       });
     });
 </script>
