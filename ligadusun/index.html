@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
+
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
+
+
+   <style>
+        h2 {
+         font-size:30px;
+       }
+  
+        table {
+            width: 90%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #00FFFF;
+        }
+        
+        
+    
+        </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>klasemen LigaDusun Tanjung Bulan</title>
+</head>
+
+<body class="bg-dark text-light">
+   <!-- <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
+     -->   <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+            <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+                <img class="img-fluid">
+            </div>
+            <div class="pt-3 text-center">
+                <h5>Tanjung Bulan Squad <span style="color:#00BFFF;"><i class="fa-solid fa-circle-check"></i></span></h5><br/>
+                
+                
+                <p>
+                    Klasemen LigaDusun Tanjung Bulan
+                </p>
+            </div>
+            
+    </div> 
+
+    <!-- Modal -->
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showImageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showImageLabel">Tanjung Bulan Squad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid img-thumbnail profile">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // * img position
+        const position = '/img/tbsquad.jpg';
+
+        // ! Don't change this line
+        $(document).ready(() => {
+            $('#profile img').attr('src', position);
+        });
+    </script>
+
+
+    
+
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
+
+
+<center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
+
+<table id="standings">
+  <thead>
+    <tr>
+      <th>🏆</th><th>Tim</th><th>Main</th><th>M</th>
+      <th>K</th><th>Skor</th><th>Poin</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  fetch('matches.json')
+    .then(r => r.json())
+    .then(matches => {
+      const teams = {};
+      function ensure(name) {
+        if (!teams[name]) teams[name] = {
+          name, games:0, wins:0, losses:0,
+          setsFor:0, setsAgainst:0, points:0
+        };
+        return teams[name];
+      }
+
+      matches.forEach(m => {
+        const [a,b] = m.score.split('-').map(Number);
+        const home = ensure(m.home), away = ensure(m.away);
+        home.games++; away.games++;
+        home.setsFor += a; home.setsAgainst += b;
+        away.setsFor += b; away.setsAgainst += a;
+
+        const winner = a > b ? home : away;
+        const loser = a > b ? away : home;
+        const wSets = Math.max(a,b), lSets = Math.min(a,b);
+
+        winner.wins++; loser.losses++;
+        if (wSets >=3 && lSets <=1) {
+          winner.points += 3;
+        } else {
+          winner.points += 2;
+          loser.points += 1;
+        }
+      });
+
+      const sorted = Object.values(teams).sort((x,y) => {
+        return (y.points - x.points)
+            || (y.wins - x.wins)
+            || ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst));
+      });
+
+      const tbody = document.querySelector('#standings tbody');
+      sorted.forEach((t,i) => {
+        const scoreSet = `${t.setsFor}-${t.setsAgainst}`;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i+1}</td>
+          <td>${t.name}</td><td>${t.games}</td>
+          <td>${t.wins}</td><td>${t.losses}</td>
+          <td>${scoreSet}</td><td>${t.points}</td>`;
+        tbody.appendChild(row);
+      });
+    });
+</script></center>
+<br/><br/>
+<center>Made With ❤️ by Hamba Allah</center>
+<br></body>
+
+    </html>
+    
