@@ -195,19 +195,19 @@
 
 <center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
 
-<div id="tables"></div>
+<div id="klasemen"></div>
 
 <script>
   fetch('hasil.json')
     .then(res => res.json())
     .then(data => {
-      const container = document.getElementById('tables');
+      const matches = data["grup"];
       const teams = {};
 
-      function ensure(name) {
+      function ensureTeam(name) {
         if (!teams[name]) {
           teams[name] = {
-            name: name,
+            name,
             games: 0,
             wins: 0,
             losses: 0,
@@ -219,110 +219,107 @@
         return teams[name];
       }
 
-      // Proses grup utama
-      const groupName = Object.keys(data).find(name => name.startsWith('Grup'));
-      const groupMatches = data[groupName];
-
-      groupMatches.forEach(match => {
-        const [a, b] = match.score.split('-').map(Number);
-        const home = ensure(match.home);
-        const away = ensure(match.away);
+      matches.forEach(match => {
+        const [s1, s2] = match.score.split('-').map(Number);
+        const home = ensureTeam(match.home);
+        const away = ensureTeam(match.away);
 
         home.games++; away.games++;
-        home.setsFor += a; home.setsAgainst += b;
-        away.setsFor += b; away.setsAgainst += a;
+        home.setsFor += s1; home.setsAgainst += s2;
+        away.setsFor += s2; away.setsAgainst += s1;
 
-        const winner = a > b ? home : away;
-        const loser = a > b ? away : home;
+        const homeWin = s1 > s2;
+        const winner = homeWin ? home : away;
+        const loser = homeWin ? away : home;
 
         winner.wins++;
         loser.losses++;
-        winner.points += 2;
+        winner.points += 2; // BO3: Menang dapat 2 poin
       });
 
-      // Urutkan dan tampilkan klasemen
-      const sorted = Object.values(teams).sort((x, y) => {
-        return (y.points - x.points) ||
-               (y.wins - x.wins) ||
-               ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst));
+      const sorted = Object.values(teams).sort((a, b) => {
+        return b.points - a.points ||
+               (b.setsFor - b.setsAgainst) - (a.setsFor - a.setsAgainst);
       });
+
+      const container = document.getElementById('klasemen');
 
       const table = document.createElement('table');
+      table.className = 'table table-dark table-bordered';
       table.innerHTML = `
-        <caption style="text-align:left;font-weight:bold;font-size:1.2em;margin-bottom:8px;color:white;">
-          ${groupName} - Klasemen
-        </caption>
-        <thead style="background:#1e1e1e;">
+        <caption style="caption-side: top; font-weight: bold; font-size: 1.2em;">Klasemen</caption>
+        <thead>
           <tr>
-            <th style="color:white">No</th>
-            <th style="color:white">Tim</th>
-            <th style="color:white">TP</th>
-            <th style="color:white">M</th>
-            <th style="color:white">K</th>
-            <th style="color:white">SS</th>
-            <th style="color:white">Poin</th>
+            <th>No</th>
+            <th>Tim</th>
+            <th>TP</th>
+            <th>M</th>
+            <th>K</th>
+            <th>SS</th>
+            <th>Poin</th>
           </tr>
         </thead>
         <tbody></tbody>
       `;
 
       const tbody = table.querySelector('tbody');
-      sorted.forEach((t, i) => {
+      sorted.forEach((team, i) => {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${i + 1}</td>
-          <td>${t.name}</td>
-          <td>${t.games}</td>
-          <td>${t.wins}</td>
-          <td>${t.losses}</td>
-          <td>${t.setsFor}-${t.setsAgainst}</td>
-          <td>${t.points}</td>
+          <td>${team.name}</td>
+          <td>${team.games}</td>
+          <td>${team.wins}</td>
+          <td>${team.losses}</td>
+          <td>${team.setsFor}-${team.setsAgainst}</td>
+          <td>${team.points}</td>
         `;
         tbody.appendChild(row);
       });
 
       container.appendChild(table);
 
-      // Tampilkan Final & Perebutan Juara 3
+      // Final dan Perebutan Juara 3
       const medalMap = {
-  "Final": "🥇",
-  "Perebutan Juara 3": "🥉"
-};
+        "Final": "🥇",
+        "Perebutan Juara 3": "🥉"
+      };
 
-['Final', 'Perebutan Juara 3'].forEach(stage => {
-  const matches = data[stage];
-  if (!matches) return;
+      ['Final', 'Perebutan Juara 3'].forEach(stage => {
+        const matches = data[stage];
+        if (!matches) return;
 
-  matches.forEach(m => {
-    const [a, b] = m.score.split('-').map(Number);
-    const winner = a > b ? m.home : m.away;
-    const loser = a > b ? m.away : m.home;
-    const scoreText = `${m.home} ${a} - ${b} ${m.away}`;
+        matches.forEach(m => {
+          const [a, b] = m.score.split('-').map(Number);
+          const winner = a > b ? m.home : m.away;
+          const scoreText = `${m.home} ${a} - ${b} ${m.away}`;
 
-    const card = document.createElement('div');
-    card.className = 'winner-card';
-
-    card.innerHTML = `
-      <div class="winner-title">${stage}</div>
-      <div class="winner-match">
-        <span>${scoreText}</span>
-      </div>
-      <div class="winner-match" style="border-top:none;">
-        <span class="winner-medal">${medalMap[stage]}</span>
-        <span class="winner-name">${winner}</span> menang!
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
-});
+          const card = document.createElement('div');
+          card.className = 'winner-card';
+          card.innerHTML = `
+            <div class="winner-title">${stage}</div>
+            <div class="winner-match">
+              <span>${scoreText}</span>
+            </div>
+            <div class="winner-match" style="border-top:none;">
+              <span class="winner-medal">${medalMap[stage]}</span>
+              <span class="winner-name">${winner}</span> menang!
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      });
+    });
 </script>
+
+
+
 </center><br/><br/>
     <p>
-        *TP : Total Pertandingan dimainkan<br/>
-        *M  : Menang<br/>
-        *K  : Kalah<br/>
-        *SS : Skor Set (Set menang - Set kalah)
+        * TP : Total Pertandingan dimainkan<br/>
+        * M  : Menang<br/>
+        * K  : Kalah<br/>
+        * SS : Skor Set (Set menang - Set kalah)
     </p>
 
 <br/><br/>
