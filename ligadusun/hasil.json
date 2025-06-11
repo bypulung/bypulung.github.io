@@ -1,14 +1,14 @@
 {
-  "Grup A": [
-    { "home": "Tim A", "away": "Tim B", "score": "2-0" },
-    { "home": "Tim C", "away": "Tim D", "score": "1-2" },
-    { "home": "Tim A", "away": "Tim C", "score": "2-1" },
-    { "home": "Tim B", "away": "Tim D", "score": "0-2" }
+  "grup": [
+    { "home": "Tim A", "away": "Tim B", "score": "2-1" },
+    { "home": "Tim C", "away": "Tim D", "score": "0-2" },
+    { "home": "Tim A", "away": "Tim C", "score": "2-0" },
+    { "home": "Tim B", "away": "Tim D", "score": "1-2" }
   ],
   "Final": [
     { "home": "Tim A", "away": "Tim D", "score": "2-1" }
   ],
   "Perebutan Juara 3": [
-    { "home": "Tim B", "away": "Tim C", "score": "1-2" }
+    { "home": "Tim B", "away": "Tim C", "score": "2-0" }
   ]
 }
