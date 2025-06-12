@@ -201,201 +201,132 @@
 <center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
 
 <div id="klasemen"></div>
+    <button id="downloadBtn" style="margin-top: 20px; padding: 8px 16px;">Unduh Klasemen (CSV)</button>
+<div id="final"></div>
 
 <script>
-  fetch('hasil.json')
-    .then(res => res.json())
-    .then(data => {
-      const matches = data["grup"];
-      const teams = {};
+fetch('hasil.json')
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById('klasemen');
+    const teams = {};
 
-      function ensureTeam(name) {
-        if (!teams[name]) {
-          teams[name] = {
-            name,
-            games: 0,
-            wins: 0,
-            losses: 0,
-            setsFor: 0,
-            setsAgainst: 0,
-            points: 0
-          };
-        }
-        return teams[name];
+    function ensure(name) {
+      if (!teams[name]) {
+        teams[name] = {
+          name: name,
+          games: 0,
+          wins: 0,
+          losses: 0,
+          setsFor: 0,
+          setsAgainst: 0,
+          points: 0
+        };
       }
+      return teams[name];
+    }
 
-      matches.forEach(match => {
-        const [s1, s2] = match.score.split('-').map(Number);
-        const home = ensureTeam(match.home);
-        const away = ensureTeam(match.away);
+    // === Proses Klasemen Grup ===
+    const groupMatches = data["Grup A"];
+    groupMatches.forEach(match => {
+      const [a, b] = match.score.split('-').map(Number);
+      const home = ensure(match.home);
+      const away = ensure(match.away);
 
-        home.games++; away.games++;
-        home.setsFor += s1; home.setsAgainst += s2;
-        away.setsFor += s2; away.setsAgainst += s1;
+      home.games++; away.games++;
+      home.setsFor += a; home.setsAgainst += b;
+      away.setsFor += b; away.setsAgainst += a;
 
-        const homeWin = s1 > s2;
-        const winner = homeWin ? home : away;
-        const loser = homeWin ? away : home;
+      const winner = a > b ? home : away;
+      const loser = a > b ? away : home;
 
-        winner.wins++;
-        loser.losses++;
-        winner.points += 2; // BO3: Menang dapat 2 poin
-      });
-
-      const sorted = Object.values(teams).sort((a, b) => {
-        return b.points - a.points ||
-               (b.setsFor - b.setsAgainst) - (a.setsFor - a.setsAgainst);
-      });
-
-      const container = document.getElementById('klasemen');
-
-      const table = document.createElement('table');
-      table.className = 'table table-dark table-bordered';
-      table.innerHTML = `
-        <caption style="caption-side: top; font-weight: bold; font-size: 1.2em;">Klasemen</caption>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Tim</th>
-            <th>TP</th>
-            <th>M</th>
-            <th>K</th>
-            <th>SS</th>
-            <th>Poin</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      `;
-
-      const tbody = table.querySelector('tbody');
-      sorted.forEach((team, i) => {
-        const row = document.createElement('tr');
-<h2>Klasemen Grup</h2>
-<div id="klasemen"></div>
-<button id="downloadBtn" style="margin-top: 20px; padding: 8px 16px;">Unduh Klasemen (CSV)</button>
-<h2>Final & Perebutan Juara 3</h2>
-<div id="hasil-final"></div>
-
-
-<script>
-  fetch('hasil.json')
-    .then(res => res.json())
-    .then(data => {
-      const teams = {};
-
-      function ensureTeam(name) {
-        if (!teams[name]) {
-          teams[name] = {
-            name,
-            games: 0,
-            wins: 0,
-            losses: 0,
-            setsFor: 0,
-            setsAgainst: 0,
-            points: 0
-          };
-        }
-        return teams[name];
-      }
-
-      // Proses grup
-      Object.entries(data).forEach(([key, matches]) => {
-        if (key === 'Final' || key === 'Perebutan Juara 3') return;
-
-        matches.forEach(match => {
-          const [a, b] = match.score.split('-').map(Number);
-          const home = ensureTeam(match.home);
-          const away = ensureTeam(match.away);
-
-          home.games++; away.games++;
-          home.setsFor += a; home.setsAgainst += b;
-          away.setsFor += b; away.setsAgainst += a;
-
-          const winner = a > b ? home : away;
-          const loser = a > b ? away : home;
-
-          winner.wins++;
-          loser.losses++;
-          winner.points += 2;
-        });
-      });
-
-      // Tampilkan klasemen
-      const sorted = Object.values(teams).sort((a, b) => {
-        return b.points - a.points ||
-               (b.setsFor - b.setsAgainst) - (a.setsFor - a.setsAgainst);
-      });
-
-      const table = document.createElement('table');
-      table.innerHTML = `
-        <caption>Grup A</caption>
-        <thead>
-          <tr>
-            <th>🏆</th>
-            <th>Tim</th>
-            <th>TP</th>
-            <th>M</th>
-            <th>K</th>
-            <th>SS</th>
-            <th>Poin</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      `;
-
-      sorted.forEach((t, i) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${t.name}</td>
-          <td>${t.games}</td>
-          <td>${t.wins}</td>
-          <td>${t.losses}</td>
-          <td>${t.setsFor}-${t.setsAgainst}</td>
-          <td>${t.points}</td>
-        `;
-        table.querySelector('tbody').appendChild(row);
-      });
-
-      document.getElementById('klasemen').appendChild(table);
-
-      // Final & Perebutan Juara 3
-      const medalMap = {
-        "Final": "🥇 Juara 1 & 2",
-        "Perebutan Juara 3": "🥉 Juara 3"
-      };
-
-      const finalDiv = document.getElementById('hasil-final');
-
-      Object.entries(medalMap).forEach(([key, title]) => {
-        const matches = data[key];
-        if (!matches) return;
-
-        matches.forEach(match => {
-          const [a, b] = match.score.split('-').map(Number);
-          const winner = a > b ? match.home : match.away;
-
-          const div = document.createElement('div');
-          div.className = 'result-card';
-          div.innerHTML = `
-            <div class="stage-title">${title}</div>
-            <div>
-              <span class="team-name">${match.home}</span>
-              <span class="score">${a}-${b}</span>
-              <span class="team-name">${match.away}</span>
-            </div>
-            <div class="winner">🏆 Pemenang: ${winner}</div>
-          `;
-          finalDiv.appendChild(div);
-        });
-      });
-
-    })
-    .catch(err => {
-      document.getElementById('klasemen').innerText = 'Gagal memuat data.';
-      console.error(err);
+      winner.wins++; loser.losses++;
+      winner.points += 2;
     });
+
+    const sorted = Object.values(teams).sort((x, y) => {
+      return (y.points - x.points) ||
+             (y.wins - x.wins) ||
+             ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst));
+    });
+
+    const table = document.createElement('table');
+    table.style.width = '98%';
+    table.style.borderCollapse = 'collapse';
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>🏆</th>
+          <th>Tim</th>
+          <th>TP</th>
+          <th>M</th>
+          <th>K</th>
+          <th>SS</th>
+          <th>Poin</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    `;
+
+    const tbody = table.querySelector('tbody');
+    sorted.forEach((t, i) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${t.name}</td>
+        <td>${t.games}</td>
+        <td>${t.wins}</td>
+        <td>${t.losses}</td>
+        <td>${t.setsFor}-${t.setsAgainst}</td>
+        <td>${t.points}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    container.appendChild(table);
+
+    // === FINAL DAN JUARA 3 ===
+    const medal = {
+      1: '🥇 <b style="color:gold;">Juara 1</b>',
+      2: '🥈 <b style="color:silver;">Juara 2</b>',
+      3: '🥉 <b style="color:peru;">Juara 3</b>',
+    };
+
+    const finalDiv = document.getElementById('final');
+    const finalMatch = data["Final"]?.[0];
+    const juara3Match = data["Perebutan Juara 3"]?.[0];
+
+    const hasil = [];
+
+    if (finalMatch) {
+      const [a, b] = finalMatch.score.split('-').map(Number);
+      const p1 = a > b ? finalMatch.home : finalMatch.away;
+      const p2 = a > b ? finalMatch.away : finalMatch.home;
+      hasil.push({pos: 1, name: p1, score: finalMatch});
+      hasil.push({pos: 2, name: p2});
+    }
+
+    if (juara3Match) {
+      const [a, b] = juara3Match.score.split('-').map(Number);
+      const p3 = a > b ? juara3Match.home : juara3Match.away;
+      hasil.push({pos: 3, name: p3});
+    }
+
+    hasil.forEach(d => {
+      const div = document.createElement('div');
+      div.style.margin = '12px 0';
+      div.innerHTML = `
+        ${medal[d.pos]}: <b>${d.name}</b>
+        ${d.score ? ` <span style="opacity:0.7;">(${d.score.home} ${d.score.score} ${d.score.away})</span>` : ''}
+      `;
+      finalDiv.appendChild(div);
+    });
+
+  });
 </script>
+        
+
+    
 
 <script>
 document.getElementById("downloadBtn").addEventListener("click", function () {
