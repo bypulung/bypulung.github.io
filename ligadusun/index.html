@@ -198,12 +198,21 @@
 
 
 
-<h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
+<h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> LigaDusun Tanjung Bulan</h5>
 
-    <div id="klasemen"></div><br/><br/>
-<div id="hasilGrup"></div><br/><br/>
-<div id="finals"></div><br/><br/>
-<div id="juara"></div><br/><br/>
+    <div id="klasemen"></div>
+    <br/><br/>
+    <p>
+        * TP : Total Pertandingan dimainkan<br/>
+        * M  : Menang<br/>
+        * K  : Kalah<br/>
+        * SS : Skor Set (Set menang - Set kalah)
+    </p>
+    
+    <hr/><br/>
+<div id="hasilGrup"></div><hr/><br/>
+<div id="finals"></div><hr/><br/>
+<div id="juara"></div><hr/><br/>
 
 <script>
 fetch('hasil.json')
@@ -317,21 +326,15 @@ fetch('hasil.json')
     juaraDiv.innerHTML = `
       <h5>🏆 Juara</h5>
       <ul>
-        <li>🥇 Juara 1: <b style="color:gold">${juara1}</b></li>
-        <li>🥈 Juara 2: <b style="color:silver">${juara2}</b></li>
-        <li>🥉 Juara 3: <b style="color:orange">${juara3}</b></li>
+        🥇 Juara 1: <b style="color:gold">${juara1}</b>
+        🥈 Juara 2: <b style="color:silver">${juara2}</b>
+        🥉 Juara 3: <b style="color:orange">${juara3}</b>
       </ul>
     `;
   });
 </script>
 
-</center><br/><br/>
-    <p>
-        * TP : Total Pertandingan dimainkan<br/>
-        * M  : Menang<br/>
-        * K  : Kalah<br/>
-        * SS : Skor Set (Set menang - Set kalah)
-    </p>
+
 
 <br/><br/>
 <center>Made in ©️RISMA AL-HUDA</center>
