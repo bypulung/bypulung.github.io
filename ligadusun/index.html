@@ -200,15 +200,15 @@
 
 <center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
 
-<div id="klasemen"></div>
-    <button id="downloadBtn" style="margin-top: 20px; padding: 8px 16px;">Unduh Klasemen (CSV)</button>
-<div id="final"></div>
+    <div id="klasemen"></div>
+<div id="hasilGrup"></div>
+<div id="finals"></div>
+<div id="juara"></div>
 
 <script>
 fetch('hasil.json')
   .then(res => res.json())
   .then(data => {
-    const container = document.getElementById('klasemen');
     const teams = {};
 
     function ensure(name) {
@@ -226,9 +226,9 @@ fetch('hasil.json')
       return teams[name];
     }
 
-    // === Proses Klasemen Grup ===
-    const groupMatches = data["Grup A"];
-    groupMatches.forEach(match => {
+    // Proses hasil grup
+    const hasilGrup = data["Grup A"];
+    hasilGrup.forEach(match => {
       const [a, b] = match.score.split('-').map(Number);
       const home = ensure(match.home);
       const away = ensure(match.away);
@@ -240,10 +240,12 @@ fetch('hasil.json')
       const winner = a > b ? home : away;
       const loser = a > b ? away : home;
 
-      winner.wins++; loser.losses++;
+      winner.wins++;
+      loser.losses++;
       winner.points += 2;
     });
 
+    // Buat klasemen
     const sorted = Object.values(teams).sort((x, y) => {
       return (y.points - x.points) ||
              (y.wins - x.wins) ||
@@ -251,24 +253,20 @@ fetch('hasil.json')
     });
 
     const table = document.createElement('table');
-    table.style.width = '98%';
-    table.style.borderCollapse = 'collapse';
     table.innerHTML = `
       <thead>
         <tr>
-          <th>🏆</th>
+          <th>No</th>
           <th>Tim</th>
-          <th>TP</th>
-          <th>M</th>
-          <th>K</th>
-          <th>SS</th>
+          <th>Main</th>
+          <th>Menang</th>
+          <th>Kalah</th>
+          <th>Set</th>
           <th>Poin</th>
         </tr>
       </thead>
       <tbody></tbody>
     `;
-
-    const tbody = table.querySelector('tbody');
     sorted.forEach((t, i) => {
       const row = document.createElement('tr');
       row.innerHTML = `
@@ -280,75 +278,52 @@ fetch('hasil.json')
         <td>${t.setsFor}-${t.setsAgainst}</td>
         <td>${t.points}</td>
       `;
-      tbody.appendChild(row);
+      table.querySelector('tbody').appendChild(row);
+    });
+    document.getElementById('klasemen').appendChild(table);
+
+    // Tampilkan hasil pertandingan grup
+    const list = document.createElement('ul');
+    hasilGrup.forEach(match => {
+      const item = document.createElement('li');
+      item.innerHTML = `<b>${match.home}</b> <span style="color:cyan;font-weight:bold">${match.score}</span> <b>${match.away}</b>`;
+      list.appendChild(item);
+    });
+    const grupDiv = document.getElementById('hasilGrup');
+    grupDiv.innerHTML = `<h5>Hasil Pertandingan Grup</h5>`;
+    grupDiv.appendChild(list);
+
+    // Final & Perebutan Juara 3
+    const finalSection = document.getElementById('finals');
+    ['Final', 'Perebutan Juara 3'].forEach(stage => {
+      const match = data[stage]?.[0];
+      if (match) {
+        const [a, b] = match.score.split('-').map(Number);
+        const winner = a > b ? match.home : match.away;
+        const scoreText = `<b>${match.home}</b> <span style="color:gold;font-weight:bold">${match.score}</span> <b>${match.away}</b>`;
+        const title = stage === 'Final' ? 'Final: ' : 'Perebutan Juara 3: ';
+        const card = document.createElement('div');
+        card.innerHTML = `<p><strong>${title}</strong>${scoreText} → <span style="color:lime"><b>${winner}</b> menang</span></p>`;
+        finalSection.appendChild(card);
+      }
     });
 
-    container.appendChild(table);
+    // Juara 1-3
+    const juaraDiv = document.getElementById('juara');
+    const juara1 = data["Final"] ? (data["Final"][0].score.split('-')[0] > data["Final"][0].score.split('-')[1] ? data["Final"][0].home : data["Final"][0].away) : '-';
+    const juara2 = data["Final"] ? (data["Final"][0].score.split('-')[0] < data["Final"][0].score.split('-')[1] ? data["Final"][0].home : data["Final"][0].away) : '-';
+    const juara3 = data["Perebutan Juara 3"] ? (data["Perebutan Juara 3"][0].score.split('-')[0] > data["Perebutan Juara 3"][0].score.split('-')[1] ? data["Perebutan Juara 3"][0].home : data["Perebutan Juara 3"][0].away) : '-';
 
-    // === FINAL DAN JUARA 3 ===
-    const medal = {
-      1: '🥇 <b style="color:gold;">Juara 1</b>',
-      2: '🥈 <b style="color:silver;">Juara 2</b>',
-      3: '🥉 <b style="color:peru;">Juara 3</b>',
-    };
-
-    const finalDiv = document.getElementById('final');
-    const finalMatch = data["Final"]?.[0];
-    const juara3Match = data["Perebutan Juara 3"]?.[0];
-
-    const hasil = [];
-
-    if (finalMatch) {
-      const [a, b] = finalMatch.score.split('-').map(Number);
-      const p1 = a > b ? finalMatch.home : finalMatch.away;
-      const p2 = a > b ? finalMatch.away : finalMatch.home;
-      hasil.push({pos: 1, name: p1, score: finalMatch});
-      hasil.push({pos: 2, name: p2});
-    }
-
-    if (juara3Match) {
-      const [a, b] = juara3Match.score.split('-').map(Number);
-      const p3 = a > b ? juara3Match.home : juara3Match.away;
-      hasil.push({pos: 3, name: p3});
-    }
-
-    hasil.forEach(d => {
-      const div = document.createElement('div');
-      div.style.margin = '12px 0';
-      div.innerHTML = `
-        ${medal[d.pos]}: <b>${d.name}</b>
-        ${d.score ? ` <span style="opacity:0.7;">(${d.score.home} ${d.score.score} ${d.score.away})</span>` : ''}
-      `;
-      finalDiv.appendChild(div);
-    });
-
+    juaraDiv.innerHTML = `
+      <h5>🏆 Juara</h5>
+      <ul>
+        <li>🥇 Juara 1: <b style="color:gold">${juara1}</b></li>
+        <li>🥈 Juara 2: <b style="color:silver">${juara2}</b></li>
+        <li>🥉 Juara 3: <b style="color:orange">${juara3}</b></li>
+      </ul>
+    `;
   });
 </script>
-        
-
-    
-
-<script>
-document.getElementById("downloadBtn").addEventListener("click", function () {
-    const rows = document.querySelectorAll("table tbody tr");
-    if (!rows.length) return;
-
-    let csv = "No,Tim,TP,M,K,SS,Poin\n";
-    rows.forEach(row => {
-        const cols = Array.from(row.querySelectorAll("td")).map(td => td.textContent.trim());
-        csv += cols.join(",") + "\n";
-    });
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", "klasemen_ligadusun.csv");
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-});
-                                                        </script>
 
 </center><br/><br/>
     <p>
