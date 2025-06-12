@@ -32,39 +32,44 @@
         }
         
         
-  .winner-card {
-    background: #1e1e1e;
-    color: white;
-    padding: 16px;
-    margin-top: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.05);
-    max-width: 500px;
-  }
-
-  .winner-title {
-    font-size: 1.2em;
+  caption {
+    caption-side: top;
+    font-size: 1.3em;
+    font-weight: bold;
     margin-bottom: 8px;
+  }
+
+  .result-card {
+    background: #222;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  }
+
+  .stage-title {
+    font-size: 1.2em;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
-  .winner-match {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1em;
-    padding: 8px 0;
-    border-top: 1px solid #333;
-  }
-
-  .winner-medal {
-    font-size: 1.5em;
-    margin-right: 8px;
-  }
-
-  .winner-name {
+  .team-name {
     font-weight: bold;
-    font-size: 1.1em;
+    color: gold;
   }
+
+  .score {
+    font-weight: bold;
+    color: #ccc;
+    margin: 0 10px;
+  }
+
+  .winner {
+    color: lime;
+    font-weight: bold;
+    margin-top: 10px;
+    display: inline-block;
+        }
 
        
   @keyframes fadeInUp {
@@ -265,54 +270,154 @@
       const tbody = table.querySelector('tbody');
       sorted.forEach((team, i) => {
         const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${team.name}</td>
-          <td>${team.games}</td>
-          <td>${team.wins}</td>
-          <td>${team.losses}</td>
-          <td>${team.setsFor}-${team.setsAgainst}</td>
-          <td>${team.points}</td>
-        `;
-        tbody.appendChild(row);
-      });
+<h2>Klasemen Grup</h2>
+<div id="klasemen"></div>
+<button id="downloadBtn" style="margin-top: 20px; padding: 8px 16px;">Unduh Klasemen (CSV)</button>
+<h2>Final & Perebutan Juara 3</h2>
+<div id="hasil-final"></div>
 
-      container.appendChild(table);
 
-      // Final dan Perebutan Juara 3
-      const medalMap = {
-        "Final": "🥇",
-        "Perebutan Juara 3": "🥉"
-      };
+<script>
+  fetch('hasil.json')
+    .then(res => res.json())
+    .then(data => {
+      const teams = {};
 
-      ['Final', 'Perebutan Juara 3'].forEach(stage => {
-        const matches = data[stage];
-        if (!matches) return;
+      function ensureTeam(name) {
+        if (!teams[name]) {
+          teams[name] = {
+            name,
+            games: 0,
+            wins: 0,
+            losses: 0,
+            setsFor: 0,
+            setsAgainst: 0,
+            points: 0
+          };
+        }
+        return teams[name];
+      }
 
-        matches.forEach(m => {
-          const [a, b] = m.score.split('-').map(Number);
-          const winner = a > b ? m.home : m.away;
-          const scoreText = `${m.home} ${a} - ${b} ${m.away}`;
+      // Proses grup
+      Object.entries(data).forEach(([key, matches]) => {
+        if (key === 'Final' || key === 'Perebutan Juara 3') return;
 
-          const card = document.createElement('div');
-          card.className = 'winner-card';
-          card.innerHTML = `
-            <div class="winner-title">${stage}</div>
-            <div class="winner-match">
-              <span>${scoreText}</span>
-            </div>
-            <div class="winner-match" style="border-top:none;">
-              <span class="winner-medal">${medalMap[stage]}</span>
-              <span class="winner-name">${winner}</span> menang!
-            </div>
-          `;
-          container.appendChild(card);
+        matches.forEach(match => {
+          const [a, b] = match.score.split('-').map(Number);
+          const home = ensureTeam(match.home);
+          const away = ensureTeam(match.away);
+
+          home.games++; away.games++;
+          home.setsFor += a; home.setsAgainst += b;
+          away.setsFor += b; away.setsAgainst += a;
+
+          const winner = a > b ? home : away;
+          const loser = a > b ? away : home;
+
+          winner.wins++;
+          loser.losses++;
+          winner.points += 2;
         });
       });
+
+      // Tampilkan klasemen
+      const sorted = Object.values(teams).sort((a, b) => {
+        return b.points - a.points ||
+               (b.setsFor - b.setsAgainst) - (a.setsFor - a.setsAgainst);
+      });
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <caption>Grup A</caption>
+        <thead>
+          <tr>
+            <th>🏆</th>
+            <th>Tim</th>
+            <th>TP</th>
+            <th>M</th>
+            <th>K</th>
+            <th>SS</th>
+            <th>Poin</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      sorted.forEach((t, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${t.name}</td>
+          <td>${t.games}</td>
+          <td>${t.wins}</td>
+          <td>${t.losses}</td>
+          <td>${t.setsFor}-${t.setsAgainst}</td>
+          <td>${t.points}</td>
+        `;
+        table.querySelector('tbody').appendChild(row);
+      });
+
+      document.getElementById('klasemen').appendChild(table);
+
+      // Final & Perebutan Juara 3
+      const medalMap = {
+        "Final": "🥇 Juara 1 & 2",
+        "Perebutan Juara 3": "🥉 Juara 3"
+      };
+
+      const finalDiv = document.getElementById('hasil-final');
+
+      Object.entries(medalMap).forEach(([key, title]) => {
+        const matches = data[key];
+        if (!matches) return;
+
+        matches.forEach(match => {
+          const [a, b] = match.score.split('-').map(Number);
+          const winner = a > b ? match.home : match.away;
+
+          const div = document.createElement('div');
+          div.className = 'result-card';
+          div.innerHTML = `
+            <div class="stage-title">${title}</div>
+            <div>
+              <span class="team-name">${match.home}</span>
+              <span class="score">${a}-${b}</span>
+              <span class="team-name">${match.away}</span>
+            </div>
+            <div class="winner">🏆 Pemenang: ${winner}</div>
+          `;
+          finalDiv.appendChild(div);
+        });
+      });
+
+    })
+    .catch(err => {
+      document.getElementById('klasemen').innerText = 'Gagal memuat data.';
+      console.error(err);
     });
 </script>
 
+<script>
+document.getElementById("downloadBtn").addEventListener("click", function () {
+    const rows = document.querySelectorAll("table tbody tr");
+    if (!rows.length) return;
 
+    let csv = "No,Tim,TP,M,K,SS,Poin\n";
+    rows.forEach(row => {
+        const cols = Array.from(row.querySelectorAll("td")).map(td => td.textContent.trim());
+        csv += cols.join(",") + "\n";
+    });
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.setAttribute("href", URL.createObjectURL(blob));
+    link.setAttribute("download", "klasemen_ligadusun.csv");
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+});
+                                                        </script>
 
 </center><br/><br/>
     <p>
@@ -323,7 +428,7 @@
     </p>
 
 <br/><br/>
-<center>Made in RISMA AL-HUDA</center>
+<center>Made in ©️RISMA AL-HUDA</center>
 <br></body>
 
     </html>
