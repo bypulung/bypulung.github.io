@@ -198,12 +198,12 @@
 
 
 
-<center><h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
+<h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h5>
 
-    <div id="klasemen"></div>
-<div id="hasilGrup"></div>
-<div id="finals"></div>
-<div id="juara"></div>
+    <div id="klasemen"></div><br/><br/>
+<div id="hasilGrup"></div><br/><br/>
+<div id="finals"></div><br/><br/>
+<div id="juara"></div><br/><br/>
 
 <script>
 fetch('hasil.json')
@@ -256,12 +256,12 @@ fetch('hasil.json')
     table.innerHTML = `
       <thead>
         <tr>
-          <th>No</th>
+          <th>🏆</th>
           <th>Tim</th>
-          <th>Main</th>
-          <th>Menang</th>
-          <th>Kalah</th>
-          <th>Set</th>
+          <th>TP</th>
+          <th>M</th>
+          <th>K</th>
+          <th>SS</th>
           <th>Poin</th>
         </tr>
       </thead>
@@ -301,7 +301,7 @@ fetch('hasil.json')
         const [a, b] = match.score.split('-').map(Number);
         const winner = a > b ? match.home : match.away;
         const scoreText = `<b>${match.home}</b> <span style="color:gold;font-weight:bold">${match.score}</span> <b>${match.away}</b>`;
-        const title = stage === 'Final' ? 'Final: ' : 'Perebutan Juara 3: ';
+        const title = stage === 'Final' ? 'Final:<br/> ' : 'Perebutan Juara 3:<br/> ';
         const card = document.createElement('div');
         card.innerHTML = `<p><strong>${title}</strong>${scoreText} → <span style="color:lime"><b>${winner}</b> menang</span></p>`;
         finalSection.appendChild(card);
