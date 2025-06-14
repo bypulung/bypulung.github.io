@@ -200,28 +200,29 @@
 
 <h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> LigaDusun Tanjung Bulan</h5>
 
+    
+    
     <div id="klasemen"></div>
-    <br/><br/>
+    <br/>
     <p>
         * TP : Total Pertandingan dimainkan<br/>
         * M  : Menang<br/>
         * K  : Kalah<br/>
         * SS : Skor Set (Set menang - Set kalah)
-    </p>
-    
-    <hr/><br/>
+    </p><hr/><br/>
 <div id="hasilGrup"></div><hr/><br/>
-<!--
-    <div id="finals"></div><hr/><br/>
-<div id="juara"></div><hr/><br/>
-    -->
-
-<script>
+<div id="hasilFinal"></div><hr/><br/>
+<div id="juara"></div><script><hr/><br/>
 fetch('hasil.json')
   .then(res => res.json())
   .then(data => {
-    const teams = {};
+    const klasemenDiv = document.getElementById('klasemen');
+    const hasilGrupDiv = document.getElementById('hasilGrup');
+    const hasilFinalDiv = document.getElementById('hasilFinal');
+    const juaraDiv = document.getElementById('juara');
 
+    // ===== Klasemen =====
+    const teams = {};
     function ensure(name) {
       if (!teams[name]) {
         teams[name] = {
@@ -237,102 +238,126 @@ fetch('hasil.json')
       return teams[name];
     }
 
-    // Proses hasil grup
-    const hasilGrup = data["Grup A"];
-    hasilGrup.forEach(match => {
-      const [a, b] = match.score.split('-').map(Number);
-      const home = ensure(match.home);
-      const away = ensure(match.away);
-
-      home.games++; away.games++;
-      home.setsFor += a; home.setsAgainst += b;
-      away.setsFor += b; away.setsAgainst += a;
-
-      const winner = a > b ? home : away;
-      const loser = a > b ? away : home;
-
-      winner.wins++;
-      loser.losses++;
-      winner.points += 2;
-    });
-
-    // Buat klasemen
-    const sorted = Object.values(teams).sort((x, y) => {
-      return (y.points - x.points) ||
-             (y.wins - x.wins) ||
-             ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst));
-    });
-
-    const table = document.createElement('table');
-    table.innerHTML = `
-      <thead>
-        <tr>
-          <th>🏆</th>
-          <th>Tim</th>
-          <th>TP</th>
-          <th>M</th>
-          <th>K</th>
-          <th>SS</th>
-          <th>Poin</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    `;
-    sorted.forEach((t, i) => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${i + 1}</td>
-        <td>${t.name}</td>
-        <td>${t.games}</td>
-        <td>${t.wins}</td>
-        <td>${t.losses}</td>
-        <td>${t.setsFor}-${t.setsAgainst}</td>
-        <td>${t.points}</td>
-      `;
-      table.querySelector('tbody').appendChild(row);
-    });
-    document.getElementById('klasemen').appendChild(table);
-
-    // Tampilkan hasil pertandingan grup
-    const list = document.createElement('ul');
-    hasilGrup.forEach(match => {
-      const item = document.createElement('li');
-      item.innerHTML = `<b>${match.home}</b> <span style="color:cyan;font-weight:bold">${match.score}</span> <b>${match.away}</b>`;
-      list.appendChild(item);
-    });
-    const grupDiv = document.getElementById('hasilGrup');
-    grupDiv.innerHTML = `<h5>Hasil Pertandingan Grup</h5>`;
-    grupDiv.appendChild(list);
-
-    // Final & Perebutan Juara 3
-    const finalSection = document.getElementById('finals');
-    ['Final', 'Perebutan Juara 3'].forEach(stage => {
-      const match = data[stage]?.[0];
-      if (match) {
+    if (data["Grup"] && Array.isArray(data["Grup"])) {
+      data["Grup"].forEach(match => {
+        if (!match.score || !match.score.includes('-')) return;
         const [a, b] = match.score.split('-').map(Number);
-        const winner = a > b ? match.home : match.away;
-        const scoreText = `<b>${match.home}</b> <span style="color:gold;font-weight:bold">${match.score}</span> <b>${match.away}</b>`;
-        const title = stage === 'Final' ? 'Final:<br/> ' : 'Perebutan Juara 3:<br/> ';
-        const card = document.createElement('div');
-        card.innerHTML = `<p><strong>${title}</strong>${scoreText} → <span style="color:lime"><b>${winner}</b> menang</span></p>`;
-        finalSection.appendChild(card);
+        const home = ensure(match.home);
+        const away = ensure(match.away);
+
+        home.games++; away.games++;
+        home.setsFor += a; home.setsAgainst += b;
+        away.setsFor += b; away.setsAgainst += a;
+
+        const winner = a > b ? home : away;
+        const loser = a > b ? away : home;
+        winner.wins++; loser.losses++;
+        winner.points += 2;
+      });
+
+      const sorted = Object.values(teams).sort((x, y) =>
+        (y.points - x.points) ||
+        (y.wins - x.wins) ||
+        ((y.setsFor - y.setsAgainst) - (x.setsFor - x.setsAgainst))
+      );
+
+      const table = document.createElement('table');
+      table.innerHTML = `
+        <caption style="text-align:left;font-weight:bold;font-size:1.2em;margin-bottom:8px;color:white;">
+          🏆 Klasemen
+        </caption>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tim</th>
+            <th>TP</th>
+            <th>M</th>
+            <th>K</th>
+            <th>SS</th>
+            <th>Poin</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      `;
+
+      const tbody = table.querySelector('tbody');
+      sorted.forEach((t, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${t.name}</td>
+          <td>${t.games}</td>
+          <td>${t.wins}</td>
+          <td>${t.losses}</td>
+          <td>${t.setsFor}-${t.setsAgainst}</td>
+          <td>${t.points}</td>
+        `;
+        tbody.appendChild(row);
+      });
+      klasemenDiv.appendChild(table);
+    }
+
+    // ===== Hasil Pertandingan Grup =====
+    if (data["Grup"] && Array.isArray(data["Grup"])) {
+      const list = document.createElement('ul');
+      list.innerHTML = '<h3 style="color:white">📋 Hasil Pertandingan Grup</h3>';
+      data["Grup"].forEach(match => {
+        if (!match.score || !match.score.includes('-')) return;
+        const li = document.createElement('li');
+        li.textContent = `${match.home} ${match.score} ${match.away}`;
+        list.appendChild(li);
+      });
+      hasilGrupDiv.appendChild(list);
+    }
+
+    // ===== Final dan Perebutan Juara 3 =====
+    if (data["Final"] || data["Juara 3"]) {
+      const list = document.createElement('ul');
+      list.innerHTML = '<h3 style="color:white">🎯 Final & Perebutan Juara 3</h3>';
+
+      if (data["Final"] && data["Final"].score) {
+        const f = data["Final"];
+        const finalItem = document.createElement('li');
+        finalItem.innerHTML = `<strong>Final:</strong> <span>${f.home}</span> <strong style="color:orange">${f.score}</strong> <span>${f.away}</span>`;
+        list.appendChild(finalItem);
       }
-    });
 
-    // Juara 1-3
-    const juaraDiv = document.getElementById('juara');
-    const juara1 = data["Final"] ? (data["Final"][0].score.split('-')[0] > data["Final"][0].score.split('-')[1] ? data["Final"][0].home : data["Final"][0].away) : '-';
-    const juara2 = data["Final"] ? (data["Final"][0].score.split('-')[0] < data["Final"][0].score.split('-')[1] ? data["Final"][0].home : data["Final"][0].away) : '-';
-    const juara3 = data["Perebutan Juara 3"] ? (data["Perebutan Juara 3"][0].score.split('-')[0] > data["Perebutan Juara 3"][0].score.split('-')[1] ? data["Perebutan Juara 3"][0].home : data["Perebutan Juara 3"][0].away) : '-';
+      if (data["Juara 3"] && data["Juara 3"].score) {
+        const j3 = data["Juara 3"];
+        const juara3Item = document.createElement('li');
+        juara3Item.innerHTML = `<strong>Perebutan Juara 3:</strong> <span>${j3.home}</span> <strong style="color:orange">${j3.score}</strong> <span>${j3.away}</span>`;
+        list.appendChild(juara3Item);
+      }
 
-    juaraDiv.innerHTML = `
-      <h5>🏆 Juara</h5>
-      <ul>
-        🥇 Juara 1: <b style="color:gold">${juara1}</b><br/>
-        🥈 Juara 2: <b style="color:silver">${juara2}</b><br/>
-        🥉 Juara 3: <b style="color:orange">${juara3}</b>
-      </ul>
-    `;
+      hasilFinalDiv.appendChild(list);
+    }
+
+    // ===== Juara 1, 2, 3 =====
+    const juaraList = [];
+    if (data["Final"] && data["Final"].score) {
+      const [a, b] = data["Final"].score.split('-').map(Number);
+      if (a > b) {
+        juaraList.push(data["Final"].home);
+        juaraList.push(data["Final"].away);
+      } else {
+        juaraList.push(data["Final"].away);
+        juaraList.push(data["Final"].home);
+      }
+    }
+    if (data["Juara 3"] && data["Juara 3"].score) {
+      const [a, b] = data["Juara 3"].score.split('-').map(Number);
+      if (a > b) juaraList.push(data["Juara 3"].home);
+      else juaraList.push(data["Juara 3"].away);
+    }
+
+    if (juaraList.length === 3) {
+      const ul = document.createElement('ul');
+      ul.innerHTML = '<h3 style="color:white">🏅 Juara</h3>';
+      ul.innerHTML += `<li>🥇 ${juaraList[0]}</li>`;
+      ul.innerHTML += `<li>🥈 ${juaraList[1]}</li>`;
+      ul.innerHTML += `<li>🥉 ${juaraList[2]}</li>`;
+      juaraDiv.appendChild(ul);
+    }
   });
 </script>
 
