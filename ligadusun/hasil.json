@@ -7,8 +7,6 @@
     { "home": "Tim A", "away": "Tim D", "score": "2-0" },
     { "home": "Tim B", "away": "Tim C", "score": "2-1" }
   ],
-  "Final": [
-    { "home": "Tim A", "away": "Tim D",  }
-  ],
+  
   
 }
