@@ -8,9 +8,7 @@
     { "home": "Tim B", "away": "Tim C", "score": "2-1" }
   ],
   "Final": [
-    { "home": "Tim A", "away": "Tim D", "score": "" }
+    { "home": "Tim A", "away": "Tim D",  }
   ],
-  "Perebutan Juara 3": [
-    { "home": "Tim B", "away": "Tim C", "score": "" }
-  ]
+  
 }
