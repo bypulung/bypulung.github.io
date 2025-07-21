@@ -15,9 +15,11 @@
 
    <style>
 
-       .update::before{
-           content:"Senin, 31 Maret 2025";
-       }
+       body { font-family: sans-serif; margin: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+    th { background-color: #eee; }
+    h2 { margin-top: 40px; }
 
        .profil {
   width: 150px;
@@ -121,7 +123,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>KAS RISMA | Update 31 Maret 2025</title>
+    <title>BANK RISMA | Rekap Tabungan Online</title>
 </head>
 
 <body class="bg-dark text-light">
@@ -219,9 +221,9 @@
  -->
         
         
-    <h2 id="putra"><i class="fas fa-wallet">
+    <h1 id="putra"><i class="fas fa-wallet">
         
-    </i> Bank RISMA</h2>
+    </i> BANK RISMA</h1>
 
        
 
@@ -255,153 +257,143 @@
 
     <hr/>
     
-    <h5>💰 Rekap Total Saldo</h5>
-<div id="rekap-total"></div>
+     <h2>Laporan Tabungan RISMA</h2>
+  <div id="total-summary"></div>
+  <div id="monthly-reports"></div>
 
-<h5>📅 Tabungan Bulanan</h5>
-<div id="laporan-bulanan"></div>
+  <script>
+    const months = [
+      'februari_2026',
+      'januari_2026',
+      'desember_2025',
+      'november_2025',
+      'oktober_2025',
+      'september_2025',
+      'agustus_2025'
+    ];
 
-<script>
-  const files = [
-    "2026-02.json",
-    "2026-01.json",
-    "2025-12.json",
-    "2025-11.json",
-    "2025-10.json",
-    "2025-09.json",
-    "2025-08.json"
-  ]; // dari terbaru ke lama
+    const allData = {};
+    const userTotals = {};
 
-  const basePath = "";
-  const anggotaMap = {};
+    async function loadData() {
+      for (const month of months) {
+        try {
+          const res = await fetch(`data/${month}.json`);
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.length === 0) continue;
 
-  const loadJSON = async (filename) => {
-    const res = await fetch(basePath + filename);
-    return res.ok ? res.json() : [];
-  };
+          allData[month] = data;
 
-  const formatRupiah = (angka) => "Rp " + angka.toLocaleString("id-ID");
-
-  const tampilkanRekapTotal = () => {
-    const anggotaArray = Object.entries(anggotaMap).map(([nama, val]) => ({
-      nama,
-      tabungan: val.tabungan,
-      penarikan: val.penarikan,
-      saldo: val.tabungan - val.penarikan
-    }));
-
-    anggotaArray.sort((a, b) => b.saldo - a.saldo);
-
-    let totalTabungan = 0, totalPenarikan = 0, totalSaldo = 0;
-
-    let html = `<table>
-      <thead>
-        <tr>
-          <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo</th>
-        </tr>
-      </thead>
-      <tbody>`;
-
-    anggotaArray.forEach((a, i) => {
-      html += `<tr>
-        <td>${i + 1}</td>
-        <td>${a.nama}</td>
-        <td>${formatRupiah(a.tabungan)}</td>
-        <td>${formatRupiah(a.penarikan)}</td>
-        <td>${formatRupiah(a.saldo)}</td>
-      </tr>`;
-      totalTabungan += a.tabungan;
-      totalPenarikan += a.penarikan;
-      totalSaldo += a.saldo;
-    });
-
-    html += `</tbody>
-      <tfoot>
-        <tr style="font-weight:bold; background:#f0f0f0">
-          <td colspan="2">TOTAL</td>
-          <td>${formatRupiah(totalTabungan)}</td>
-          <td>${formatRupiah(totalPenarikan)}</td>
-          <td>${formatRupiah(totalSaldo)}</td>
-        </tr>
-      </tfoot>
-    </table>`;
-
-    document.getElementById("rekap-total").innerHTML = html;
-  };
-
-  const tampilkanLaporanBulanan = async () => {
-    let html = "";
-    const saldoSementara = {}; // untuk menghitung saldo awal tiap anggota
-
-    for (const file of files.reverse()) {
-      const data = await loadJSON(file);
-      if (!Array.isArray(data) || data.length === 0) continue;
-
-      const bulan = file.replace(".json", "");
-
-      html += `<h3>📌 Bulan: ${bulan}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th><th>Nama</th><th>Saldo Awal</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
-          </tr>
-        </thead>
-        <tbody>`;
-
-      let totalAwal = 0, totalTabungan = 0, totalPenarikan = 0, totalAkhir = 0;
-
-      data.forEach((item, i) => {
-        const nama = item.nama;
-        const tabungan = item.tabungan || 0;
-        const penarikan = item.penarikan || 0;
-
-        const saldoAwal = saldoSementara[nama] ?? 0;
-        const saldoAkhir = saldoAwal + tabungan - penarikan;
-
-        saldoSementara[nama] = saldoAkhir;
-
-        // Simpan juga ke data agregat total
-        if (!anggotaMap[nama]) {
-          anggotaMap[nama] = { tabungan: 0, penarikan: 0 };
+          for (const item of data) {
+            const name = item.nama;
+            if (!userTotals[name]) {
+              userTotals[name] = { tabungan: 0, penarikan: 0 };
+            }
+            userTotals[name].tabungan += item.tabungan || 0;
+            userTotals[name].penarikan += item.penarikan || 0;
+          }
+        } catch (e) {
+          console.warn(`Gagal memuat ${month}:`, e);
         }
+      }
 
-        anggotaMap[nama].tabungan += tabungan;
-        anggotaMap[nama].penarikan += penarikan;
-
-        html += `<tr>
-          <td>${i + 1}</td>
-          <td>${nama}</td>
-          <td>${formatRupiah(saldoAwal)}</td>
-          <td>${formatRupiah(tabungan)}</td>
-          <td>${formatRupiah(penarikan)}</td>
-          <td>${formatRupiah(saldoAkhir)}</td>
-        </tr>`;
-
-        totalAwal += saldoAwal;
-        totalTabungan += tabungan;
-        totalPenarikan += penarikan;
-        totalAkhir += saldoAkhir;
-      });
-
-      html += `</tbody>
-        <tfoot>
-          <tr style="font-weight:bold; background:#f0f0f0">
-            <td colspan="2">TOTAL</td>
-            <td>${formatRupiah(totalAwal)}</td>
-            <td>${formatRupiah(totalTabungan)}</td>
-            <td>${formatRupiah(totalPenarikan)}</td>
-            <td>${formatRupiah(totalAkhir)}</td>
-          </tr>
-        </tfoot>
-      </table>`;
+      renderSummary();
+      renderMonthlyTables();
     }
 
-    document.getElementById("laporan-bulanan").innerHTML = html;
-    tampilkanRekapTotal();
-  };
+    function renderSummary() {
+      const totalDiv = document.getElementById('total-summary');
+      const users = Object.keys(userTotals);
 
-  tampilkanLaporanBulanan();
-</script>
+      const rows = users.map((name, i) => {
+        const { tabungan, penarikan } = userTotals[name];
+        const saldo = tabungan - penarikan;
+        return `<tr>
+          <td>${i + 1}</td>
+          <td>${name}</td>
+          <td>${tabungan}</td>
+          <td>${penarikan}</td>
+          <td>${saldo}</td>
+        </tr>`;
+      });
+
+      const totalSetoran = users.reduce((s, n) => s + userTotals[n].tabungan, 0);
+      const totalPenarikan = users.reduce((s, n) => s + userTotals[n].penarikan, 0);
+      const totalSaldo = totalSetoran - totalPenarikan;
+
+      const totalRow = `<tr style="font-weight:bold">
+        <td colspan="2">TOTAL</td>
+        <td>${totalSetoran}</td>
+        <td>${totalPenarikan}</td>
+        <td>${totalSaldo}</td>
+      </tr>`;
+
+      totalDiv.innerHTML = `
+        <h2>Rekap Total Tabungan Anggota</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.sort((a, b) => {
+              const saldoA = userTotals[users[rows.indexOf(a)]].tabungan - userTotals[users[rows.indexOf(a)]].penarikan;
+              const saldoB = userTotals[users[rows.indexOf(b)]].tabungan - userTotals[users[rows.indexOf(b)]].penarikan;
+              return saldoB - saldoA;
+            }).join('')}
+            ${totalRow}
+          </tbody>
+        </table>`;
+    }
+
+    function renderMonthlyTables() {
+      const div = document.getElementById('monthly-reports');
+
+      for (const [month, data] of Object.entries(allData)) {
+        if (!data || data.length === 0) continue;
+
+        const rows = data.map((item, i) => {
+          const saldoAkhir = (item.tabungan || 0) - (item.penarikan || 0);
+          return `<tr>
+            <td>${i + 1}</td>
+            <td>${item.nama}</td>
+            <td>${item.tabungan || 0}</td>
+            <td>${item.penarikan || 0}</td>
+            <td>${saldoAkhir}</td>
+          </tr>`;
+        });
+
+        const totalTabungan = data.reduce((s, d) => s + (d.tabungan || 0), 0);
+        const totalPenarikan = data.reduce((s, d) => s + (d.penarikan || 0), 0);
+        const totalSaldo = totalTabungan - totalPenarikan;
+
+        div.innerHTML += `
+          <h2>Bulan ${month.replace('_', ' ').toUpperCase()}</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows.join('')}
+              <tr style="font-weight:bold">
+                <td colspan="2">TOTAL</td>
+                <td>${totalTabungan}</td>
+                <td>${totalPenarikan}</td>
+                <td>${totalSaldo}</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+      }
+    }
+
+    loadData();
+  </script>
+
 
     <p></p><br/>
 
@@ -409,7 +401,7 @@
         <hr/>
         <span class="h5">Leader</span><br/>
         <div class="profil">
-            <img src="img/pulung.png"/>
+            <img src="/risma/img/pulung.png"/>
         </div><br/>
         Pulung R.
         <p></p>
@@ -417,7 +409,7 @@
         <hr/>
         <span class="h5">Co-Leader</span><br/>
         <div class="profil">
-            <img src="img/faisol.jpg"/>
+            <img src="/risma/img/faisol.jpg"/>
         </div><br/>
         Faisol
         <p></p>
@@ -427,12 +419,12 @@
         <hr/>
         <span class="h5">Sekertaris</span><br/>
         <div class="profil">
-            <img src="img/anis.jpg"/>
+            <img src="/risma/img/anis.jpg"/>
         </div><br/>
         Anis
         <p></p>
         <div class="profil">
-            <img src="img/putri.jpg"/>
+            <img src="/risma/img/putri.jpg"/>
         </div><br/>
         Putri
         <p></p>
@@ -440,13 +432,13 @@
         <hr/>
         <span class="h5">Bendahara</span><br/>
         <div class="profil">
-            <img src="img/tama.jpg"/>
+            <img src="/risma/img/tama.jpg"/>
         </div><br/>
         Tama
         <p></p>
 
         <div class="profil">
-            <img src="img/nadia.jpg"/>
+            <img src="/risma/img/nadia.jpg"/>
         </div><br/>
         Nadia
         <p></p>
@@ -454,12 +446,12 @@
         <hr/>
         <span class="h5">Humas</span><br/>
         <div class="profil">
-            <img src="img/rifai.jpg"/>
+            <img src="/risma/img/rifai.jpg"/>
         </div><br/>
         Rifai
         <p></p>
         <div class="profil">
-            <img src="img/tio.jpg"/>
+            <img src="/risma/img/tio.jpg"/>
         </div><br/>
         Tio
         <p></p>
@@ -467,12 +459,12 @@
         <hr/>
         <span class="h5">Marketing</span><br/>
         <div class="profil">
-            <img src="img/sasa.jpg"/>
+            <img src="/risma/img/sasa.jpg"/>
         </div><br/>
         Sasa
         <p></p>
         <div class="profil">
-            <img src="img/riswadi.jpg"/>
+            <img src="/risma/img/riswadi.jpg"/>
         </div><br/>
         Riswadi
         <p></p>
@@ -480,12 +472,12 @@
         <hr/>
         <span class="h5">Jumat Berkah</span><br/>
         <div class="profil">
-            <img src="img/nabila.jpg"/>
+            <img src="/risma/img/nabila.jpg"/>
         </div><br/>
         Nabila
         <p></p>
         <div class="profil">
-            <img src="img/irma.jpg"/>
+            <img src="/risma/img/irma.jpg"/>
         </div><br/>
         Irma
         <p></p>
@@ -495,12 +487,12 @@
         <hr/>
         <span class="h5">Perlengkapan</span><br/>
         <div class="profil">
-            <img src="img/rifky.jpg"/>
+            <img src="/risma/img/rifky.jpg"/>
         </div><br/>
         Rifky
         <p></p>
         <div class="profil">
-            <img src="img/syifa.jpg"/>
+            <img src="/risma/img/syifa.jpg"/>
         </div><br/>
         Syifa
         <p></p>
@@ -509,53 +501,53 @@
         <span class="h5">Yang Punya Kawasan</span><br/>
 
         <div class="profil">
-            <img src="img/mul.jpg"/>
+            <img src="/risma/img/mul.jpg"/>
         </div><br/>
         Mulyono
         <p></p>
 
         <div class="profil">
-            <img src="img/wahyu.jpg"/>
+            <img src="/risma/img/wahyu.jpg"/>
         </div><br/>
         Wahyu
         <p></p>
         
         <div class="profil">
-            <img src="img/rizki.jpg"/>
+            <img src="/risma/img/rizki.jpg"/>
         </div><br/>
         Rizky
         <p></p>
         <div class="profil">
-            <img src="img/aril.jpg"/>
+            <img src="/risma/img/aril.jpg"/>
         </div><br/>
         Aril
         <p></p>
 
         <div class="profil">
-            <img src="img/yogi.jpg"/>
+            <img src="/risma/img/yogi.jpg"/>
         </div><br/>
         Yogi
         <p></p>
         <div class="profil">
-            <img src="img/asa.jpg"/>
+            <img src="/risma/img/asa.jpg"/>
         </div><br/>
         Asa
         <p></p>
 
         <div class="profil">
-            <img src="img/yuyun.jpg"/>
+            <img src="/risma/img/yuyun.jpg"/>
         </div><br/>
         Yuyun
         <p></p>
         <div class="profil">
-            <img src="img/firli.jpg"/>
+            <img src="/risma/img/firli.jpg"/>
         </div><br/>
         Firli
         <p></p>
 
         
         <div class="profil">
-            <img src="img/hanafi.jpg"/>
+            <img src="/risma/img/hanafi.jpg"/>
         </div><br/>
         Hanapi
         <p></p>
@@ -569,4 +561,4 @@
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-</html>
+                       </html>
