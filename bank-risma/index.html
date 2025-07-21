@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
+
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
+
+
+   <style>
+
+       .update::before{
+           content:"Senin, 31 Maret 2025";
+       }
+
+       .profil {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #333;
+  /* commented for demo
+  float: left;
+  margin-left: 125px;
+  margin-top: 20px;
+  */
+  
+  /*for demo*/
+  display:inline-block;
+  vertical-align:middle;
+}
+.profil img{
+  width:100%;
+}
+
+
+       
+       
+        h2 {
+            width: 95%;
+            font-size:30px; 
+            background-color: #778899; 
+            
+       }
+  
+        table {
+            width: 95%;
+            border-collapse: collapse; justify-content: center; /* Horizontal center */
+            align-items: center;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #696969;
+        }
+        
+        
+    .navbar {
+            position: fixed; /* Membuat navbar tetap di atas */
+            top: 0;
+            width: 100%;
+            background-color: #7FFF00;
+            overflow: hidden;
+            z-index: 1000; /* Memastikan navbar berada di atas konten lain */
+        }
+
+        /* Gaya untuk tautan dalam navbar */
+        .navbar a {
+            float: left;
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 5px 5px;
+            text-decoration: blink;
+            font-size: 17px;
+        }
+
+    /* Ubah warna tautan saat dihover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Tambahkan padding ke konten halaman untuk menghindari konten terpotong oleh navbar */
+        .content {
+            padding: 60px 20px;
+            height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */
+        }
+
+        #backToTopBtn {
+            display: block; /* Tampilkan tombol dari awal */
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #7FFF00;
+            color: black;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+         #backToTopBtn:hover {
+            background-color: #555; 
+        }
+        
+    
+        </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>KAS RISMA | Update 31 Maret 2025</title>
+</head>
+
+<body class="bg-dark text-light">
+   
+    
+    <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+           
+    
+        
+        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+        
+                <img class="img-fluid">
+            </div>
+            <span class="pt-3 text-center">
+                <b>Made in RISMA</b><br/>
+                
+            </span>
+
+        
+            
+       </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showImageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showImageLabel">RISMA Tanjung Bulan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid img-thumbnail profile">
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <script>
+        // * img position
+        const position = '/risma_1.png';
+
+        // ! Don't change this line
+        $(document).ready(() => {
+            $('#profile img').attr('src', position);
+        });
+    </script>
+
+    <center>
+
+    
+<!--
+    <script>
+        // list links
+        const links = [
+            
+            
+            {
+
+                url: 'jadwal.html',
+                icon: 'fas fa-calendar-alt',
+                text: 'Jadwal Pertandingan',
+            },
+           
+            
+            {
+
+                url: 'hasil.html',
+                icon: 'fas fa-hourglass-end',
+                text: 'Hasil Pertandingan',
+            },
+
+            
+           
+        ];
+
+        // ! Don't change this line
+        $(document).ready(() => {
+            const callbackMap = (element, i) => {
+                return  /*html*/`
+                <li class="my-3 py-3 px-5 border border-light">
+                    <a target="" href="${element.url}" class="text-decoration-none"
+                        style="font-weight: 450;">
+                        <i class="fa-fw ${element.icon}"></i>
+                        ${element.text}
+                    </a>
+                </li>
+                `;
+            };
+            $('.list-unstyled.links').append($.map(links, callbackMap));
+        });
+    </script>
+
+ -->
+        
+        
+    <h2 id="putra"><i class="fas fa-wallet">
+        
+    </i> Bank RISMA</h2>
+
+       
+
+    </center>
+    
+
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
+
+<center>
+
+    <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
+
+<script>
+  const updatedAt = new Date(document.lastModified);
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
+  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
+</script>
+
+    <hr/>
+    
+    <h5>💰 Rekap Total Saldo</h5>
+<div id="rekap-total"></div>
+
+<h5>📅 Tabungan Bulanan</h5>
+<div id="laporan-bulanan"></div>
+
+<script>
+  const files = [
+    "2026-02.json",
+    "2026-01.json",
+    "2025-12.json",
+    "2025-11.json",
+    "2025-10.json",
+    "2025-09.json",
+    "2025-08.json"
+  ]; // dari terbaru ke lama
+
+  const basePath = "";
+  const anggotaMap = {};
+
+  const loadJSON = async (filename) => {
+    const res = await fetch(basePath + filename);
+    return res.ok ? res.json() : [];
+  };
+
+  const formatRupiah = (angka) => "Rp " + angka.toLocaleString("id-ID");
+
+  const tampilkanRekapTotal = () => {
+    const anggotaArray = Object.entries(anggotaMap).map(([nama, val]) => ({
+      nama,
+      tabungan: val.tabungan,
+      penarikan: val.penarikan,
+      saldo: val.tabungan - val.penarikan
+    }));
+
+    anggotaArray.sort((a, b) => b.saldo - a.saldo);
+
+    let totalTabungan = 0, totalPenarikan = 0, totalSaldo = 0;
+
+    let html = `<table>
+      <thead>
+        <tr>
+          <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    anggotaArray.forEach((a, i) => {
+      html += `<tr>
+        <td>${i + 1}</td>
+        <td>${a.nama}</td>
+        <td>${formatRupiah(a.tabungan)}</td>
+        <td>${formatRupiah(a.penarikan)}</td>
+        <td>${formatRupiah(a.saldo)}</td>
+      </tr>`;
+      totalTabungan += a.tabungan;
+      totalPenarikan += a.penarikan;
+      totalSaldo += a.saldo;
+    });
+
+    html += `</tbody>
+      <tfoot>
+        <tr style="font-weight:bold; background:#f0f0f0">
+          <td colspan="2">TOTAL</td>
+          <td>${formatRupiah(totalTabungan)}</td>
+          <td>${formatRupiah(totalPenarikan)}</td>
+          <td>${formatRupiah(totalSaldo)}</td>
+        </tr>
+      </tfoot>
+    </table>`;
+
+    document.getElementById("rekap-total").innerHTML = html;
+  };
+
+  const tampilkanLaporanBulanan = async () => {
+    let html = "";
+    const saldoSementara = {}; // untuk menghitung saldo awal tiap anggota
+
+    for (const file of files.reverse()) {
+      const data = await loadJSON(file);
+      if (!Array.isArray(data) || data.length === 0) continue;
+
+      const bulan = file.replace(".json", "");
+
+      html += `<h3>📌 Bulan: ${bulan}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th><th>Nama</th><th>Saldo Awal</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+      let totalAwal = 0, totalTabungan = 0, totalPenarikan = 0, totalAkhir = 0;
+
+      data.forEach((item, i) => {
+        const nama = item.nama;
+        const tabungan = item.tabungan || 0;
+        const penarikan = item.penarikan || 0;
+
+        const saldoAwal = saldoSementara[nama] ?? 0;
+        const saldoAkhir = saldoAwal + tabungan - penarikan;
+
+        saldoSementara[nama] = saldoAkhir;
+
+        // Simpan juga ke data agregat total
+        if (!anggotaMap[nama]) {
+          anggotaMap[nama] = { tabungan: 0, penarikan: 0 };
+        }
+
+        anggotaMap[nama].tabungan += tabungan;
+        anggotaMap[nama].penarikan += penarikan;
+
+        html += `<tr>
+          <td>${i + 1}</td>
+          <td>${nama}</td>
+          <td>${formatRupiah(saldoAwal)}</td>
+          <td>${formatRupiah(tabungan)}</td>
+          <td>${formatRupiah(penarikan)}</td>
+          <td>${formatRupiah(saldoAkhir)}</td>
+        </tr>`;
+
+        totalAwal += saldoAwal;
+        totalTabungan += tabungan;
+        totalPenarikan += penarikan;
+        totalAkhir += saldoAkhir;
+      });
+
+      html += `</tbody>
+        <tfoot>
+          <tr style="font-weight:bold; background:#f0f0f0">
+            <td colspan="2">TOTAL</td>
+            <td>${formatRupiah(totalAwal)}</td>
+            <td>${formatRupiah(totalTabungan)}</td>
+            <td>${formatRupiah(totalPenarikan)}</td>
+            <td>${formatRupiah(totalAkhir)}</td>
+          </tr>
+        </tfoot>
+      </table>`;
+    }
+
+    document.getElementById("laporan-bulanan").innerHTML = html;
+    tampilkanRekapTotal();
+  };
+
+  tampilkanLaporanBulanan();
+</script>
+
+    <p></p><br/>
+
+    <center>
+        <hr/>
+        <span class="h5">Leader</span><br/>
+        <div class="profil">
+            <img src="img/pulung.png"/>
+        </div><br/>
+        Pulung R.
+        <p></p>
+        
+        <hr/>
+        <span class="h5">Co-Leader</span><br/>
+        <div class="profil">
+            <img src="img/faisol.jpg"/>
+        </div><br/>
+        Faisol
+        <p></p>
+
+        
+
+        <hr/>
+        <span class="h5">Sekertaris</span><br/>
+        <div class="profil">
+            <img src="img/anis.jpg"/>
+        </div><br/>
+        Anis
+        <p></p>
+        <div class="profil">
+            <img src="img/putri.jpg"/>
+        </div><br/>
+        Putri
+        <p></p>
+
+        <hr/>
+        <span class="h5">Bendahara</span><br/>
+        <div class="profil">
+            <img src="img/tama.jpg"/>
+        </div><br/>
+        Tama
+        <p></p>
+
+        <div class="profil">
+            <img src="img/nadia.jpg"/>
+        </div><br/>
+        Nadia
+        <p></p>
+
+        <hr/>
+        <span class="h5">Humas</span><br/>
+        <div class="profil">
+            <img src="img/rifai.jpg"/>
+        </div><br/>
+        Rifai
+        <p></p>
+        <div class="profil">
+            <img src="img/tio.jpg"/>
+        </div><br/>
+        Tio
+        <p></p>
+
+        <hr/>
+        <span class="h5">Marketing</span><br/>
+        <div class="profil">
+            <img src="img/sasa.jpg"/>
+        </div><br/>
+        Sasa
+        <p></p>
+        <div class="profil">
+            <img src="img/riswadi.jpg"/>
+        </div><br/>
+        Riswadi
+        <p></p>
+
+        <hr/>
+        <span class="h5">Jumat Berkah</span><br/>
+        <div class="profil">
+            <img src="img/nabila.jpg"/>
+        </div><br/>
+        Nabila
+        <p></p>
+        <div class="profil">
+            <img src="img/irma.jpg"/>
+        </div><br/>
+        Irma
+        <p></p>
+
+        
+
+        <hr/>
+        <span class="h5">Perlengkapan</span><br/>
+        <div class="profil">
+            <img src="img/rifky.jpg"/>
+        </div><br/>
+        Rifky
+        <p></p>
+        <div class="profil">
+            <img src="img/syifa.jpg"/>
+        </div><br/>
+        Syifa
+        <p></p>
+
+        <hr/>
+        <span class="h5">Yang Punya Kawasan</span><br/>
+
+        <div class="profil">
+            <img src="img/mul.jpg"/>
+        </div><br/>
+        Mulyono
+        <p></p>
+
+        <div class="profil">
+            <img src="img/wahyu.jpg"/>
+        </div><br/>
+        Wahyu
+        <p></p>
+        
+        <div class="profil">
+            <img src="img/rizki.jpg"/>
+        </div><br/>
+        Rizky
+        <p></p>
+        <div class="profil">
+            <img src="img/aril.jpg"/>
+        </div><br/>
+        Aril
+        <p></p>
+
+        <div class="profil">
+            <img src="img/yogi.jpg"/>
+        </div><br/>
+        Yogi
+        <p></p>
+        <div class="profil">
+            <img src="img/asa.jpg"/>
+        </div><br/>
+        Asa
+        <p></p>
+
+        <div class="profil">
+            <img src="img/yuyun.jpg"/>
+        </div><br/>
+        Yuyun
+        <p></p>
+        <div class="profil">
+            <img src="img/firli.jpg"/>
+        </div><br/>
+        Firli
+        <p></p>
+
+        
+        <div class="profil">
+            <img src="img/hanafi.jpg"/>
+        </div><br/>
+        Hanapi
+        <p></p>
+        
+<hr/>
+    <ul class="list-unstyled links">
+    </ul>
+
+<p></p> <br/>
+    
+    Made With ❤️ by Hamba Allah</center>
+<br></body>
+
+</html>
