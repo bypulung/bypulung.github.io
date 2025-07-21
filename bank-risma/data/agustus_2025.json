@@ -1,1 +1,6 @@
 
+[
+  { "nama": "Anisa", "tabungan": 10000, "penarikan": 0 },
+  { "nama": "Mulyono", "tabungan": 5000, "penarikan": 0 },
+  { "nama": "Putri", "tabungan": 20000, "penarikan": 5000 }
+]
