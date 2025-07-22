@@ -256,10 +256,9 @@
   document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
 </script>
 
-    <hr/>
+    <br/>
     
-     
-<h2>Rekap Tabungan</h2>
+     <h2>Rekap Tabungan</h2>
 <div id="rekap-tabungan"></div>
 <h2>Laporan Bulanan</h2>
 <div id="tabungan-bulanan"></div>
@@ -275,10 +274,28 @@ const bulanFiles = [
   "agustus2025.json"
 ];
 
+// Urutkan nama file dari yang paling awal (agustus) ke paling akhir (februari)
+const sortedFiles = [...bulanFiles].sort((a, b) => {
+  const toNum = (name) => {
+    const bulanMap = {
+      januari: 1, februari: 2, maret: 3, april: 4, mei: 5, juni: 6,
+      juli: 7, agustus: 8, september: 9, oktober: 10, november: 11,
+      desember: 12
+    };
+    const nama = name.replace('.json', '');
+    const bulanStr = nama.slice(0, -4);
+    const tahun = parseInt(nama.slice(-4));
+    const bulan = bulanMap[bulanStr] || 0;
+    return tahun * 100 + bulan;
+  };
+  return toNum(a) - toNum(b);
+});
+
 const formatRupiah = (num) => num.toLocaleString('id-ID');
 
 let rekapData = {};
 let saldoTerakhir = {}; // Menyimpan saldo terakhir setiap anggota
+let dataBulananTersimpan = {}; // Simpan semua data agar bisa di-render belakangan
 
 function updateRekap(nama, jenis, tabungan, penarikan) {
   if (!rekapData[nama]) {
@@ -292,9 +309,17 @@ function renderTabelRekap() {
   const container = document.getElementById("rekap-tabungan");
   let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
+  // Buat array untuk diurutkan berdasarkan saldo
+  const dataArray = Object.entries(rekapData).map(([nama, val]) => {
+    const saldo = val.tabungan - val.penarikan;
+    return { nama, ...val, saldo };
+  });
+
+  // Urutkan berdasarkan saldo tertinggi
+  dataArray.sort((a, b) => b.saldo - a.saldo);
+
   let rows = '';
-  Object.entries(rekapData).forEach(([nama, { jenis, tabungan, penarikan }]) => {
-    const saldo = tabungan - penarikan;
+  dataArray.forEach(({ nama, jenis, tabungan, penarikan, saldo }) => {
     if (jenis === "putra") totalPutra += tabungan;
     else totalPutri += tabungan;
     totalTabungan += tabungan;
@@ -339,74 +364,80 @@ function formatNamaBulan(namaFile) {
   return bulan.charAt(0).toUpperCase() + bulan.slice(1) + ' ' + tahun;
 }
 
-function renderBulanan(namaFile, data) {
+function renderBulananSemua() {
   const container = document.getElementById("tabungan-bulanan");
-  let rows = '';
-  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
-  ["putra", "putri"].forEach(jenis => {
-    data[jenis].forEach(item => {
-      const { nama, tabungan, penarikan } = item;
+  for (let namaFile of sortedFiles) {
+    const data = dataBulananTersimpan[namaFile];
+    if (!data) continue;
 
-      // Ambil saldo terakhir jika ada
-      const saldoLalu = saldoTerakhir[nama] || 0;
-      const saldoKini = saldoLalu + tabungan - penarikan;
-      saldoTerakhir[nama] = saldoKini;
+    let rows = '';
+    let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
-      updateRekap(nama, jenis, tabungan, penarikan);
+    ["putra", "putri"].forEach(jenis => {
+      data[jenis].forEach(item => {
+        const { nama, tabungan, penarikan } = item;
 
-      if (jenis === "putra") totalPutra += tabungan;
-      else totalPutri += tabungan;
+        const saldoLalu = saldoTerakhir[nama] || 0;
+        const saldoKini = saldoLalu + tabungan - penarikan;
+        saldoTerakhir[nama] = saldoKini;
 
-      totalTabungan += tabungan;
-      totalTarik += penarikan;
-      totalSaldo += saldoKini;
+        updateRekap(nama, jenis, tabungan, penarikan);
 
-      rows += `<tr>
-        <td>${nama}</td>
-        <td>${formatRupiah(tabungan)}</td>
-        <td>${formatRupiah(penarikan)}</td>
-        <td><span style="color:green">${formatRupiah(saldoKini)}</span></td>
-      </tr>`;
+        if (jenis === "putra") totalPutra += tabungan;
+        else totalPutri += tabungan;
+
+        totalTabungan += tabungan;
+        totalTarik += penarikan;
+        totalSaldo += saldoKini;
+
+        rows += `<tr>
+          <td>${nama}</td>
+          <td>${formatRupiah(tabungan)}</td>
+          <td>${formatRupiah(penarikan)}</td>
+          <td><span style="color:green">${formatRupiah(saldoKini)}</span></td>
+        </tr>`;
+      });
     });
-  });
 
-  container.innerHTML += `
-    <h3>${formatNamaBulan(namaFile)}</h3>
-    <table border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th>Nama</th>
-          <th>Tabungan</th>
-          <th>Penarikan</th>
-          <th>Saldo</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <p><br/>
-      Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
-      Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
-      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
-      Total Penarikan: ${formatRupiah(totalTarik)}<br/>
-      Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
-    </p><br/>
-    <hr/>
-  `;
+    container.innerHTML += `
+      <h3>${formatNamaBulan(namaFile)}</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Tabungan</th>
+            <th>Penarikan</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p><br/>
+        Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+        Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+        Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
+        Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+        Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
+      </p><br/>
+      <hr/>
+    `;
+  }
 }
 
 async function loadSemua() {
-  for (let namaFile of bulanFiles) {
+  for (let namaFile of sortedFiles) {
     try {
       const res = await fetch(`data/${namaFile}`);
       if (!res.ok) continue;
       const data = await res.json();
       if (!data.putra && !data.putri) continue;
-      renderBulanan(namaFile, data);
+      dataBulananTersimpan[namaFile] = data;
     } catch (e) {
       console.warn(`Gagal membaca ${namaFile}`);
     }
   }
+  renderBulananSemua();
   renderTabelRekap();
 }
 
@@ -580,4 +611,4 @@ loadSemua();
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-    </html>
+        </html>
