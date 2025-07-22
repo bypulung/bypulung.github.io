@@ -120,166 +120,172 @@ caption { caption-side: top; font-weight: bold; font-size: 1.2em; text-align: le
     
     
     <div id="klasemen"></div>
-<div id="info-poin" style="margin-top: 1em;">
-  <strong>Keterangan:</strong><br>
-  P = Pertandingan Dimainkan<br/>M = Menang<br/>K = Kalah<br/>SS = Skor Set (set menang - set kalah)<br/>Poin = Skor akhir<br>
-  *Menang 2:0 = 3 poin<br/>*Menang 2:1 = 2 poin<br/>*Kalah 1:2 = 1 poin<br/>*Kalah 0:2 = 0 poin
+
+<div style="margin-top: 20px;">
+  <strong>Keterangan:</strong>
+  <ul>
+    <li><strong>P</strong> = Pertandingan Dimainkan</li>
+    <li><strong>M</strong> = Menang</li>
+    <li><strong>K</strong> = Kalah</li>
+    <li><strong>SS</strong> = Skor Set (Contoh: 4-0 1-2)</li>
+    <li><strong>Poin:</strong> BO3, jika menang 2:0 = 3 poin, jika menang 2:1 = 2 poin dan kalah dapat 1 poin</li>
+  </ul>
 </div>
 
-<h3 style="margin-top:2em;">Jadwal Pertandingan</h3>
-<ul id="jadwal"></ul>
+<hr>
 
 <h3>Hasil Pertandingan</h3>
-<ul id="hasil"></ul>
+<ul id="hasil-pertandingan"></ul>
 
-<h3>Nama Tim & Pemain</h3>
+<h3>Jadwal Pertandingan</h3>
+<ul id="jadwal-pertandingan"></ul>
+
+<hr>
+
+<h3>Daftar Tim & Pemain</h3>
 <ul id="tim-pemain"></ul>
 
 <script>
-async function fetchJSON(file) {
-  const res = await fetch(file);
-  return res.json();
-}
+  let teams = {};
+  let standings = [];
 
-function createKlasemen(timList, matchList) {
-  const klasemen = {};
+  async function fetchData() {
+    const [teamRes, matchRes] = await Promise.all([
+      fetch('tim.json'),
+      fetch('main.json')
+    ]);
 
-  timList.forEach(tim => {
-    klasemen[tim.id] = {
-      nama: tim.nama,
-      P: 0,
-      M: 0,
-      K: 0,
-      poin: 0,
-      skorSetMenang: 0,
-      skorSetKalah: 0,
-      SS: ''
-    };
-  });
+    teams = await teamRes.json();
+    const matches = await matchRes.json();
 
-  matchList.forEach(match => {
-    if (!match.hasil || typeof match.hasil !== 'object') return;
+    buildStandings(teams, matches);
+    renderStandings();
+    renderMatches(matches);
+    renderSchedule(matches);
+    renderTeamList(teams);
+  }
 
-    const { timA, timB, hasil } = match;
-    const skorA = hasil.skorA;
-    const skorB = hasil.skorB;
+  function buildStandings(teams, matches) {
+    standings = Object.keys(teams).map(id => ({
+      id,
+      name: teams[id].nama,
+      played: 0,
+      win: 0,
+      lose: 0,
+      setWin: 0,
+      setLose: 0,
+      point: 0,
+      ssLog: []
+    }));
 
-    if (typeof skorA !== 'number' || typeof skorB !== 'number') return;
+    matches.forEach(m => {
+      if (!m.hasil) return;
 
-    const tim1 = klasemen[timA];
-    const tim2 = klasemen[timB];
+      const home = standings.find(t => t.id === m.tim1);
+      const away = standings.find(t => t.id === m.tim2);
 
-    tim1.P += 1;
-    tim2.P += 1;
+      const [h, a] = m.hasil;
 
-    tim1.skorSetMenang += skorA;
-    tim1.skorSetKalah += skorB;
-    tim2.skorSetMenang += skorB;
-    tim2.skorSetKalah += skorA;
+      home.played++;
+      away.played++;
 
-    // Hitung poin berdasarkan aturan BO3
-    if (skorA === 2 && skorB === 0) {
-      tim1.M += 1;
-      tim2.K += 1;
-      tim1.poin += 3;
-    } else if (skorA === 2 && skorB === 1) {
-      tim1.M += 1;
-      tim2.K += 1;
-      tim1.poin += 2;
-      tim2.poin += 1;
-    } else if (skorB === 2 && skorA === 0) {
-      tim2.M += 1;
-      tim1.K += 1;
-      tim2.poin += 3;
-    } else if (skorB === 2 && skorA === 1) {
-      tim2.M += 1;
-      tim1.K += 1;
-      tim2.poin += 2;
-      tim1.poin += 1;
-    }
+      home.setWin += h;
+      home.setLose += a;
+      away.setWin += a;
+      away.setLose += h;
 
-    tim1.SS += `${skorA}-${skorB} `;
-    tim2.SS += `${skorB}-${skorA} `;
-  });
+      home.ssLog.push(`${h}-${a}`);
+      away.ssLog.push(`${a}-${h}`);
 
-  const sorted = Object.values(klasemen).sort((a, b) => {
-    if (b.poin !== a.poin) return b.poin - a.poin;
-    const selisihA = a.skorSetMenang - a.skorSetKalah;
-    const selisihB = b.skorSetMenang - b.skorSetKalah;
-    return selisihB - selisihA;
-  });
+      if (h === 2 && a === 0) {
+        home.point += 3;
+        home.win++;
+        away.lose++;
+      } else if (h === 2 && a === 1) {
+        home.point += 2;
+        away.point += 1;
+        home.win++;
+        away.lose++;
+      } else if (a === 2 && h === 0) {
+        away.point += 3;
+        away.win++;
+        home.lose++;
+      } else if (a === 2 && h === 1) {
+        away.point += 2;
+        home.point += 1;
+        away.win++;
+        home.lose++;
+      }
+    });
 
-  let html = `<table border="1" cellspacing="0" cellpadding="5">
-    <tr><th>No</th><th>Tim</th><th>P</th><th>M</th><th>K</th><th>SS</th><th>Poin</th></tr>`;
-  sorted.forEach((tim, i) => {
-    html += `<tr>
-      <td>${i + 1}</td>
-      <td>${tim.nama}</td>
-      <td>${tim.P}</td>
-      <td>${tim.M}</td>
-      <td>${tim.K}</td>
-      <td>${tim.SS.trim()}</td>
-      <td style="color:green;font-weight:bold;">${tim.poin}</td>
+    standings.sort((a, b) => {
+      if (b.point !== a.point) return b.point - a.point;
+      const diffA = a.setWin - a.setLose;
+      const diffB = b.setWin - b.setLose;
+      return diffB - diffA;
+    });
+  }
+
+  function renderStandings() {
+    const table = document.createElement('table');
+    table.border = 1;
+    const thead = `<tr>
+      <th>No</th><th>Tim</th><th>P</th><th>M</th><th>K</th><th>SS</th><th>Poin</th>
     </tr>`;
-  });
-  html += `</table>`;
+    const rows = standings.map((t, i) => `
+      <tr>
+        <td>${i + 1}</td>
+        <td>${t.name}</td>
+        <td>${t.played}</td>
+        <td>${t.win}</td>
+        <td>${t.lose}</td>
+        <td>${t.ssLog.join(' ')}</td>
+        <td style="color: green; font-weight: bold">${t.point}</td>
+      </tr>
+    `).join('');
+    table.innerHTML = thead + rows;
+    document.getElementById('klasemen').appendChild(table);
+  }
 
-  document.getElementById("klasemen").innerHTML = html;
-}
+  function renderMatches(matches) {
+    const hasilList = document.getElementById('hasil-pertandingan');
+    matches.forEach(m => {
+      if (!m.hasil) return;
+      const tim1 = teams[m.tim1].nama;
+      const tim2 = teams[m.tim2].nama;
+      const [h, a] = m.hasil;
+      const item = document.createElement('li');
+      item.textContent = `${tim1} ${h}-${a} ${tim2}`;
+      hasilList.appendChild(item);
+    });
+  }
 
-function tampilkanJadwal(matchList, timList) {
-  const jadwalEl = document.getElementById("jadwal");
-  const getTim = id => timList.find(t => t.id === id)?.nama || id;
+  function renderSchedule(matches) {
+    const list = document.getElementById('jadwal-pertandingan');
+    matches.forEach(m => {
+      const tim1 = teams[m.tim1].nama;
+      const tim2 = teams[m.tim2].nama;
+      const item = document.createElement('li');
+      item.textContent = `${tim1} vs ${tim2}`;
+      list.appendChild(item);
+    });
+  }
 
-  matchList.forEach(match => {
-    const { timA, timB, waktu } = match;
-    const teks = `${getTim(timA)} vs ${getTim(timB)}${waktu ? ' - ' + waktu : ''}`;
-    const li = document.createElement("li");
-    li.textContent = teks;
-    jadwalEl.appendChild(li);
-  });
-}
+  function renderTeamList(teams) {
+    const list = document.getElementById('tim-pemain');
+    Object.entries(teams).forEach(([id, data]) => {
+      const item = document.createElement('li');
+      item.innerHTML = `<strong>${data.nama}</strong>: ${data.pemain.join(', ')}`;
+      list.appendChild(item);
+    });
+  }
 
-function tampilkanHasil(matchList, timList) {
-  const hasilEl = document.getElementById("hasil");
-  const getTim = id => timList.find(t => t.id === id)?.nama || id;
-
-  matchList.forEach(match => {
-    if (!match.hasil) return;
-    const { timA, timB, hasil } = match;
-    if (typeof hasil.skorA !== 'number' || typeof hasil.skorB !== 'number') return;
-
-    const li = document.createElement("li");
-    li.textContent = `${getTim(timA)} ${hasil.skorA} - ${hasil.skorB} ${getTim(timB)}`;
-    hasilEl.appendChild(li);
-  });
-}
-
-function tampilkanTimPemain(timList) {
-  const list = document.getElementById("tim-pemain");
-  timList.forEach(tim => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${tim.nama}:</strong> ${tim.pemain.join(", ")}`;
-    list.appendChild(li);
-  });
-}
-
-(async () => {
-  const timList = await fetchJSON('tim.json');
-  const matchList = await fetchJSON('main.json');
-
-  createKlasemen(timList, matchList);
-  tampilkanJadwal(matchList, timList);
-  tampilkanHasil(matchList, timList);
-  tampilkanTimPemain(timList);
-})();
+  fetchData();
 </script>
-
 
 <br/><br/>
 <center>Made in ©️RISMA AL-HUDA</center>
 <br></body>
 
     </html>
-
     
