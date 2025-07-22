@@ -308,7 +308,7 @@ function renderTabelRekap() {
   });
 
   container.innerHTML = `
-    <h3>Rekap Tabungan</h3>
+    
     <table border="1" cellspacing="0" cellpadding="5">
       <thead>
         <tr>
@@ -320,12 +320,12 @@ function renderTabelRekap() {
       </thead>
       <tbody>${rows}</tbody>
     </table>
-    <p>
+    <p><br/>
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
       Total Penarikan: ${formatRupiah(totalTarik)}<br/>
       Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
-    </p>
+    </p><br/>
     <hr/>
   `;
 }
@@ -357,7 +357,7 @@ function renderBulanan(namaFile, data) {
   });
 
   container.innerHTML += `
-    <h3>Tabungan Bulan ${namaFile.replace('.json', '').toUpperCase()}</h3>
+    <h3>${namaFile.replace('.json', '').toUpperCase()}</h3>
     <table border="1" cellspacing="0" cellpadding="5">
       <thead>
         <tr>
@@ -369,12 +369,12 @@ function renderBulanan(namaFile, data) {
       </thead>
       <tbody>${rows}</tbody>
     </table>
-    <p>
+    <p><br/>
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
       Total Penarikan: ${formatRupiah(totalTarik)}<br/>
       Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
-    </p>
+    </p><br/>
     <hr/>
   `;
 }
