@@ -139,7 +139,10 @@
                 <img class="img-fluid">
             </div>
             <span class="pt-3 text-center">
-                <b>Made in RISMA</b><br/>
+
+                 <h1><i class="fas fa-wallet">
+        
+    </i> BANK RISMA</h1>
                 
             </span>
 
@@ -221,9 +224,7 @@
  -->
         
         
-    <h1><i class="fas fa-wallet">
-        
-    </i> BANK RISMA</h1>
+   
 
        
 
@@ -257,10 +258,11 @@
 
     <hr/>
     
-     <h2>Laporan Tabungan RISMA</h2>
+     
   
-
 <div id="rekap-container"></div>
+
+<h1>Laporan Bulanan</h1>
 <div id="bulanan-container"></div>
 
 <script>
@@ -306,6 +308,7 @@ function hitungRekap(allData) {
 
   const hasil = Object.entries(rekap).map(([nama, d]) => ({
     nama,
+    tabungan: d.tabungan,
     penarikan: d.penarikan,
     saldo: d.tabungan - d.penarikan
   }));
@@ -320,29 +323,47 @@ function buatTabelRekap(data) {
   table.style.marginBottom = '1em';
 
   const thead = table.insertRow();
-  ['Nama', 'Penarikan', 'Saldo Akhir'].forEach(h => {
+  ['Nama', 'Tabungan', 'Penarikan', 'Saldo Akhir'].forEach(h => {
     const th = document.createElement('th');
     th.innerText = h;
     thead.appendChild(th);
   });
 
-  let totalSaldo = 0;
+  let totalTabungan = 0;
   let totalPenarikan = 0;
+  let totalPutraTabungan = 0, totalPutraPenarikan = 0;
+  let totalPutriTabungan = 0, totalPutriPenarikan = 0;
 
   data.forEach(item => {
     const row = table.insertRow();
     row.insertCell().innerText = item.nama;
+    row.insertCell().innerText = formatRupiah(item.tabungan);
     row.insertCell().innerText = formatRupiah(item.penarikan);
     row.insertCell().innerText = formatRupiah(item.saldo);
-    totalSaldo += item.saldo;
+
+    totalTabungan += item.tabungan;
     totalPenarikan += item.penarikan;
+
+    if (item.nama.toLowerCase().includes('putri')) {
+      totalPutriTabungan += item.tabungan;
+      totalPutriPenarikan += item.penarikan;
+    } else {
+      totalPutraTabungan += item.tabungan;
+      totalPutraPenarikan += item.penarikan;
+    }
   });
 
   container.appendChild(table);
 
   const info = document.createElement('p');
-  info.innerHTML = `Total Penarikan: ${formatRupiah(totalPenarikan)}<br/>
-                    Total Saldo: ${formatRupiah(totalSaldo)}`;
+  info.innerHTML = `
+    <br/>
+    Total Tabungan Putra: ${formatRupiah(totalPutraTabungan)}<br/>
+    Total Penarikan Putra: ${formatRupiah(totalPutraPenarikan)}<br/>
+    Total Tabungan Putri: ${formatRupiah(totalPutriTabungan)}<br/>
+    Total Penarikan Putri: ${formatRupiah(totalPutriPenarikan)}<br/>
+    <br/>
+  `;
   container.appendChild(info);
   container.appendChild(document.createElement('hr'));
 }
@@ -361,7 +382,7 @@ function buatTabelBulanan(dataMap) {
     table.border = 1;
 
     const thead = table.insertRow();
-    ['Nama', 'Tabungan', 'Penarikan', 'Saldo'].forEach(h => {
+    ['Nama', 'Tabungan', 'Penarikan', 'Saldo Akhir'].forEach(h => {
       const th = document.createElement('th');
       th.innerText = h;
       thead.appendChild(th);
@@ -369,7 +390,8 @@ function buatTabelBulanan(dataMap) {
 
     let totalTabungan = 0;
     let totalPenarikan = 0;
-    let totalSaldo = 0;
+    let totalPutraTabungan = 0, totalPutraPenarikan = 0;
+    let totalPutriTabungan = 0, totalPutriPenarikan = 0;
 
     data.forEach(item => {
       const row = table.insertRow();
@@ -378,17 +400,33 @@ function buatTabelBulanan(dataMap) {
       row.insertCell().innerText = formatRupiah(item.penarikan || 0);
       const saldo = (item.tabungan || 0) - (item.penarikan || 0);
       row.insertCell().innerText = formatRupiah(saldo);
-      totalTabungan += item.tabungan || 0;
-      totalPenarikan += item.penarikan || 0;
-      totalSaldo += saldo;
+
+      const tab = item.tabungan || 0;
+      const pen = item.penarikan || 0;
+
+      totalTabungan += tab;
+      totalPenarikan += pen;
+
+      if (item.nama.toLowerCase().includes('putri')) {
+        totalPutriTabungan += tab;
+        totalPutriPenarikan += pen;
+      } else {
+        totalPutraTabungan += tab;
+        totalPutraPenarikan += pen;
+      }
     });
 
     container.appendChild(table);
 
     const info = document.createElement('p');
-    info.innerHTML = `Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
-                      Total Penarikan: ${formatRupiah(totalPenarikan)}<br/>
-                      Total Saldo: ${formatRupiah(totalSaldo)}`;
+    info.innerHTML = `
+      <br/>
+      Total Tabungan Putra: ${formatRupiah(totalPutraTabungan)}<br/>
+      Total Penarikan Putra: ${formatRupiah(totalPutraPenarikan)}<br/>
+      Total Tabungan Putri: ${formatRupiah(totalPutriTabungan)}<br/>
+      Total Penarikan Putri: ${formatRupiah(totalPutriPenarikan)}<br/>
+      <br/>
+    `;
     container.appendChild(info);
     container.appendChild(document.createElement('hr'));
   }
@@ -400,6 +438,7 @@ fetchData().then(data => {
   buatTabelBulanan(data);
 });
 </script>
+
 
     <p></p><br/>
 
@@ -567,5 +606,5 @@ fetchData().then(data => {
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-            </html>
-                  
+    </html>
+            
