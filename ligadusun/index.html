@@ -115,176 +115,102 @@ caption { caption-side: top; font-weight: bold; font-size: 1.2em; text-align: le
 
 
 
-<h5 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> LigaDusun Tanjung Bulan</h5>
+<h2 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h2>
 
     
-    
-    <div id="klasemen"></div>
+    <table>  
+  <thead>  
+    <tr>  
+      <th>No</th>  
+      <th>Tim</th>  
+      <th>Main</th>  
+      <th>M</th>  
+      <th>K</th>  
+      <th>Set</th>  
+      <th>Poin</th>  
+    </tr>  
+  </thead>  
+  <tbody id="klasemen-body"></tbody>  
+</table>  
 
-<div style="margin-top: 20px;">
-  <strong>Keterangan:</strong>
-  <ul>
-    <li><strong>P</strong> = Pertandingan Dimainkan</li>
-    <li><strong>M</strong> = Menang</li>
-    <li><strong>K</strong> = Kalah</li>
-    <li><strong>SS</strong> = Skor Set (Contoh: 4-0 1-2)</li>
-    <li><strong>Poin:</strong> BO3, jika menang 2:0 = 3 poin, jika menang 2:1 = 2 poin dan kalah dapat 1 poin</li>
-  </ul>
-</div>
+<script src="main.js"></script>  
+<script>  
+  const klasemen = {};  
 
-<hr>
+  matches.forEach(match => {  
+    const { home, away, setHome, setAway } = match;  
 
-<h3>Hasil Pertandingan</h3>
-<ul id="hasil-pertandingan"></ul>
+    [home, away].forEach(tim => {  
+      if (!klasemen[tim]) {  
+        klasemen[tim] = {  
+          nama: tim,  
+          main: 0,  
+          menang: 0,  
+          kalah: 0,  
+          totalSet: 0,  
+          poin: 0  
+        };  
+      }  
+    });  
 
-<h3>Jadwal Pertandingan</h3>
-<ul id="jadwal-pertandingan"></ul>
+    // Update jumlah main  
+    klasemen[home].main++;  
+    klasemen[away].main++;  
 
-<hr>
+    // Tambah total set  
+    klasemen[home].totalSet += setHome;  
+    klasemen[away].totalSet += setAway;  
 
-<h3>Daftar Tim & Pemain</h3>
-<ul id="tim-pemain"></ul>
+    // Tentukan pemenang dan poin berdasarkan skor
+    if (setHome > setAway) {
+      klasemen[home].menang++;
+      klasemen[away].kalah++;
 
-<script>
-  let teams = {};
-  let standings = [];
-
-  async function fetchData() {
-    const [teamRes, matchRes] = await Promise.all([
-      fetch('tim.json'),
-      fetch('main.json')
-    ]);
-
-    teams = await teamRes.json();
-    const matches = await matchRes.json();
-
-    buildStandings(teams, matches);
-    renderStandings();
-    renderMatches(matches);
-    renderSchedule(matches);
-    renderTeamList(teams);
-  }
-
-  function buildStandings(teams, matches) {
-    standings = Object.keys(teams).map(id => ({
-      id,
-      name: teams[id].nama,
-      played: 0,
-      win: 0,
-      lose: 0,
-      setWin: 0,
-      setLose: 0,
-      point: 0,
-      ssLog: []
-    }));
-
-    matches.forEach(m => {
-      if (!m.hasil) return;
-
-      const home = standings.find(t => t.id === m.tim1);
-      const away = standings.find(t => t.id === m.tim2);
-
-      const [h, a] = m.hasil;
-
-      home.played++;
-      away.played++;
-
-      home.setWin += h;
-      home.setLose += a;
-      away.setWin += a;
-      away.setLose += h;
-
-      home.ssLog.push(`${h}-${a}`);
-      away.ssLog.push(`${a}-${h}`);
-
-      if (h === 2 && a === 0) {
-        home.point += 3;
-        home.win++;
-        away.lose++;
-      } else if (h === 2 && a === 1) {
-        home.point += 2;
-        away.point += 1;
-        home.win++;
-        away.lose++;
-      } else if (a === 2 && h === 0) {
-        away.point += 3;
-        away.win++;
-        home.lose++;
-      } else if (a === 2 && h === 1) {
-        away.point += 2;
-        home.point += 1;
-        away.win++;
-        home.lose++;
+      if (setHome === 2 && setAway === 0) {
+        klasemen[home].poin += 3;
+        klasemen[away].poin += 0;
+      } else if (setHome === 2 && setAway === 1) {
+        klasemen[home].poin += 2;
+        klasemen[away].poin += 1;
       }
-    });
+    } else {
+      klasemen[away].menang++;
+      klasemen[home].kalah++;
 
-    standings.sort((a, b) => {
-      if (b.point !== a.point) return b.point - a.point;
-      const diffA = a.setWin - a.setLose;
-      const diffB = b.setWin - b.setLose;
-      return diffB - diffA;
-    });
-  }
+      if (setAway === 2 && setHome === 0) {
+        klasemen[away].poin += 3;
+        klasemen[home].poin += 0;
+      } else if (setAway === 2 && setHome === 1) {
+        klasemen[away].poin += 2;
+        klasemen[home].poin += 1;
+      }
+    }
+  });  
 
-  function renderStandings() {
-    const table = document.createElement('table');
-    table.border = 1;
-    const thead = `<tr>
-      <th>No</th><th>Tim</th><th>P</th><th>M</th><th>K</th><th>SS</th><th>Poin</th>
-    </tr>`;
-    const rows = standings.map((t, i) => `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${t.name}</td>
-        <td>${t.played}</td>
-        <td>${t.win}</td>
-        <td>${t.lose}</td>
-        <td>${t.ssLog.join(' ')}</td>
-        <td style="color: green; font-weight: bold">${t.point}</td>
-      </tr>
-    `).join('');
-    table.innerHTML = thead + rows;
-    document.getElementById('klasemen').appendChild(table);
-  }
+  const tabel = Object.values(klasemen).sort((a, b) => {  
+    if (b.poin !== a.poin) return b.poin - a.poin;  
+    return b.totalSet - a.totalSet;  
+  });  
 
-  function renderMatches(matches) {
-    const hasilList = document.getElementById('hasil-pertandingan');
-    matches.forEach(m => {
-      if (!m.hasil) return;
-      const tim1 = teams[m.tim1].nama;
-      const tim2 = teams[m.tim2].nama;
-      const [h, a] = m.hasil;
-      const item = document.createElement('li');
-      item.textContent = `${tim1} ${h}-${a} ${tim2}`;
-      hasilList.appendChild(item);
-    });
-  }
-
-  function renderSchedule(matches) {
-    const list = document.getElementById('jadwal-pertandingan');
-    matches.forEach(m => {
-      const tim1 = teams[m.tim1].nama;
-      const tim2 = teams[m.tim2].nama;
-      const item = document.createElement('li');
-      item.textContent = `${tim1} vs ${tim2}`;
-      list.appendChild(item);
-    });
-  }
-
-  function renderTeamList(teams) {
-    const list = document.getElementById('tim-pemain');
-    Object.entries(teams).forEach(([id, data]) => {
-      const item = document.createElement('li');
-      item.innerHTML = `<strong>${data.nama}</strong>: ${data.pemain.join(', ')}`;
-      list.appendChild(item);
-    });
-  }
-
-  fetchData();
+  const tbody = document.getElementById("klasemen-body");  
+  tabel.forEach((tim, i) => {  
+    const tr = document.createElement("tr");  
+    tr.innerHTML = `  
+      <td>${i + 1}</td>  
+      <td>${tim.nama}</td>  
+      <td>${tim.main}</td>  
+      <td>${tim.menang}</td>  
+      <td>${tim.kalah}</td>  
+      <td>${tim.totalSet}</td>  
+      <td>${tim.poin}</td>  
+    `;  
+    tbody.appendChild(tr);  
+  });  
 </script>
+    
 
 <br/><br/>
-<center>Made in ©️RISMA AL-HUDA</center>
+<center><~ Made in RISMA ~></center>
 <br></body>
 
     </html>
