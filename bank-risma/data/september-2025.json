@@ -1,5 +1,5 @@
 [
-  { "nama": "Putri", "tabungan": 50000, "penarikan": 0 },
-  { "nama": "Pulung", "tabungan": 75000, "penarikan": 25000 },
-  { "nama": "Faisol", "tabungan": 100000, "penarikan": 0 }
+  { "nama": "Putri - Putri", "tabungan": 50000, "penarikan": 0 },
+  { "nama": "putra - Pulung", "tabungan": 75000, "penarikan": 25000 },
+  { "nama": "putra - Faisol", "tabungan": 100000, "penarikan": 0 }
 ]
