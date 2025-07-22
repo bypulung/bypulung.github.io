@@ -274,28 +274,26 @@ const bulanFiles = [
   "agustus2025.json"
 ];
 
-// Urutkan nama file dari yang paling awal (agustus) ke paling akhir (februari)
-const sortedFiles = [...bulanFiles].sort((a, b) => {
-  const toNum = (name) => {
-    const bulanMap = {
-      januari: 1, februari: 2, maret: 3, april: 4, mei: 5, juni: 6,
-      juli: 7, agustus: 8, september: 9, oktober: 10, november: 11,
-      desember: 12
-    };
-    const nama = name.replace('.json', '');
-    const bulanStr = nama.slice(0, -4);
-    const tahun = parseInt(nama.slice(-4));
-    const bulan = bulanMap[bulanStr] || 0;
-    return tahun * 100 + bulan;
-  };
-  return toNum(a) - toNum(b);
-});
+const bulanMap = {
+  januari: 1, februari: 2, maret: 3, april: 4, mei: 5, juni: 6,
+  juli: 7, agustus: 8, september: 9, oktober: 10, november: 11,
+  desember: 12
+};
 
+const toNum = (name) => {
+  const nama = name.replace('.json', '');
+  const bulanStr = nama.slice(0, -4);
+  const tahun = parseInt(nama.slice(-4));
+  const bulan = bulanMap[bulanStr] || 0;
+  return tahun * 100 + bulan;
+};
+
+const sortedFiles = [...bulanFiles].sort((a, b) => toNum(a) - toNum(b));
 const formatRupiah = (num) => num.toLocaleString('id-ID');
 
 let rekapData = {};
-let saldoTerakhir = {}; // Menyimpan saldo terakhir setiap anggota
-let dataBulananTersimpan = {}; // Simpan semua data agar bisa di-render belakangan
+let saldoTerakhir = {}; 
+let dataBulananTersimpan = {};
 
 function updateRekap(nama, jenis, tabungan, penarikan) {
   if (!rekapData[nama]) {
@@ -309,13 +307,11 @@ function renderTabelRekap() {
   const container = document.getElementById("rekap-tabungan");
   let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
-  // Buat array untuk diurutkan berdasarkan saldo
   const dataArray = Object.entries(rekapData).map(([nama, val]) => {
     const saldo = val.tabungan - val.penarikan;
     return { nama, ...val, saldo };
   });
 
-  // Urutkan berdasarkan saldo tertinggi
   dataArray.sort((a, b) => b.saldo - a.saldo);
 
   let rows = '';
@@ -349,9 +345,9 @@ function renderTabelRekap() {
     <p><br/>
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
-      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
+      Total Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
       Total Penarikan: ${formatRupiah(totalTarik)}<br/>
-      Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
+      Sisa Saldo : <span style="color:green">${formatRupiah(totalSaldo)}</span>
     </p><br/>
     <hr/>
   `;
@@ -366,10 +362,11 @@ function formatNamaBulan(namaFile) {
 
 function renderBulananSemua() {
   const container = document.getElementById("tabungan-bulanan");
+  const urutanTerbalik = [...sortedFiles].reverse(); // untuk penampilan dari terbaru ke terlama
 
-  for (let namaFile of sortedFiles) {
+  urutanTerbalik.forEach(namaFile => {
     const data = dataBulananTersimpan[namaFile];
-    if (!data) continue;
+    if (!data) return;
 
     let rows = '';
     let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
@@ -414,15 +411,15 @@ function renderBulananSemua() {
         <tbody>${rows}</tbody>
       </table>
       <p><br/>
-        Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
-        Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
-        Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
+        Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+        Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+        Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
         Total Penarikan: ${formatRupiah(totalTarik)}<br/>
-        Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
+        Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
       </p><br/>
       <hr/>
     `;
-  }
+  });
 }
 
 async function loadSemua() {
@@ -437,13 +434,13 @@ async function loadSemua() {
       console.warn(`Gagal membaca ${namaFile}`);
     }
   }
+  // Hitung saldo dari bulan terlama
   renderBulananSemua();
   renderTabelRekap();
 }
 
 loadSemua();
 </script>
-
 
     <p></p>
 <~ Made in RISMA ~>
@@ -611,4 +608,4 @@ loadSemua();
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-        </html>
+    </html>
