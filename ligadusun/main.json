@@ -1,0 +1,8 @@
+[
+  { "teamA": "Dusun Timur", "teamB": "Dusun Barat", "scoreA": 2, "scoreB": 1, "date": "2025-08-01" },
+  { "teamA": "Dusun Utara", "teamB": "Dusun Selatan", "scoreA": 0, "scoreB": 2, "date": "2025-08-02" },
+  { "teamA": "Dusun Timur", "teamB": "Dusun Selatan", "scoreA": 2, "scoreB": 0, "date": "2025-08-03" },
+  { "teamA": "Dusun Barat", "teamB": "Dusun Utara", "scoreA": 2, "scoreB": 1, "date": "2025-08-04" },
+  { "teamA": "Dusun Timur", "teamB": "Dusun Utara", "scoreA": 1, "scoreB": 2, "date": "2025-08-05" },
+  { "teamA": "Dusun Selatan", "teamB": "Dusun Barat", "scoreA": 2, "scoreB": 1, "date": "2025-08-06" }
+]
