@@ -258,7 +258,7 @@
 
     
     
-     <h2>Rekap Tabungan</h2>
+     <h2>Total Tabungan</h2>
 <div id="rekap-tabungan"></div>
 <h2>Laporan Bulanan</h2>
 <div id="tabungan-bulanan"></div>
@@ -346,7 +346,7 @@ function renderTabelRekap() {
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
       Total Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
-      Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+      Total Penarikan Saldo: ${formatRupiah(totalTarik)}<br/>
       Sisa Saldo : <span style="color:green">${formatRupiah(totalSaldo)}</span>
     </p><br/>
     <hr/>
@@ -414,7 +414,7 @@ function renderBulananSemua() {
         Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
         Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
         Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
-        Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+        Penarikan Saldo: ${formatRupiah(totalTarik)}<br/>
         Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
       </p><br/>
       <hr/>
@@ -423,6 +423,7 @@ function renderBulananSemua() {
 }
 
 async function loadSemua() {
+  // Load semua data ke memory
   for (let namaFile of sortedFiles) {
     try {
       const res = await fetch(`data/${namaFile}`);
@@ -434,12 +435,29 @@ async function loadSemua() {
       console.warn(`Gagal membaca ${namaFile}`);
     }
   }
-  // Hitung saldo dari bulan terlama
+
+  // Lakukan perhitungan saldo dari bulan terlama ke terbaru
+  for (let namaFile of sortedFiles) {
+    const data = dataBulananTersimpan[namaFile];
+    if (!data) continue;
+
+    ["putra", "putri"].forEach(jenis => {
+      data[jenis].forEach(item => {
+        const { nama, tabungan, penarikan } = item;
+
+        const saldoLalu = saldoTerakhir[nama] || 0;
+        const saldoKini = saldoLalu + tabungan - penarikan;
+        saldoTerakhir[nama] = saldoKini;
+
+        updateRekap(nama, jenis, tabungan, penarikan);
+      });
+    });
+  }
+
+  // Sekarang tampilkan laporan dari bulan terbaru ke terlama
   renderBulananSemua();
   renderTabelRekap();
 }
-
-loadSemua();
 </script>
 
     <p></p>
