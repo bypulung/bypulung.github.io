@@ -288,11 +288,12 @@ const toNum = (name) => {
   return tahun * 100 + bulan;
 };
 
-const sortedFiles = [...bulanFiles].sort((a, b) => toNum(a) - toNum(b));
+const sortedFiles = [...bulanFiles].sort((a, b) => toNum(a) - toNum(b)); // urutan lama → baru
+const reversedFiles = [...sortedFiles].reverse(); // untuk tampilan: terbaru → terlama
 const formatRupiah = (num) => num.toLocaleString('id-ID');
 
 let rekapData = {};
-let saldoTerakhir = {}; 
+let saldoTerakhir = {};
 let dataBulananTersimpan = {};
 
 function updateRekap(nama, jenis, tabungan, penarikan) {
@@ -347,7 +348,7 @@ function renderTabelRekap() {
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
       Total Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
       Total Penarikan Saldo: ${formatRupiah(totalTarik)}<br/>
-      Sisa Saldo : <span style="color:green">${formatRupiah(totalSaldo)}</span>
+      Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
     </p><br/>
     <hr/>
   `;
@@ -362,9 +363,8 @@ function formatNamaBulan(namaFile) {
 
 function renderBulananSemua() {
   const container = document.getElementById("tabungan-bulanan");
-  const urutanTerbalik = [...sortedFiles].reverse(); // untuk penampilan dari terbaru ke terlama
 
-  urutanTerbalik.forEach(namaFile => {
+  reversedFiles.forEach(namaFile => {
     const data = dataBulananTersimpan[namaFile];
     if (!data) return;
 
@@ -372,14 +372,9 @@ function renderBulananSemua() {
     let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
     ["putra", "putri"].forEach(jenis => {
-      data[jenis].forEach(item => {
+      data[jenis]?.forEach(item => {
         const { nama, tabungan, penarikan } = item;
-
-        const saldoLalu = saldoTerakhir[nama] || 0;
-        const saldoKini = saldoLalu + tabungan - penarikan;
-        saldoTerakhir[nama] = saldoKini;
-
-        updateRekap(nama, jenis, tabungan, penarikan);
+        const saldoKini = saldoTerakhir[nama] || 0;
 
         if (jenis === "putra") totalPutra += tabungan;
         else totalPutri += tabungan;
@@ -423,7 +418,7 @@ function renderBulananSemua() {
 }
 
 async function loadSemua() {
-  // Load semua data ke memory
+  // Ambil semua data dulu
   for (let namaFile of sortedFiles) {
     try {
       const res = await fetch(`data/${namaFile}`);
@@ -436,29 +431,29 @@ async function loadSemua() {
     }
   }
 
-  // Lakukan perhitungan saldo dari bulan terlama ke terbaru
+  // Hitung saldo per orang dari data yang sudah terurut kronologis
   for (let namaFile of sortedFiles) {
     const data = dataBulananTersimpan[namaFile];
     if (!data) continue;
 
     ["putra", "putri"].forEach(jenis => {
-      data[jenis].forEach(item => {
+      data[jenis]?.forEach(item => {
         const { nama, tabungan, penarikan } = item;
-
         const saldoLalu = saldoTerakhir[nama] || 0;
         const saldoKini = saldoLalu + tabungan - penarikan;
         saldoTerakhir[nama] = saldoKini;
-
         updateRekap(nama, jenis, tabungan, penarikan);
       });
     });
   }
 
-  // Sekarang tampilkan laporan dari bulan terbaru ke terlama
-  renderBulananSemua();
-  renderTabelRekap();
+  renderBulananSemua(); // tampilan dari terbaru
+  renderTabelRekap();   // rekap akhir
 }
+
+loadSemua();
 </script>
+
 
     <p></p>
 <~ Made in RISMA ~>
