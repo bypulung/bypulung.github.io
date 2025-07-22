@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Input Hasil Pertandingan Voli</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    table, th, td { border: 1px solid black; border-collapse: collapse; }
+    th, td { padding: 6px 12px; }
+    select, input { margin: 4px; }
+    button { margin: 2px 4px; }
+  </style>
+</head>
+<body>
+  <h2>Input Hasil Pertandingan</h2>
+
+  <form id="form-match">
+    <label>Tim Home:
+      <select id="home-select"></select>
+    </label>
+    <label>Set Home:
+      <input type="number" id="set-home" min="0" max="2" required>
+    </label><br>
+    <label>Tim Away:
+      <select id="away-select"></select>
+    </label>
+    <label>Set Away:
+      <input type="number" id="set-away" min="0" max="2" required>
+    </label><br>
+    <input type="hidden" id="edit-index" value="">
+    <button type="submit">Simpan</button>
+  </form>
+
+  <h3>Daftar Pertandingan</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Home</th>
+        <th>Set</th>
+        <th>Away</th>
+        <th>Set</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="match-table-body"></tbody>
+  </table>
+
+  <script src="tim.js"></script>
+  <script src="main.js"></script>
+  <script>
+    const tbody = document.getElementById("match-table-body");
+    const homeSelect = document.getElementById("home-select");
+    const awaySelect = document.getElementById("away-select");
+    const setHomeInput = document.getElementById("set-home");
+    const setAwayInput = document.getElementById("set-away");
+    const editIndex = document.getElementById("edit-index");
+    const form = document.getElementById("form-match");
+
+    // Isi select dengan data dari tim.js
+    function populateTeamOptions() {
+      teams.forEach(tim => {
+        const option1 = new Option(tim, tim);
+        const option2 = new Option(tim, tim);
+        homeSelect.appendChild(option1);
+        awaySelect.appendChild(option2);
+      });
+    }
+
+    // Tampilkan semua data dari main.js
+    function renderTable() {
+      tbody.innerHTML = "";
+      matches.forEach((m, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${i + 1}</td>
+          <td>${m.home}</td>
+          <td>${m.setHome}</td>
+          <td>${m.away}</td>
+          <td>${m.setAway}</td>
+          <td>
+            <button onclick="editMatch(${i})">Edit</button>
+            <button onclick="deleteMatch(${i})">Hapus</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Tambah atau Update data pertandingan
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const home = homeSelect.value;
+      const away = awaySelect.value;
+      const setHome = parseInt(setHomeInput.value);
+      const setAway = parseInt(setAwayInput.value);
+
+      if (home === away) return alert("Tim tidak boleh sama!");
+
+      const data = { home, away, setHome, setAway };
+      const idx = editIndex.value;
+
+      if (idx === "") {
+        matches.push(data);
+      } else {
+        matches[idx] = data;
+        editIndex.value = "";
+      }
+
+      form.reset();
+      renderTable();
+    });
+
+    // Edit data
+    function editMatch(index) {
+      const m = matches[index];
+      homeSelect.value = m.home;
+      awaySelect.value = m.away;
+      setHomeInput.value = m.setHome;
+      setAwayInput.value = m.setAway;
+      editIndex.value = index;
+    }
+
+    // Hapus data
+    function deleteMatch(index) {
+      if (confirm("Yakin ingin menghapus pertandingan ini?")) {
+        matches.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    // Inisialisasi awal
+    populateTeamOptions();
+    renderTable();
+  </script>
+</body>
+</html>
