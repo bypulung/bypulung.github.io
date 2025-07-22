@@ -259,7 +259,7 @@
     <hr/>
     
      
-  <h2>Rekap Tabungan</h2>
+<h2>Rekap Tabungan</h2>
 <div id="rekap-tabungan"></div>
 <h2>Laporan Bulanan</h2>
 <div id="tabungan-bulanan"></div>
@@ -278,6 +278,7 @@ const bulanFiles = [
 const formatRupiah = (num) => num.toLocaleString('id-ID');
 
 let rekapData = {};
+let saldoTerakhir = {}; // Menyimpan saldo terakhir setiap anggota
 
 function updateRekap(nama, jenis, tabungan, penarikan) {
   if (!rekapData[nama]) {
@@ -289,13 +290,14 @@ function updateRekap(nama, jenis, tabungan, penarikan) {
 
 function renderTabelRekap() {
   const container = document.getElementById("rekap-tabungan");
-  let totalPutra = 0, totalPutri = 0, totalTarik = 0, totalSaldo = 0;
+  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
   let rows = '';
   Object.entries(rekapData).forEach(([nama, { jenis, tabungan, penarikan }]) => {
     const saldo = tabungan - penarikan;
     if (jenis === "putra") totalPutra += tabungan;
     else totalPutri += tabungan;
+    totalTabungan += tabungan;
     totalTarik += penarikan;
     totalSaldo += saldo;
 
@@ -303,12 +305,11 @@ function renderTabelRekap() {
       <td>${nama}</td>
       <td>${formatRupiah(tabungan)}</td>
       <td>${formatRupiah(penarikan)}</td>
-      <td>${formatRupiah(saldo)}</td>
+      <td><span style="color:green">${formatRupiah(saldo)}</span></td>
     </tr>`;
   });
 
   container.innerHTML = `
-    
     <table border="1" cellspacing="0" cellpadding="5">
       <thead>
         <tr>
@@ -323,41 +324,55 @@ function renderTabelRekap() {
     <p><br/>
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
       Total Penarikan: ${formatRupiah(totalTarik)}<br/>
-      Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
+      Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
     </p><br/>
     <hr/>
   `;
 }
 
+function formatNamaBulan(namaFile) {
+  const nama = namaFile.replace('.json', '');
+  const bulan = nama.slice(0, -4);
+  const tahun = nama.slice(-4);
+  return bulan.charAt(0).toUpperCase() + bulan.slice(1) + ' ' + tahun;
+}
+
 function renderBulanan(namaFile, data) {
   const container = document.getElementById("tabungan-bulanan");
   let rows = '';
-  let totalPutra = 0, totalPutri = 0, totalTarik = 0, totalSaldo = 0;
+  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
 
   ["putra", "putri"].forEach(jenis => {
     data[jenis].forEach(item => {
       const { nama, tabungan, penarikan } = item;
-      const saldo = tabungan - penarikan;
+
+      // Ambil saldo terakhir jika ada
+      const saldoLalu = saldoTerakhir[nama] || 0;
+      const saldoKini = saldoLalu + tabungan - penarikan;
+      saldoTerakhir[nama] = saldoKini;
+
       updateRekap(nama, jenis, tabungan, penarikan);
 
       if (jenis === "putra") totalPutra += tabungan;
       else totalPutri += tabungan;
 
+      totalTabungan += tabungan;
       totalTarik += penarikan;
-      totalSaldo += saldo;
+      totalSaldo += saldoKini;
 
       rows += `<tr>
         <td>${nama}</td>
         <td>${formatRupiah(tabungan)}</td>
         <td>${formatRupiah(penarikan)}</td>
-        <td>${formatRupiah(saldo)}</td>
+        <td><span style="color:green">${formatRupiah(saldoKini)}</span></td>
       </tr>`;
     });
   });
 
   container.innerHTML += `
-    <h3>${namaFile.replace('.json', '').toUpperCase()}</h3>
+    <h3>${formatNamaBulan(namaFile)}</h3>
     <table border="1" cellspacing="0" cellpadding="5">
       <thead>
         <tr>
@@ -372,8 +387,9 @@ function renderBulanan(namaFile, data) {
     <p><br/>
       Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
       Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
       Total Penarikan: ${formatRupiah(totalTarik)}<br/>
-      Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
+      Total Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>
     </p><br/>
     <hr/>
   `;
@@ -397,7 +413,8 @@ async function loadSemua() {
 loadSemua();
 </script>
 
-    <p></p><br/>
+
+    <p></p>
 <~ Made in RISMA ~>
     <center>
         <hr/>
@@ -563,4 +580,4 @@ loadSemua();
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-                       </html>
+    </html>
