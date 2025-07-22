@@ -52,7 +52,7 @@
        }
   
         table {
-            width: 95%;
+            width: 98%;
             border-collapse: collapse; justify-content: center; /* Horizontal center */
             align-items: center;
         }
@@ -259,189 +259,146 @@
     <hr/>
     
      
-  
-<div id="rekap-container"></div>
-
-<h1>Laporan Bulanan</h1>
-<div id="bulanan-container"></div>
+  <h2>Rekap Tabungan</h2>
+<div id="rekap-tabungan"></div>
+<h2>Laporan Bulanan</h2>
+<div id="tabungan-bulanan"></div>
 
 <script>
 const bulanFiles = [
-  'februari-2026.json',
-  'januari-2026.json',
-  'desember-2025.json',
-  'november-2025.json',
-  'oktober-2025.json',
-  'september-2025.json',
-  'agustus-2025.json',
+  "februari2026.json",
+  "januari2026.json",
+  "desember2025.json",
+  "november2025.json",
+  "oktober2025.json",
+  "september2025.json",
+  "agustus2025.json"
 ];
 
-const formatRupiah = n => n.toLocaleString('id-ID');
+const formatRupiah = (num) => num.toLocaleString('id-ID');
 
-async function fetchData() {
-  let allData = {};
-  for (const file of bulanFiles) {
+let rekapData = {};
+
+function updateRekap(nama, jenis, tabungan, penarikan) {
+  if (!rekapData[nama]) {
+    rekapData[nama] = { jenis, tabungan: 0, penarikan: 0 };
+  }
+  rekapData[nama].tabungan += tabungan;
+  rekapData[nama].penarikan += penarikan;
+}
+
+function renderTabelRekap() {
+  const container = document.getElementById("rekap-tabungan");
+  let totalPutra = 0, totalPutri = 0, totalTarik = 0, totalSaldo = 0;
+
+  let rows = '';
+  Object.entries(rekapData).forEach(([nama, { jenis, tabungan, penarikan }]) => {
+    const saldo = tabungan - penarikan;
+    if (jenis === "putra") totalPutra += tabungan;
+    else totalPutri += tabungan;
+    totalTarik += penarikan;
+    totalSaldo += saldo;
+
+    rows += `<tr>
+      <td>${nama}</td>
+      <td>${formatRupiah(tabungan)}</td>
+      <td>${formatRupiah(penarikan)}</td>
+      <td>${formatRupiah(saldo)}</td>
+    </tr>`;
+  });
+
+  container.innerHTML = `
+    <h3>Rekap Tabungan</h3>
+    <table border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Tabungan</th>
+          <th>Penarikan</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p>
+      Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+      Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+      Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+      Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
+    </p>
+    <hr/>
+  `;
+}
+
+function renderBulanan(namaFile, data) {
+  const container = document.getElementById("tabungan-bulanan");
+  let rows = '';
+  let totalPutra = 0, totalPutri = 0, totalTarik = 0, totalSaldo = 0;
+
+  ["putra", "putri"].forEach(jenis => {
+    data[jenis].forEach(item => {
+      const { nama, tabungan, penarikan } = item;
+      const saldo = tabungan - penarikan;
+      updateRekap(nama, jenis, tabungan, penarikan);
+
+      if (jenis === "putra") totalPutra += tabungan;
+      else totalPutri += tabungan;
+
+      totalTarik += penarikan;
+      totalSaldo += saldo;
+
+      rows += `<tr>
+        <td>${nama}</td>
+        <td>${formatRupiah(tabungan)}</td>
+        <td>${formatRupiah(penarikan)}</td>
+        <td>${formatRupiah(saldo)}</td>
+      </tr>`;
+    });
+  });
+
+  container.innerHTML += `
+    <h3>Tabungan Bulan ${namaFile.replace('.json', '').toUpperCase()}</h3>
+    <table border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Tabungan</th>
+          <th>Penarikan</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p>
+      Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+      Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+      Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+      Total Saldo: <font color="green">${formatRupiah(totalSaldo)} </font>
+    </p>
+    <hr/>
+  `;
+}
+
+async function loadSemua() {
+  for (let namaFile of bulanFiles) {
     try {
-      const res = await fetch(`data/${file}`);
+      const res = await fetch(`data/${namaFile}`);
       if (!res.ok) continue;
       const data = await res.json();
-      if (data.length === 0) continue;
-      allData[file] = data;
+      if (!data.putra && !data.putri) continue;
+      renderBulanan(namaFile, data);
     } catch (e) {
-      console.error(`Gagal memuat ${file}:`, e);
+      console.warn(`Gagal membaca ${namaFile}`);
     }
   }
-  return allData;
+  renderTabelRekap();
 }
 
-function hitungRekap(allData) {
-  const rekap = {};
-  for (const bulan in allData) {
-    for (const item of allData[bulan]) {
-      if (!rekap[item.nama]) {
-        rekap[item.nama] = { tabungan: 0, penarikan: 0 };
-      }
-      rekap[item.nama].tabungan += item.tabungan || 0;
-      rekap[item.nama].penarikan += item.penarikan || 0;
-    }
-  }
-
-  const hasil = Object.entries(rekap).map(([nama, d]) => ({
-    nama,
-    tabungan: d.tabungan,
-    penarikan: d.penarikan,
-    saldo: d.tabungan - d.penarikan
-  }));
-
-  return hasil.sort((a, b) => b.saldo - a.saldo);
-}
-
-function buatTabelRekap(data) {
-  const container = document.getElementById('rekap-container');
-  const table = document.createElement('table');
-  table.border = 1;
-  table.style.marginBottom = '1em';
-
-  const thead = table.insertRow();
-  ['Nama', 'Tabungan', 'Penarikan', 'Saldo Akhir'].forEach(h => {
-    const th = document.createElement('th');
-    th.innerText = h;
-    thead.appendChild(th);
-  });
-
-  let totalTabungan = 0;
-  let totalPenarikan = 0;
-  let totalPutraTabungan = 0, totalPutraPenarikan = 0;
-  let totalPutriTabungan = 0, totalPutriPenarikan = 0;
-
-  data.forEach(item => {
-    const row = table.insertRow();
-    row.insertCell().innerText = item.nama;
-    row.insertCell().innerText = formatRupiah(item.tabungan);
-    row.insertCell().innerText = formatRupiah(item.penarikan);
-    row.insertCell().innerText = formatRupiah(item.saldo);
-
-    totalTabungan += item.tabungan;
-    totalPenarikan += item.penarikan;
-
-    if (item.nama.toLowerCase().includes('putri')) {
-      totalPutriTabungan += item.tabungan;
-      totalPutriPenarikan += item.penarikan;
-    } else {
-      totalPutraTabungan += item.tabungan;
-      totalPutraPenarikan += item.penarikan;
-    }
-  });
-
-  container.appendChild(table);
-
-  const info = document.createElement('p');
-  info.innerHTML = `
-    <br/>
-    Total Tabungan Putra: ${formatRupiah(totalPutraTabungan)}<br/>
-    Total Penarikan Putra: ${formatRupiah(totalPutraPenarikan)}<br/>
-    Total Tabungan Putri: ${formatRupiah(totalPutriTabungan)}<br/>
-    Total Penarikan Putri: ${formatRupiah(totalPutriPenarikan)}<br/>
-    <br/>
-  `;
-  container.appendChild(info);
-  container.appendChild(document.createElement('hr'));
-}
-
-function buatTabelBulanan(dataMap) {
-  const container = document.getElementById('bulanan-container');
-
-  for (const [bulan, data] of Object.entries(dataMap)) {
-    if (data.length === 0) continue;
-
-    const h3 = document.createElement('h3');
-    h3.innerText = bulan.replace('.json', '').replace('-', ' ').toUpperCase();
-    container.appendChild(h3);
-
-    const table = document.createElement('table');
-    table.border = 1;
-
-    const thead = table.insertRow();
-    ['Nama', 'Tabungan', 'Penarikan', 'Saldo Akhir'].forEach(h => {
-      const th = document.createElement('th');
-      th.innerText = h;
-      thead.appendChild(th);
-    });
-
-    let totalTabungan = 0;
-    let totalPenarikan = 0;
-    let totalPutraTabungan = 0, totalPutraPenarikan = 0;
-    let totalPutriTabungan = 0, totalPutriPenarikan = 0;
-
-    data.forEach(item => {
-      const row = table.insertRow();
-      row.insertCell().innerText = item.nama;
-      row.insertCell().innerText = formatRupiah(item.tabungan || 0);
-      row.insertCell().innerText = formatRupiah(item.penarikan || 0);
-      const saldo = (item.tabungan || 0) - (item.penarikan || 0);
-      row.insertCell().innerText = formatRupiah(saldo);
-
-      const tab = item.tabungan || 0;
-      const pen = item.penarikan || 0;
-
-      totalTabungan += tab;
-      totalPenarikan += pen;
-
-      if (item.nama.toLowerCase().includes('putri')) {
-        totalPutriTabungan += tab;
-        totalPutriPenarikan += pen;
-      } else {
-        totalPutraTabungan += tab;
-        totalPutraPenarikan += pen;
-      }
-    });
-
-    container.appendChild(table);
-
-    const info = document.createElement('p');
-    info.innerHTML = `
-      <br/>
-      Total Tabungan Putra: ${formatRupiah(totalPutraTabungan)}<br/>
-      Total Penarikan Putra: ${formatRupiah(totalPutraPenarikan)}<br/>
-      Total Tabungan Putri: ${formatRupiah(totalPutriTabungan)}<br/>
-      Total Penarikan Putri: ${formatRupiah(totalPutriPenarikan)}<br/>
-      <br/>
-    `;
-    container.appendChild(info);
-    container.appendChild(document.createElement('hr'));
-  }
-}
-
-fetchData().then(data => {
-  const rekap = hitungRekap(data);
-  buatTabelRekap(rekap);
-  buatTabelBulanan(data);
-});
+loadSemua();
 </script>
 
-
     <p></p><br/>
-
+<~ Made in RISMA ~>
     <center>
         <hr/>
         <span class="h5">Leader</span><br/>
@@ -606,5 +563,4 @@ fetchData().then(data => {
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-    </html>
-            
+                       </html>
