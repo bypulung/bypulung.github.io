@@ -221,7 +221,7 @@
  -->
         
         
-    <h1 id="putra"><i class="fas fa-wallet">
+    <h1><i class="fas fa-wallet">
         
     </i> BANK RISMA</h1>
 
@@ -257,101 +257,149 @@
 
     <hr/>
     
-     
+     <h2>Laporan Tabungan RISMA</h2>
   
-<div id="total-saldo"></div>
-    <h1>Laporan Tabungan Bulanan</h1>
-<div id="tabel-tabungan-bulanan"></div>
-<div id="tables-container"></div>
+
+<div id="rekap-container"></div>
+<div id="bulanan-container"></div>
 
 <script>
-  const fileNames = [
-    'februari-2026.json',
-    'januari-2026.json',
-    'desember-2025.json',
-    'november-2025.json',
-    'oktober-2025.json',
-    'september-2025.json',
-    'agustus-2025.json'
-  ];
+const bulanFiles = [
+  'februari-2026.json',
+  'januari-2026.json',
+  'desember-2025.json',
+  'november-2025.json',
+  'oktober-2025.json',
+  'september-2025.json',
+  'agustus-2025.json',
+];
 
-  function formatRupiah(angka) {
-    return angka.toLocaleString('id-ID');
+const formatRupiah = n => n.toLocaleString('id-ID');
+
+async function fetchData() {
+  let allData = {};
+  for (const file of bulanFiles) {
+    try {
+      const res = await fetch(`data/${file}`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data.length === 0) continue;
+      allData[file] = data;
+    } catch (e) {
+      console.error(`Gagal memuat ${file}:`, e);
+    }
+  }
+  return allData;
+}
+
+function hitungRekap(allData) {
+  const rekap = {};
+  for (const bulan in allData) {
+    for (const item of allData[bulan]) {
+      if (!rekap[item.nama]) {
+        rekap[item.nama] = { tabungan: 0, penarikan: 0 };
+      }
+      rekap[item.nama].tabungan += item.tabungan || 0;
+      rekap[item.nama].penarikan += item.penarikan || 0;
+    }
   }
 
-  function createTable(data, monthName) {
-    let totalTabungan = 0;
-    let totalPenarikan = 0;
+  const hasil = Object.entries(rekap).map(([nama, d]) => ({
+    nama,
+    penarikan: d.penarikan,
+    saldo: d.tabungan - d.penarikan
+  }));
+
+  return hasil.sort((a, b) => b.saldo - a.saldo);
+}
+
+function buatTabelRekap(data) {
+  const container = document.getElementById('rekap-container');
+  const table = document.createElement('table');
+  table.border = 1;
+  table.style.marginBottom = '1em';
+
+  const thead = table.insertRow();
+  ['Nama', 'Penarikan', 'Saldo Akhir'].forEach(h => {
+    const th = document.createElement('th');
+    th.innerText = h;
+    thead.appendChild(th);
+  });
+
+  let totalSaldo = 0;
+  let totalPenarikan = 0;
+
+  data.forEach(item => {
+    const row = table.insertRow();
+    row.insertCell().innerText = item.nama;
+    row.insertCell().innerText = formatRupiah(item.penarikan);
+    row.insertCell().innerText = formatRupiah(item.saldo);
+    totalSaldo += item.saldo;
+    totalPenarikan += item.penarikan;
+  });
+
+  container.appendChild(table);
+
+  const info = document.createElement('p');
+  info.innerHTML = `Total Penarikan: ${formatRupiah(totalPenarikan)}<br/>
+                    Total Saldo: ${formatRupiah(totalSaldo)}`;
+  container.appendChild(info);
+  container.appendChild(document.createElement('hr'));
+}
+
+function buatTabelBulanan(dataMap) {
+  const container = document.getElementById('bulanan-container');
+
+  for (const [bulan, data] of Object.entries(dataMap)) {
+    if (data.length === 0) continue;
+
+    const h3 = document.createElement('h3');
+    h3.innerText = bulan.replace('.json', '').replace('-', ' ').toUpperCase();
+    container.appendChild(h3);
 
     const table = document.createElement('table');
-    table.style.marginBottom = '10px';
-    table.style.borderCollapse = 'collapse';
+    table.border = 1;
 
-    const caption = document.createElement('caption');
-    caption.style.fontWeight = 'bold';
-    caption.style.marginBottom = '4px';
-    caption.textContent = `Tabungan Bulanan - ${monthName}`;
-    table.appendChild(caption);
-
-    const thead = document.createElement('thead');
-    thead.innerHTML = `
-      <tr>
-        <th style="text-align:left;padding:4px;">Nama</th>
-        <th style="text-align:right;padding:4px;">Tabungan</th>
-        <th style="text-align:right;padding:4px;">Penarikan</th>
-        <th style="text-align:right;padding:4px;">Saldo</th>
-      </tr>
-    `;
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-
-    data.forEach(row => {
-      const saldo = (row.tabungan || 0) - (row.penarikan || 0);
-      totalTabungan += row.tabungan || 0;
-      totalPenarikan += row.penarikan || 0;
-
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="padding:4px;">${row.nama}</td>
-        <td style="text-align:right;padding:4px;">${formatRupiah(row.tabungan || 0)}</td>
-        <td style="text-align:right;padding:4px;">${formatRupiah(row.penarikan || 0)}</td>
-        <td style="text-align:right;padding:4px;">${formatRupiah(saldo)}</td>
-      `;
-      tbody.appendChild(tr);
+    const thead = table.insertRow();
+    ['Nama', 'Tabungan', 'Penarikan', 'Saldo'].forEach(h => {
+      const th = document.createElement('th');
+      th.innerText = h;
+      thead.appendChild(th);
     });
 
-    table.appendChild(tbody);
+    let totalTabungan = 0;
+    let totalPenarikan = 0;
+    let totalSaldo = 0;
 
-    const summary = document.createElement('div');
-    summary.innerHTML = `
-      <p>Total tabungan: ${formatRupiah(totalTabungan)}</p>
-      <p>Total penarikan: ${formatRupiah(totalPenarikan)}</p>
-      <p>Total saldo: ${formatRupiah(totalTabungan - totalPenarikan)}</p>
-      <hr/>
-    `;
+    data.forEach(item => {
+      const row = table.insertRow();
+      row.insertCell().innerText = item.nama;
+      row.insertCell().innerText = formatRupiah(item.tabungan || 0);
+      row.insertCell().innerText = formatRupiah(item.penarikan || 0);
+      const saldo = (item.tabungan || 0) - (item.penarikan || 0);
+      row.insertCell().innerText = formatRupiah(saldo);
+      totalTabungan += item.tabungan || 0;
+      totalPenarikan += item.penarikan || 0;
+      totalSaldo += saldo;
+    });
 
-    const container = document.getElementById('tables-container');
     container.appendChild(table);
-    container.appendChild(summary);
+
+    const info = document.createElement('p');
+    info.innerHTML = `Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
+                      Total Penarikan: ${formatRupiah(totalPenarikan)}<br/>
+                      Total Saldo: ${formatRupiah(totalSaldo)}`;
+    container.appendChild(info);
+    container.appendChild(document.createElement('hr'));
   }
+}
 
-  Promise.all(
-    fileNames.map(file =>
-      fetch(`data/${file}`)
-        .then(res => res.json())
-        .then(data => ({ file, data }))
-    )
-  ).then(results => {
-    results.forEach(({ file, data }) => {
-      const monthName = file.replace('.json', '').replace('-', ' ').toUpperCase();
-      createTable(data, monthName);
-    });
-  }).catch(err => {
-    console.error('Gagal memuat data JSON:', err);
-  });
+fetchData().then(data => {
+  const rekap = hitungRekap(data);
+  buatTabelRekap(rekap);
+  buatTabelBulanan(data);
+});
 </script>
-
 
     <p></p><br/>
 
@@ -519,5 +567,5 @@
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-        </html>
-         
+            </html>
+                  
