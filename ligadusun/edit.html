@@ -1,137 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Input Hasil Pertandingan Voli</title>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    table, th, td { border: 1px solid black; border-collapse: collapse; }
-    th, td { padding: 6px 12px; }
-    select, input { margin: 4px; }
-    button { margin: 2px 4px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
+
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
+
+
+   <style>
+        h2 {
+         font-size:30px;
+       }
+  
+        table {
+            width: 90%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #1e1e1e;
+        }
+        
+        
+    
+        </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>klasemen LigaDusun Tanjung Bulan</title>
 </head>
-<body>
-  <h2>Input Hasil Pertandingan</h2>
 
-  <form id="form-match">
-    <label>Tim Home:
-      <select id="home-select"></select>
-    </label>
-    <label>Set Home:
-      <input type="number" id="set-home" min="0" max="2" required>
-    </label><br>
-    <label>Tim Away:
-      <select id="away-select"></select>
-    </label>
-    <label>Set Away:
-      <input type="number" id="set-away" min="0" max="2" required>
-    </label><br>
-    <input type="hidden" id="edit-index" value="">
-    <button type="submit">Simpan</button>
-  </form>
+<body class="bg-dark text-light">
+   <!-- <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
+     -->   <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+            <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+                <img class="img-fluid">
+            </div>
+            <div class="pt-3 text-center">
+                <h5>Tanjung Bulan Squad <span style="color:#00BFFF;"><i class="fa-solid fa-circle-check"></i></span></h5><br/>
+                
+                
+                
+            </div>
+            
+    </div> 
 
-  <h3>Daftar Pertandingan</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Home</th>
-        <th>Set</th>
-        <th>Away</th>
-        <th>Set</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody id="match-table-body"></tbody>
-  </table>
+    <!-- Modal -->
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showImageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showImageLabel">Tanjung Bulan Squad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid img-thumbnail profile">
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <script src="tim.js"></script>
-  <script src="main.js"></script>
-  <script>
-    const tbody = document.getElementById("match-table-body");
-    const homeSelect = document.getElementById("home-select");
-    const awaySelect = document.getElementById("away-select");
-    const setHomeInput = document.getElementById("set-home");
-    const setAwayInput = document.getElementById("set-away");
-    const editIndex = document.getElementById("edit-index");
-    const form = document.getElementById("form-match");
+    <script>
+        // * img position
+        const position = '/img/tbsquad.jpg';
 
-    // Isi select dengan data dari tim.js
-    function populateTeamOptions() {
-      teams.forEach(tim => {
-        const option1 = new Option(tim, tim);
-        const option2 = new Option(tim, tim);
-        homeSelect.appendChild(option1);
-        awaySelect.appendChild(option2);
-      });
-    }
+        // ! Don't change this line
+        $(document).ready(() => {
+            $('#profile img').attr('src', position);
+        });
+    </script>
 
-    // Tampilkan semua data dari main.js
-    function renderTable() {
-      tbody.innerHTML = "";
-      matches.forEach((m, i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${i + 1}</td>
-          <td>${m.home}</td>
-          <td>${m.setHome}</td>
-          <td>${m.away}</td>
-          <td>${m.setAway}</td>
-          <td>
-            <button onclick="editMatch(${i})">Edit</button>
-            <button onclick="deleteMatch(${i})">Hapus</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
 
-    // Tambah atau Update data pertandingan
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const home = homeSelect.value;
-      const away = awaySelect.value;
-      const setHome = parseInt(setHomeInput.value);
-      const setAway = parseInt(setAwayInput.value);
+    
 
-      if (home === away) return alert("Tim tidak boleh sama!");
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
 
-      const data = { home, away, setHome, setAway };
-      const idx = editIndex.value;
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
 
-      if (idx === "") {
-        matches.push(data);
-      } else {
-        matches[idx] = data;
-        editIndex.value = "";
+
+
+<form id="matchForm">
+  <select id="home">
+    <option value="Tim A">Tim A</option>
+    <option value="Tim B">Tim B</option>
+    <option value="Tim C">Tim C</option>
+    <option value="Tim D">Tim D</option>
+  </select>
+
+  <select id="away">
+    <option value="Tim A">Tim A</option>
+    <option value="Tim B">Tim B</option>
+    <option value="Tim C">Tim C</option>
+    <option value="Tim D">Tim D</option>
+  </select>
+
+  <input type="number" id="setHome" placeholder="Skor Home" required />
+  <input type="number" id="setAway" placeholder="Skor Away" required />
+
+  <button type="submit">Kirim Hasil</button>
+</form>
+
+
+<script>
+  const form = document.getElementById('matchForm');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const home = document.getElementById('home').value;
+    const away = document.getElementById('away').value;
+    const setHome = document.getElementById('setHome').value;
+    const setAway = document.getElementById('setAway').value;
+
+    fetch('https://script.google.com/macros/s/AKfycbzW7cNxS3zKdw8wxgHc9GkosWPPwF7M6fZQcIjYJ4GdXkMsjBL1WOvh5A0UYFgDsowj/exec', {
+      method: 'POST',
+      body: JSON.stringify({
+        home,
+        away,
+        setHome,
+        setAway
+      }),
+      headers: {
+        'Content-Type': 'application/json'
       }
-
+    })
+    .then(res => res.json())
+    .then(response => {
+      alert('Berhasil disimpan ke Google Sheets!');
       form.reset();
-      renderTable();
+    })
+    .catch(err => {
+      alert('Gagal kirim: ' + err);
     });
+  });
+</script>
 
-    // Edit data
-    function editMatch(index) {
-      const m = matches[index];
-      homeSelect.value = m.home;
-      awaySelect.value = m.away;
-      setHomeInput.value = m.setHome;
-      setAwayInput.value = m.setAway;
-      editIndex.value = index;
-    }
 
-    // Hapus data
-    function deleteMatch(index) {
-      if (confirm("Yakin ingin menghapus pertandingan ini?")) {
-        matches.splice(index, 1);
-        renderTable();
-      }
-    }
+</center>
+<br/><br/>
+<center>Server by ® RISMA AL-HUDA</center>
+<br></body>
 
-    // Inisialisasi awal
-    populateTeamOptions();
-    renderTable();
-  </script>
-</body>
-</html>
+    </html>
+
+    
