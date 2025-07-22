@@ -20,6 +20,9 @@ function calculateStandings(teams, matches) {
   matches.forEach(match => {
     const { teamA, teamB, scoreA, scoreB } = match;
 
+    // Abaikan jika skor belum lengkap
+    if (typeof scoreA !== 'number' || typeof scoreB !== 'number') return;
+
     standings[teamA].P++;
     standings[teamB].P++;
 
@@ -76,7 +79,7 @@ function renderSchedule(matches) {
       <tr>
         <td>${i + 1}</td>
         <td>${match.teamA} vs ${match.teamB}</td>
-        <td>${match.date}</td>
+        <td>${match.date || '-'}</td>
       </tr>
     `;
   });
@@ -85,15 +88,19 @@ function renderSchedule(matches) {
 function renderResults(matches) {
   const tbody = document.querySelector('#resultsTable tbody');
   tbody.innerHTML = "";
-  matches.forEach((match, i) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${i + 1}</td>
-        <td>${match.teamA}</td>
-        <td>${match.teamB}</td>
-        <td>${match.scoreA} - ${match.scoreB}</td>
-      </tr>
-    `;
+  let counter = 1;
+  matches.forEach(match => {
+    const { teamA, teamB, scoreA, scoreB } = match;
+    if (typeof scoreA === 'number' && typeof scoreB === 'number') {
+      tbody.innerHTML += `
+        <tr>
+          <td>${counter++}</td>
+          <td>${teamA}</td>
+          <td>${teamB}</td>
+          <td>${scoreA} - ${scoreB}</td>
+        </tr>
+      `;
+    }
   });
 }
 
@@ -112,8 +119,8 @@ function renderTeams(teams) {
 
 async function init() {
   const [teams, matches] = await Promise.all([
-    fetchJSON("teams.json"),
-    fetchJSON("matches.json")
+    fetchJSON("tim.json"),
+    fetchJSON("main.json")
   ]);
   const standings = calculateStandings(teams, matches);
   renderStandings(standings);
