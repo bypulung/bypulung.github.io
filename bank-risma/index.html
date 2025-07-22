@@ -258,141 +258,97 @@
     <hr/>
     
      <h2>Laporan Tabungan RISMA</h2>
-  <div id="total-summary"></div>
-  <div id="monthly-reports"></div>
+  
 
-  <script>
-    const months = [
-      'februari_2026',
-      'januari_2026',
-      'desember_2025',
-      'november_2025',
-      'oktober_2025',
-      'september_2025',
-      'agustus_2025'
-    ];
+<div id="tables-container"></div>
 
-    const allData = {};
-    const userTotals = {};
+<script>
+  const fileNames = [
+    'februari-2026.json',
+    'januari-2026.json',
+    'desember-2025.json',
+    'november-2025.json',
+    'oktober-2025.json',
+    'september-2025.json',
+    'agustus-2025.json'
+  ];
 
-    async function loadData() {
-      for (const month of months) {
-        try {
-          const res = await fetch(`data/${month}.json`);
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data.length === 0) continue;
+  function formatRupiah(angka) {
+    return angka.toLocaleString('id-ID');
+  }
 
-          allData[month] = data;
+  function createTable(data, monthName) {
+    let totalTabungan = 0;
+    let totalPenarikan = 0;
 
-          for (const item of data) {
-            const name = item.nama;
-            if (!userTotals[name]) {
-              userTotals[name] = { tabungan: 0, penarikan: 0 };
-            }
-            userTotals[name].tabungan += item.tabungan || 0;
-            userTotals[name].penarikan += item.penarikan || 0;
-          }
-        } catch (e) {
-          console.warn(`Gagal memuat ${month}:`, e);
-        }
-      }
+    const table = document.createElement('table');
+    table.style.marginBottom = '10px';
+    table.style.borderCollapse = 'collapse';
 
-      renderSummary();
-      renderMonthlyTables();
-    }
+    const caption = document.createElement('caption');
+    caption.style.fontWeight = 'bold';
+    caption.style.marginBottom = '4px';
+    caption.textContent = `Tabungan Bulanan - ${monthName}`;
+    table.appendChild(caption);
 
-    function renderSummary() {
-      const totalDiv = document.getElementById('total-summary');
-      const users = Object.keys(userTotals);
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+      <tr>
+        <th style="text-align:left;padding:4px;">Nama</th>
+        <th style="text-align:right;padding:4px;">Tabungan</th>
+        <th style="text-align:right;padding:4px;">Penarikan</th>
+        <th style="text-align:right;padding:4px;">Saldo</th>
+      </tr>
+    `;
+    table.appendChild(thead);
 
-      const rows = users.map((name, i) => {
-        const { tabungan, penarikan } = userTotals[name];
-        const saldo = tabungan - penarikan;
-        return `<tr>
-          <td>${i + 1}</td>
-          <td>${name}</td>
-          <td>${tabungan}</td>
-          <td>${penarikan}</td>
-          <td>${saldo}</td>
-        </tr>`;
-      });
+    const tbody = document.createElement('tbody');
 
-      const totalSetoran = users.reduce((s, n) => s + userTotals[n].tabungan, 0);
-      const totalPenarikan = users.reduce((s, n) => s + userTotals[n].penarikan, 0);
-      const totalSaldo = totalSetoran - totalPenarikan;
+    data.forEach(row => {
+      const saldo = (row.tabungan || 0) - (row.penarikan || 0);
+      totalTabungan += row.tabungan || 0;
+      totalPenarikan += row.penarikan || 0;
 
-      const totalRow = `<tr style="font-weight:bold">
-        <td colspan="2">TOTAL</td>
-        <td>${totalSetoran}</td>
-        <td>${totalPenarikan}</td>
-        <td>${totalSaldo}</td>
-      </tr>`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="padding:4px;">${row.nama}</td>
+        <td style="text-align:right;padding:4px;">${formatRupiah(row.tabungan || 0)}</td>
+        <td style="text-align:right;padding:4px;">${formatRupiah(row.penarikan || 0)}</td>
+        <td style="text-align:right;padding:4px;">${formatRupiah(saldo)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
 
-      totalDiv.innerHTML = `
-        <h2>Rekap Total Tabungan Anggota</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.sort((a, b) => {
-              const saldoA = userTotals[users[rows.indexOf(a)]].tabungan - userTotals[users[rows.indexOf(a)]].penarikan;
-              const saldoB = userTotals[users[rows.indexOf(b)]].tabungan - userTotals[users[rows.indexOf(b)]].penarikan;
-              return saldoB - saldoA;
-            }).join('')}
-            ${totalRow}
-          </tbody>
-        </table>`;
-    }
+    table.appendChild(tbody);
 
-    function renderMonthlyTables() {
-      const div = document.getElementById('monthly-reports');
+    const summary = document.createElement('div');
+    summary.innerHTML = `
+      <p>Total tabungan: ${formatRupiah(totalTabungan)}</p>
+      <p>Total penarikan: ${formatRupiah(totalPenarikan)}</p>
+      <p>Total saldo: ${formatRupiah(totalTabungan - totalPenarikan)}</p>
+      <hr/>
+    `;
 
-      for (const [month, data] of Object.entries(allData)) {
-        if (!data || data.length === 0) continue;
+    const container = document.getElementById('tables-container');
+    container.appendChild(table);
+    container.appendChild(summary);
+  }
 
-        const rows = data.map((item, i) => {
-          const saldoAkhir = (item.tabungan || 0) - (item.penarikan || 0);
-          return `<tr>
-            <td>${i + 1}</td>
-            <td>${item.nama}</td>
-            <td>${item.tabungan || 0}</td>
-            <td>${item.penarikan || 0}</td>
-            <td>${saldoAkhir}</td>
-          </tr>`;
-        });
-
-        const totalTabungan = data.reduce((s, d) => s + (d.tabungan || 0), 0);
-        const totalPenarikan = data.reduce((s, d) => s + (d.penarikan || 0), 0);
-        const totalSaldo = totalTabungan - totalPenarikan;
-
-        div.innerHTML += `
-          <h2>Bulan ${month.replace('_', ' ').toUpperCase()}</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>No</th><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Saldo Akhir</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows.join('')}
-              <tr style="font-weight:bold">
-                <td colspan="2">TOTAL</td>
-                <td>${totalTabungan}</td>
-                <td>${totalPenarikan}</td>
-                <td>${totalSaldo}</td>
-              </tr>
-            </tbody>
-          </table>
-        `;
-      }
-    }
-
-    loadData();
-  </script>
+  Promise.all(
+    fileNames.map(file =>
+      fetch(`data/${file}`)
+        .then(res => res.json())
+        .then(data => ({ file, data }))
+    )
+  ).then(results => {
+    results.forEach(({ file, data }) => {
+      const monthName = file.replace('.json', '').replace('-', ' ').toUpperCase();
+      createTable(data, monthName);
+    });
+  }).catch(err => {
+    console.error('Gagal memuat data JSON:', err);
+  });
+</script>
 
 
     <p></p><br/>
@@ -561,4 +517,5 @@
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-                       </html>
+        </html>
+         
