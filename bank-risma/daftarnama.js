@@ -9,7 +9,7 @@ const daftarnama = {
     "Wahyu",
     "Rifai",
     "Tio",
-    "Ibnu"
+    "Ibnu",
     "Sogi"
   ],
   putri: [
