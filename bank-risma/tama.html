@@ -13,8 +13,8 @@
 <script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
 
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
   <script src="https://tanjungbulan.my.id/bank-risma/daftarnama.js"></script>
   
    <style>
@@ -263,80 +263,155 @@
 
 
 
-<h2>Input Tabungan Putra</h2>
+  <h2>Input Tabungan Putra</h2>
 
-<label for="nama">Nama:</label>
-<select id="nama"></select><br><br>
+  <label for="nama">Nama:</label><br/>
+  <select id="nama"></select><br><br>
 
-<label for="jumlah">Jumlah (Rp):</label><br />
-<input type="number" id="jumlah"><br><br>
+  <label for="jumlah">Jumlah (Rp):</label><br />
+  <input type="number" id="jumlah"><br><br>
 
-<label for="tipe">Tipe Transaksi:</label><br />
-<select id="tipe">
-  <option value="tabung">Tabung</option>
-  <option value="ambil">Ambil</option>
-</select><br><br>
+  <label for="tipe">Tipe Transaksi:</label><br />
+  <select id="tipe">
+    <option value="tabung">Tabung</option>
+    <option value="ambil">Ambil</option>
+  </select><br><br>
 
-<button onclick="kirimData()">Simpan</button><br /><br />
+  <button onclick="kirimData()">Simpan</button><br /><br>
 
-<h2><span id="bulanTahun"></span></h2>
+  <h2><span id="bulanTahun"></span></h2>
 
-<table border="1" style="width:100%; border-collapse: collapse;">
-  <thead>
-    <tr>
-      <th>Nama</th>
-      <th>Tabung</th>
-      <th>Tarik</th>
-      <th>Tanggal</th>
-      <th>Aksi</th>
-    </tr>
-  </thead>
-  <tbody id="dataTabel">
-    <!-- Data akan ditampilkan di sini -->
-  </tbody>
-</table>
+  <table border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Ditabung</th>
+        <th>Diambil</th>
+        <th>Tanggal</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="dataTabel">
+      <!-- Data tampil di sini -->
+    </tbody>
+  </table>
 
-<script>
-  // Inisialisasi Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyAfkARu79wTh-XGLZprTfxY4XDQ65F-gE8",
-    authDomain: "bank-risma.firebaseapp.com",
-    databaseURL: "https://bank-risma-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "bank-risma",
-    storageBucket: "bank-risma.firebasestorage.app",
-    messagingSenderId: "20349077579",
-    appId: "1:20349077579:web:6b81da610dc0715289e5ce"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+  <script>
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfkARu79wTh-XGLZprTfxY4XDQ65F-gE8",
+      authDomain: "bank-risma.firebaseapp.com",
+      projectId: "bank-risma",
+      storageBucket: "bank-risma.appspot.com",
+      messagingSenderId: "20349077579",
+      appId: "1:20349077579:web:6b81da610dc0715289e5ce"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-  // Ambil bulan dan tahun
-  const today = new Date();
-  const bulan = today.toLocaleString('default', { month: 'long' });
-  const tahun = today.getFullYear();
-  const bulanTahun = `${bulan} ${tahun}`;
-  document.getElementById("bulanTahun").innerText = bulanTahun;
+    // Tampilkan bulan dan tahun
+    const today = new Date();
+    const bulan = today.toLocaleString('default', { month: 'long' });
+    const tahun = today.getFullYear();
+    const bulanTahun = `${bulan} ${tahun}`;
+    document.getElementById("bulanTahun").innerText = bulanTahun;
 
-  // Tampilkan nama dari daftarNama.putra
-  function tampilkanNamaPutra() {
-    const select = document.getElementById("nama");
-    if (typeof daftarNama !== 'undefined' && Array.isArray(daftarNama.putra)) {
-      daftarNama.putra.forEach(nama => {
-        const option = document.createElement("option");
-        option.value = nama;
-        option.textContent = nama;
-        select.appendChild(option);
-      });
-    } else {
-      alert("Daftar nama putra tidak ditemukan!");
+    // Tampilkan daftar nama dari namaputra.js
+    function tampilkanNamaPutra() {
+      const select = document.getElementById("nama");
+      if (typeof daftarNama !== 'undefined' && Array.isArray(daftarNama.putra)) {
+        daftarNama.putra.forEach(nama => {
+          const option = document.createElement("option");
+          option.value = nama;
+          option.textContent = nama;
+          select.appendChild(option);
+        });
+      } else {
+        alert("Daftar nama tidak ditemukan.");
+      }
     }
-  }
 
-  window.onload = tampilkanNamaPutra;
-</script>
+    // Fungsi kirim data ke Firestore
+    function kirimData() {
+      const nama = document.getElementById("nama").value;
+      const jumlah = parseInt(document.getElementById("jumlah").value);
+      const tipe = document.getElementById("tipe").value;
+      const tanggal = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
 
-<script src="tama.js"></script> <!-- Untuk fungsi kirimData dan tampilkan data -->
+      if (!nama || !jumlah || isNaN(jumlah)) {
+        alert("Nama dan jumlah harus diisi dengan benar.");
+        return;
+      }
 
+      const data = {
+        nama,
+        tabung: tipe === 'tabung' ? jumlah : 0,
+        ambil: tipe === 'ambil' ? jumlah : 0,
+        tanggal,
+        bulan,
+        tahun
+      };
+
+      db.collection("tabungan_putra").add(data)
+        .then(() => {
+          alert("Data berhasil disimpan!");
+          tampilkanData();
+        })
+        .catch((error) => {
+          console.error("Gagal menyimpan: ", error);
+          alert("Gagal menyimpan data.");
+        });
+    }
+
+    // Fungsi tampilkan data dari Firestore
+    function tampilkanData() {
+      const tbody = document.getElementById("dataTabel");
+      tbody.innerHTML = "";
+
+      db.collection("tabungan_putra")
+        .where("bulan", "==", bulan)
+        .where("tahun", "==", tahun)
+        .orderBy("tanggal", "desc")
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${data.nama}</td>
+              <td>${data.tabung}</td>
+              <td>${data.ambil}</td>
+              <td>${data.tanggal}</td>
+              <td><button onclick="hapusData('${doc.id}')">Hapus</button></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(error => {
+          console.error("Gagal mengambil data: ", error);
+        });
+    }
+
+    // Fungsi hapus data
+    function hapusData(id) {
+      if (confirm("Yakin ingin menghapus data ini?")) {
+        db.collection("tabungan_putra").doc(id).delete()
+          .then(() => {
+            alert("Data berhasil dihapus.");
+            tampilkanData();
+          })
+          .catch(error => {
+            console.error("Gagal menghapus: ", error);
+          });
+      }
+    }
+
+    // Jalankan saat halaman dibuka
+    window.onload = () => {
+      tampilkanNamaPutra();
+      tampilkanData();
+    };
+  </script>
     
 
     
