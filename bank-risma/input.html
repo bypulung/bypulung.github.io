@@ -127,7 +127,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>BANK RISMA | Input Tabungan</title>
+    <title>BANK RISMA | Rekap Tabungan Online</title>
 </head>
 
 <body class="bg-dark text-light">
@@ -262,121 +262,138 @@
 
 
   
-
-<h2>Pilih Jenis</h2>
-<select id="jenis" onchange="isiSelectNama()">
-  <option value="putra">Putra</option>
-  <option value="putri">Putri</option>
+  <script src="namaputra.js"></script>
+  <script src="namaputri.js"></script>
+  
+<h2>Input Tabungan Putra</h2>
+<label>Nama:</label>
+<select id="namaPutra"></select><br><br>
+<label>Jumlah (Rp):</label>
+<input type="number" id="jumlahPutra"><br><br>
+<label>Tipe:</label>
+<select id="tipePutra">
+  <option value="tabungan">Tabung</option>
+  <option value="penarikan">Ambil</option>
 </select><br><br>
+<button onclick="tambahData('putra')">Simpan</button>
 
-<h2>Input Tabungan</h2>
-<label for="nama">Nama:</label>
-<select id="nama"></select><br><br>
-
-<label for="jumlah">Jumlah (Rp):</label><br />
-<input type="number" id="jumlah"><br><br>
-
-<label for="tipe">Tipe Transaksi:</label><br />
-<select id="tipe">
-  <option value="tabung">Tabung</option>
-  <option value="ambil">Ambil</option>
+<h2>Input Tabungan Putri</h2>
+<label>Nama:</label>
+<select id="namaPutri"></select><br><br>
+<label>Jumlah (Rp):</label>
+<input type="number" id="jumlahPutri"><br><br>
+<label>Tipe:</label>
+<select id="tipePutri">
+  <option value="tabungan">Tabung</option>
+  <option value="penarikan">Ambil</option>
 </select><br><br>
+<button onclick="tambahData('putri')">Simpan</button>
 
-<button onclick="tambahData()">Tambah</button><br><br>
-
-<h2>Data Bulan Ini</h2>
+<h5>Data Tabungan Putra</h5>
 <table>
   <thead>
     <tr>
       <th>Nama</th>
-      <th>Tabung</th>
-      <th>Tarik</th>
-      <th>Aksi</th>
+      <th>Tabungan</th>
+      <th>Penarikan</th>
     </tr>
   </thead>
-  <tbody id="dataTabel"></tbody>
-</table><br>
+  <tbody id="tabelPutra"></tbody>
+</table>
 
-<h2>Hasil File JS</h2>
-<textarea id="outputArea" readonly></textarea>
+<h5>Data Tabungan Putri</h5>
+<table>
+  <thead>
+    <tr>
+      <th>Nama</th>
+      <th>Tabungan</th>
+      <th>Penarikan</th>
+    </tr>
+  </thead>
+  <tbody id="tabelPutri"></tbody>
+</table>
+
+<h5>Hasil File JS</h5>
+<textarea id="hasilJS" readonly></textarea><br>
+<button onclick="salinJS()">Salin Hasil JS</button>
 
 <script>
-let data = {
-  putra: [],
-  putri: []
-};
+  const data = {
+    putra: [],
+    putri: []
+  };
 
-function isiSelectNama() {
-  const jenis = document.getElementById('jenis').value;
-  const select = document.getElementById('nama');
-  select.innerHTML = "";
-  daftarNama[jenis].forEach(obj => {
-    const opt = document.createElement("option");
-    opt.value = obj.nama;
-    opt.textContent = obj.nama;
-    select.appendChild(opt);
-  });
-}
+  window.onload = function () {
+    const selectPutra = document.getElementById("namaPutra");
+    const selectPutri = document.getElementById("namaPutri");
 
-function tambahData() {
-  const jenis = document.getElementById('jenis').value;
-  const nama = document.getElementById('nama').value;
-  const jumlah = parseInt(document.getElementById('jumlah').value);
-  const tipe = document.getElementById('tipe').value;
+    namaPutra.forEach(nama => {
+      const opt = document.createElement("option");
+      opt.value = nama;
+      opt.textContent = nama;
+      selectPutra.appendChild(opt);
+    });
 
-  if (!nama || isNaN(jumlah) || jumlah <= 0) {
-    alert("Isi data dengan benar.");
-    return;
+    namaPutri.forEach(nama => {
+      const opt = document.createElement("option");
+      opt.value = nama;
+      opt.textContent = nama;
+      selectPutri.appendChild(opt);
+    });
+  };
+
+  function tambahData(jenis) {
+    const nama = document.getElementById("nama" + capitalize(jenis)).value;
+    const jumlah = parseInt(document.getElementById("jumlah" + capitalize(jenis)).value) || 0;
+    const tipe = document.getElementById("tipe" + capitalize(jenis)).value;
+
+    let item = data[jenis].find(d => d.nama === nama);
+    if (!item) {
+      item = { nama, tabungan: 0, penarikan: 0 };
+      data[jenis].push(item);
+    }
+
+    if (tipe === "tabungan") item.tabungan += jumlah;
+    else item.penarikan += jumlah;
+
+    updateTabel(jenis);
+    updateTextarea();
   }
 
-  // Cek apakah nama sudah ada
-  let existing = data[jenis].find(d => d.nama === nama);
-  if (!existing) {
-    existing = { nama: nama, tabungan: 0, penarikan: 0 };
-    data[jenis].push(existing);
+  function updateTabel(jenis) {
+    const tbody = document.getElementById("tabel" + capitalize(jenis));
+    tbody.innerHTML = "";
+    data[jenis].forEach(item => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${item.nama}</td>
+        <td>${item.tabungan}</td>
+        <td>${item.penarikan}</td>
+      `;
+      tbody.appendChild(row);
+    });
   }
 
-  if (tipe === "tabung") {
-    existing.tabungan += jumlah;
-  } else {
-    existing.penarikan += jumlah;
+  function updateTextarea() {
+    const hasil = {
+      putra: data.putra,
+      putri: data.putri
+    };
+    document.getElementById("hasilJS").value = JSON.stringify(hasil, null, 2);
   }
 
-  renderTabel();
-  renderOutput();
-  document.getElementById('jumlah').value = "";
-}
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-function renderTabel() {
-  const jenis = document.getElementById('jenis').value;
-  const tbody = document.getElementById('dataTabel');
-  tbody.innerHTML = "";
-
-  data[jenis].forEach((item, index) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.nama}</td>
-      <td>${item.tabungan}</td>
-      <td>${item.penarikan}</td>
-      <td><button onclick="hapusData('${jenis}', ${index})">Hapus</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function renderOutput() {
-  const output = JSON.stringify(data, null, 2);
-  document.getElementById("outputArea").value = output;
-}
-
-function hapusData(jenis, index) {
-  data[jenis].splice(index, 1);
-  renderTabel();
-  renderOutput();
-}
-
-window.onload = isiSelectNama;
+  function salinJS() {
+    const textarea = document.getElementById("hasilJS");
+    textarea.select();
+    document.execCommand("copy");
+    alert("Hasil JS berhasil disalin!");
+  }
 </script>
+
 
 
   
@@ -392,4 +409,4 @@ window.onload = isiSelectNama;
     Made With ❤️ by Hamba Allah</center>
 <br></body>
 
-  </html>
+      </html>
