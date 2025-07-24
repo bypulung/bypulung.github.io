@@ -1,3 +1,8 @@
+// Ambil bulan dan tahun sekarang
+const today = new Date();
+const bulanTahun = today.toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+document.getElementById("bulanTahun").innerText = bulanTahun;
+
 // Konfigurasi Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAfkARu79wTh-XGLZprTfxY4XDQ65F-gE8",
@@ -8,119 +13,114 @@ const firebaseConfig = {
   messagingSenderId: "20349077579",
   appId: "1:20349077579:web:6b81da610dc0715289e5ce"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Tanggal dan nama koleksi Firestore
-const today = new Date();
-const monthNames = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-];
-const namaBulan = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-document.getElementById("bulanTahun").innerText = namaBulan;
-
-// Isi dropdown nama dari daftarnama.putra
-const namaSelect = document.getElementById('nama');
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (typeof daftarnama !== "undefined" && Array.isArray(daftarnama.putra)) {
-    daftarnama.putra.forEach(nama => {
-      const option = document.createElement('option');
-      option.value = nama;
-      option.textContent = nama;
-      namaSelect.appendChild(option);
+// Ambil nama dari daftarnama.js
+window.onload = function() {
+  const select = document.getElementById("nama");
+  if (typeof putra !== 'undefined') {
+    putra.forEach(nama => {
+      const opt = document.createElement("option");
+      opt.value = nama;
+      opt.textContent = nama;
+      select.appendChild(opt);
     });
-  } else {
-    const option = document.createElement('option');
-    option.value = "";
-    option.textContent = "Daftar nama belum dimuat!";
-    namaSelect.appendChild(option);
-    alert("Gagal memuat nama putra. Pastikan file daftarnama.js dimuat lebih dulu.");
   }
-});
+  ambilData(); // setelah nama dimuat, tampilkan tabel
+};
 
-// Fungsi kirim data
+// Kirim data
 function kirimData() {
-  const nama = document.getElementById('nama').value;
-  const tipe = document.getElementById('tipe').value;
-  const jumlah = parseInt(document.getElementById('jumlah').value);
+  const nama = document.getElementById("nama").value;
+  const jumlah = parseInt(document.getElementById("jumlah").value);
+  const tipe = document.getElementById("tipe").value;
 
-  if (!nama || isNaN(jumlah) || jumlah <= 0) {
-    alert("Pastikan semua data diisi dengan benar.");
+  if (!nama || isNaN(jumlah)) {
+    alert("Nama dan jumlah harus diisi.");
     return;
   }
 
-  const data = {
-    nama,
-    gender: "putra",
-    timestamp: firebase.firestore.Timestamp.now()
-  };
+  const tanggal = firebase.firestore.Timestamp.now();
+  const bulan = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
 
-  if (tipe === "tabung") {
-    data.tabungan = jumlah;
-  } else {
-    data.penarikan = jumlah;
-  }
-
-  db.collection(namaBulan).add(data)
-    .then(() => {
-      alert("Data berhasil disimpan!");
-      document.getElementById('jumlah').value = '';
-    })
-    .catch((error) => {
-      alert("Gagal menyimpan data: " + error.message);
-    });
+  db.collection("tabungan_putra").add({
+    nama, jumlah, tipe, tanggal, bulan
+  }).then(() => {
+    document.getElementById("jumlah").value = "";
+    ambilData();
+  });
 }
 
 // Ambil dan tampilkan data
-db.collection(namaBulan)
-  .where("gender", "==", "putra")
-  .orderBy("timestamp", "desc")
-  .onSnapshot((querySnapshot) => {
-    const tbody = document.getElementById("dataTabel");
-    tbody.innerHTML = "";
+function ambilData() {
+  const bulan = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  db.collection("tabungan_putra")
+    .where("bulan", "==", bulan)
+    .orderBy("tanggal", "desc")
+    .get()
+    .then(snapshot => {
+      const tbody = document.getElementById("dataTabel");
+      tbody.innerHTML = "";
 
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      const tr = document.createElement("tr");
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const row = document.createElement("tr");
 
-      tr.innerHTML = `
-        <td>${data.nama}</td>
-        <td>${data.tabungan || "-"}</td>
-        <td>${data.penarikan || "-"}</td>
-        <td>${new Date(data.timestamp?.toDate?.()).toLocaleDateString('id-ID')}</td>
-        <td>
-          <button onclick="editData('${doc.id}')">Edit</button>
-          <button onclick="hapusData('${doc.id}')">Hapus</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
+        row.innerHTML = `
+          <td>${data.nama}</td>
+          <td>${data.tipe === "tabung" ? formatRupiah(data.jumlah) : "-"}</td>
+          <td>${data.tipe === "ambil" ? formatRupiah(data.jumlah) : "-"}</td>
+          <td>${data.tanggal.toDate().toLocaleDateString('id-ID')}</td>
+          <td>
+            <button onclick="editData('${doc.id}', '${data.nama}', ${data.jumlah}, '${data.tipe}')">Edit</button>
+            <button onclick="hapusData('${doc.id}')">Hapus</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
     });
-  });
+}
 
-// Fungsi hapus data
+// Format angka ke Rupiah
+function formatRupiah(angka) {
+  return 'Rp' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Hapus data
 function hapusData(id) {
   if (confirm("Yakin ingin menghapus data ini?")) {
-    db.collection(namaBulan).doc(id).delete()
-      .then(() => alert("Data berhasil dihapus"))
-      .catch((error) => alert("Gagal menghapus: " + error.message));
+    db.collection("tabungan_putra").doc(id).delete().then(ambilData);
   }
 }
 
-// Fungsi edit data
-function editData(id) {
-  const newTabungan = prompt("Masukkan nilai tabungan baru (biarkan kosong jika tidak mengubah):");
-  const newPenarikan = prompt("Masukkan nilai penarikan baru (biarkan kosong jika tidak mengubah):");
+// Edit data
+function editData(id, nama, jumlah, tipe) {
+  document.getElementById("nama").value = nama;
+  document.getElementById("jumlah").value = jumlah;
+  document.getElementById("tipe").value = tipe;
 
-  const updateData = {};
-  if (newTabungan !== "") updateData.tabungan = Number(newTabungan);
-  if (newPenarikan !== "") updateData.penarikan = Number(newPenarikan);
+  document.querySelector("button[onclick='kirimData()']").style.display = "none";
 
-  if (Object.keys(updateData).length > 0) {
-    db.collection(namaBulan).doc(id).update(updateData)
-      .then(() => alert("Data berhasil diperbarui"))
-      .catch((error) => alert("Gagal memperbarui: " + error.message));
-  }
-            }
+  const btn = document.createElement("button");
+  btn.id = "updateBtn";
+  btn.textContent = "Update";
+  btn.onclick = function() {
+    const newJumlah = parseInt(document.getElementById("jumlah").value);
+    const newTipe = document.getElementById("tipe").value;
+
+    db.collection("tabungan_putra").doc(id).update({
+      jumlah: newJumlah,
+      tipe: newTipe,
+      tanggal: firebase.firestore.Timestamp.now()
+    }).then(() => {
+      document.getElementById("jumlah").value = "";
+      document.getElementById("tipe").value = "tabung";
+      document.getElementById("updateBtn").remove();
+      document.querySelector("button[onclick='kirimData()']").style.display = "inline-block";
+      ambilData();
+    });
+  };
+
+  document.body.appendChild(btn);
+                                         }
