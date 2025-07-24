@@ -17,16 +17,19 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // Ambil nama dari daftarnama.js
-window.onload = function() {
+window.onload = function () {
   const select = document.getElementById("nama");
-  if (typeof putra !== 'undefined') {
-    putra.forEach(nama => {
+  if (typeof daftarNama !== 'undefined' && daftarNama.putra) {
+    daftarNama.putra.forEach(nama => {
       const opt = document.createElement("option");
       opt.value = nama;
       opt.textContent = nama;
       select.appendChild(opt);
     });
+  } else {
+    console.error("daftarNama.putra tidak ditemukan");
   }
+
   ambilData(); // setelah nama dimuat, tampilkan tabel
 };
 
@@ -47,8 +50,12 @@ function kirimData() {
   db.collection("tabungan_putra").add({
     nama, jumlah, tipe, tanggal, bulan
   }).then(() => {
+    alert("Data berhasil disimpan!");
     document.getElementById("jumlah").value = "";
     ambilData();
+  }).catch(error => {
+    console.error("Gagal menyimpan data:", error);
+    alert("Gagal menyimpan data: " + error.message);
   });
 }
 
@@ -79,6 +86,8 @@ function ambilData() {
         `;
         tbody.appendChild(row);
       });
+    }).catch(error => {
+      console.error("Gagal mengambil data:", error);
     });
 }
 
@@ -90,7 +99,13 @@ function formatRupiah(angka) {
 // Hapus data
 function hapusData(id) {
   if (confirm("Yakin ingin menghapus data ini?")) {
-    db.collection("tabungan_putra").doc(id).delete().then(ambilData);
+    db.collection("tabungan_putra").doc(id).delete().then(() => {
+      alert("Data berhasil dihapus");
+      ambilData();
+    }).catch(error => {
+      console.error("Gagal menghapus data:", error);
+      alert("Gagal menghapus data");
+    });
   }
 }
 
@@ -102,10 +117,14 @@ function editData(id, nama, jumlah, tipe) {
 
   document.querySelector("button[onclick='kirimData()']").style.display = "none";
 
+  // Hapus tombol update sebelumnya jika ada
+  const prevBtn = document.getElementById("updateBtn");
+  if (prevBtn) prevBtn.remove();
+
   const btn = document.createElement("button");
   btn.id = "updateBtn";
   btn.textContent = "Update";
-  btn.onclick = function() {
+  btn.onclick = function () {
     const newJumlah = parseInt(document.getElementById("jumlah").value);
     const newTipe = document.getElementById("tipe").value;
 
@@ -114,13 +133,17 @@ function editData(id, nama, jumlah, tipe) {
       tipe: newTipe,
       tanggal: firebase.firestore.Timestamp.now()
     }).then(() => {
+      alert("Data berhasil diperbarui");
       document.getElementById("jumlah").value = "";
       document.getElementById("tipe").value = "tabung";
-      document.getElementById("updateBtn").remove();
+      btn.remove();
       document.querySelector("button[onclick='kirimData()']").style.display = "inline-block";
       ambilData();
+    }).catch(error => {
+      console.error("Gagal update:", error);
+      alert("Gagal memperbarui data");
     });
   };
 
   document.body.appendChild(btn);
-                                         }
+          }
