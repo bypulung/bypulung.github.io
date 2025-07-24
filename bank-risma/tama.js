@@ -118,3 +118,16 @@
         .catch((error) => alert("Gagal memperbarui: " + error));
     }
   }
+
+
+if (typeof daftarnama !== "undefined" && daftarnama.putra) {
+  daftarnama.putra.forEach(nama => {
+    const option = document.createElement('option');
+    option.value = nama;
+    option.text = nama;
+    namaSelect.appendChild(option);
+  });
+} else {
+  alert("Data nama putra belum dimuat!");
+}
+
