@@ -1,4 +1,4 @@
-const daftarnama = {
+const daftarNama = {
   putra: [
     "Tama",
     "Pulung",
