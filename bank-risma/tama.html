@@ -267,16 +267,34 @@
   <label for="nama">Nama:</label>
   <select id="nama"></select><br><br>
 
-  <label for="tipe">Tipe Transaksi:</label>
-  <select id="tipe">
-    <option value="tabung">Tabung</option>
-    <option value="ambil">Ambil</option>
-  </select><br><br>
-
-  <label for="jumlah">Jumlah (Rp):</label>
+  
+  <label for="jumlah">Jumlah (Rp):</label><br/>
   <input type="number" id="jumlah"><br><br>
 
-  <button onclick="kirimData()">Simpan</button>
+    <label for="tipe">Tipe Transaksi:</label><br/>
+  <select id="tipe">
+    <option value="tabungan">Tabungan</option>
+    <option value="penarikan">Penarikan</option>
+  </select><br><br>
+    
+
+  <button onclick="kirimData()">Simpan</button><br/><br/>
+
+    <h2><span id="bulanTahun"></span></h2>
+<table border="1" style="width:100%; border-collapse: collapse;">
+  <thead>
+    <tr>
+      <th>Nama</th>
+      <th>Tabungan</th>
+      <th>Penarikan</th>
+      <th>Tanggal</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="dataTabel">
+    <!-- Data akan ditampilkan di sini -->
+  </tbody>
+</table>
 
   <script>
     // Konfigurasi Firebase
@@ -334,6 +352,67 @@
         alert("Gagal menyimpan data: " + error);
       });
     }
+
+
+const monthNames = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+const today = new Date();
+const namaBulan = monthNames[today.getMonth()] + " " + today.getFullYear();
+document.getElementById("bulanTahun").innerText = namaBulan;
+
+const collectionRef = db.collection(namaBulan).where("jenis", "==", "putra").orderBy("timestamp", "desc");
+
+// Ambil data dan tampilkan
+collectionRef.onSnapshot((querySnapshot) => {
+  const tbody = document.getElementById("dataTabel");
+  tbody.innerHTML = "";
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${data.nama}</td>
+      <td>${data.tabungan || "-"}</td>
+      <td>${data.penarikan || "-"}</td>
+      <td>${new Date(data.timestamp?.toDate?.() || "").toLocaleDateString('id-ID')}</td>
+      <td>
+        <button onclick="editData('${doc.id}')">Edit</button>
+        <button onclick="hapusData('${doc.id}')">Hapus</button>
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+});
+
+// Fungsi Hapus Data
+function hapusData(id) {
+  if (confirm("Yakin ingin menghapus data ini?")) {
+    db.collection(namaBulan).doc(id).delete()
+      .then(() => alert("Data berhasil dihapus"))
+      .catch((error) => alert("Gagal menghapus: " + error));
+  }
+}
+
+// Fungsi Edit Data
+function editData(id) {
+  const newTabungan = prompt("Masukkan nilai tabungan baru (biarkan kosong jika tidak mengubah):");
+  const newPenarikan = prompt("Masukkan nilai penarikan baru (biarkan kosong jika tidak mengubah):");
+
+  const updateData = {};
+  if (newTabungan !== "") updateData.tabungan = Number(newTabungan);
+  if (newPenarikan !== "") updateData.penarikan = Number(newPenarikan);
+
+  if (Object.keys(updateData).length > 0) {
+    db.collection(namaBulan).doc(id).update(updateData)
+      .then(() => alert("Data berhasil diperbarui"))
+      .catch((error) => alert("Gagal memperbarui: " + error));
+  }
+            }
+      
   </script>
 
 
