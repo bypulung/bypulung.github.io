@@ -15,9 +15,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="daftarnama.js"></script>
-  <script src="tama.js"></script>
-
+  <script src="https://tanjungbulan.my.id/bank-risma/daftarnama.js"></script>
+  
    <style>
 
        body { font-family: sans-serif; margin: 20px; }
@@ -262,6 +261,8 @@
 </script>
 
 
+
+
 <h2>Input Tabungan Putra</h2>
 
 <label for="nama">Nama:</label>
@@ -294,6 +295,47 @@
     <!-- Data akan ditampilkan di sini -->
   </tbody>
 </table>
+
+<script>
+  // Inisialisasi Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyAfkARu79wTh-XGLZprTfxY4XDQ65F-gE8",
+    authDomain: "bank-risma.firebaseapp.com",
+    databaseURL: "https://bank-risma-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "bank-risma",
+    storageBucket: "bank-risma.firebasestorage.app",
+    messagingSenderId: "20349077579",
+    appId: "1:20349077579:web:6b81da610dc0715289e5ce"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Ambil bulan dan tahun
+  const today = new Date();
+  const bulan = today.toLocaleString('default', { month: 'long' });
+  const tahun = today.getFullYear();
+  const bulanTahun = `${bulan} ${tahun}`;
+  document.getElementById("bulanTahun").innerText = bulanTahun;
+
+  // Tampilkan nama dari daftarNama.putra
+  function tampilkanNamaPutra() {
+    const select = document.getElementById("nama");
+    if (typeof daftarNama !== 'undefined' && Array.isArray(daftarNama.putra)) {
+      daftarNama.putra.forEach(nama => {
+        const option = document.createElement("option");
+        option.value = nama;
+        option.textContent = nama;
+        select.appendChild(option);
+      });
+    } else {
+      alert("Daftar nama putra tidak ditemukan!");
+    }
+  }
+
+  window.onload = tampilkanNamaPutra;
+</script>
+
+<script src="tama.js"></script> <!-- Untuk fungsi kirimData dan tampilkan data -->
 
     
 
