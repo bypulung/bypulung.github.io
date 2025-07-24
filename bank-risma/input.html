@@ -260,11 +260,9 @@
   document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
 </script>
 
+<script src="namaputra.js"></script>
+<script src="namaputri.js"></script>
 
-  
-  <script src="namaputra.js"></script>
-  <script src="namaputri.js"></script>
-  
 <h2>Input Tabungan Putra</h2>
 <label>Nama:</label><br>
 <select id="namaPutra"></select><br><br>
@@ -289,25 +287,28 @@
 </select><br><br>
 <button onclick="tambahData('putri')">Simpan</button>
 
+<br/>
 <h5>Data Tabungan Putra</h5>
-<table>
+<table border="1" style="border-collapse: collapse; width:100%">
   <thead>
     <tr>
       <th>Nama</th>
       <th>Tabungan</th>
       <th>Penarikan</th>
+      <th>Aksi</th>
     </tr>
   </thead>
   <tbody id="tabelPutra"></tbody>
 </table>
 
 <h5>Data Tabungan Putri</h5>
-<table>
+<table border="1" style="border-collapse: collapse; width:100%">
   <thead>
     <tr>
       <th>Nama</th>
       <th>Tabungan</th>
       <th>Penarikan</th>
+      <th>Aksi</th>
     </tr>
   </thead>
   <tbody id="tabelPutri"></tbody>
@@ -316,6 +317,7 @@
 <h5>Hasil File JS</h5>
 <textarea id="hasilJS" readonly></textarea><br>
 <button onclick="salinJS()">Salin Hasil JS</button>
+<button onclick="kirimWhatsApp()">Kirim via WhatsApp</button>
 
 <script>
   const data = {
@@ -360,6 +362,12 @@
     updateTextarea();
   }
 
+  function hapusData(jenis, nama) {
+    data[jenis] = data[jenis].filter(d => d.nama !== nama);
+    updateTabel(jenis);
+    updateTextarea();
+  }
+
   function updateTabel(jenis) {
     const tbody = document.getElementById("tabel" + capitalize(jenis));
     tbody.innerHTML = "";
@@ -369,6 +377,7 @@
         <td>${item.nama}</td>
         <td>${item.tabungan}</td>
         <td>${item.penarikan}</td>
+        <td><button onclick="hapusData('${jenis}', '${item.nama}')">Hapus</button></td>
       `;
       tbody.appendChild(row);
     });
@@ -392,11 +401,17 @@
     document.execCommand("copy");
     alert("Hasil JS berhasil disalin!");
   }
+
+  function kirimWhatsApp() {
+    const hasil = document.getElementById("hasilJS").value;
+    const pesan = encodeURIComponent("Berikut hasil tabungan:\n\n" + hasil);
+    const nomor = "6288971344131"; // 088971344131 diubah jadi format internasional
+    const url = `https://wa.me/${nomor}?text=${pesan}`;
+    window.open(url, '_blank');
+  }
 </script>
-
-
-
   
+    
 <hr/>
     <ul class="list-unstyled links">
     </ul>
