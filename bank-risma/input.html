@@ -144,23 +144,48 @@
     }
 
     .fire-btn {
-      background: linear-gradient(45deg, #ff6a00, #ff0000, #ff6a00);
-      animation: fire 1s infinite;
-      border-radius: 5px;
-    }
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    margin-top: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
 
-    @keyframes fire {
-      0% { box-shadow: 0 0 5px #ff6a00; }
-      50% { box-shadow: 0 0 15px #ff0000; }
-      100% { box-shadow: 0 0 5px #ff6a00; }
-    }
+  .fire-btn::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 10%, transparent 11%) center/10px 10px;
+    animation: burn 1s infinite linear;
+    z-index: 0;
+  }
 
-    #infoSummary {
-      background-color: #2a2a2a;
-      padding: 10px;
-      border: 1px solid #555;
-      margin-bottom: 10px;
-    }
+  .fire-btn:hover {
+    background: linear-gradient(45deg, #ff3d3d, #ff8e53);
+  }
+
+  @keyframes burn {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hapus-btn {
+    color: red;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
     
         </style>
 
@@ -301,7 +326,9 @@
 </script>
 
 
-    <script src="namaputra.js"></script>
+  
+
+<script src="namaputra.js"></script>
 <script src="namaputri.js"></script>
 
 <h2>Input Tabungan Putra</h2>
@@ -314,7 +341,7 @@
   <option value="tabungan">Tabungan</option>
   <option value="penarikan">Penarikan</option>
 </select><br>
-<button class="fire-btn" onclick="tambahData('putra')">Simpan</button>
+<button class="fire-btn" onclick="tambahData('putra')">Tambahkan</button>
 
 <h2>Input Tabungan Putri</h2>
 <label>Nama:</label>
@@ -326,7 +353,7 @@
   <option value="tabungan">Tabungan</option>
   <option value="penarikan">Penarikan</option>
 </select><br>
-<button class="fire-btn" onclick="tambahData('putri')">Simpan</button>
+<button class="fire-btn" onclick="tambahData('putri')">Tambahkan</button>
 
 <hr>
 
@@ -342,7 +369,6 @@
   </thead>
   <tbody id="tabelPutra"></tbody>
 </table>
-<p id="totalPutra"></p>
 
 <h3>Data Tabungan Putri</h3>
 <table>
@@ -356,13 +382,12 @@
   </thead>
   <tbody id="tabelPutri"></tbody>
 </table>
-<p id="totalPutri"></p>
 
 <!-- ✅ Ringkasan Info -->
-<div id="infoSummary"></div>
+<div id="infoSummary" style="margin-top:20px; font-size: 1.1em;"></div>
 
 <h3>Hasil File JS</h3>
-<textarea id="hasilJS" readonly></textarea><br>
+<textarea id="hasilJS" rows="10" style="width:100%;" readonly></textarea><br>
 <button class="fire-btn" onclick="salinJS()">Salin Hasil JS</button>
 <button class="fire-btn" onclick="kirimWA()">Kirim ke WhatsApp</button>
 
@@ -422,25 +447,16 @@
     const tbody = document.getElementById("tabel" + capitalize(jenis));
     tbody.innerHTML = "";
 
-    let totalTabung = 0;
-    let totalTarik = 0;
-
     data[jenis].forEach((item, i) => {
-      totalTabung += item.tabungan;
-      totalTarik += item.penarikan;
-
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${item.nama}</td>
         <td>${item.tabungan}</td>
         <td>${item.penarikan}</td>
-        <td><button onclick="hapusData('${jenis}', ${i})">Hapus</button></td>
+        <td><button class="hapus-btn" onclick="hapusData('${jenis}', ${i})">Hapus</button></td>
       `;
       tbody.appendChild(row);
     });
-
-    document.getElementById("total" + capitalize(jenis)).innerText =
-      `Total Tabungan: Rp${totalTabung.toLocaleString()} | Total Penarikan: Rp${totalTarik.toLocaleString()}`;
   }
 
   function updateTextarea() {
@@ -489,8 +505,8 @@
     const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
     window.open(url, "_blank");
   }
-</script>
-    
+    </script>
+        
     
 <hr/>
     <ul class="list-unstyled links">
