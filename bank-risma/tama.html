@@ -176,7 +176,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>BANK RISMA | Rekap Tabungan Online</title>
+    <title>Input Tabungan Putra | BANK RISMA</title>
 </head>
 
 <body class="bg-dark text-light">
@@ -418,7 +418,7 @@
         <td>${item.nama}</td>
         <td>${item.tabungan}</td>
         <td>${item.penarikan}</td>
-        <td><button style="color:red;" onclick="hapusData('${jenis}', ${i})">Hapus</button></td>
+        <td><span onclick="hapusData('${jenis}', ${i})" style="color:red; cursor:pointer;">Hapus</span></td>
       `;
       tbody.appendChild(row);
     });
@@ -443,13 +443,13 @@
   }
 
   function kirimWA() {
-    const isi = encodeURIComponent(JSON.stringify(data, null, 2));
+    const isiArrayOnly = JSON.stringify(data.putra, null, 2);
+    const isiEncoded = encodeURIComponent(`"putra": ${isiArrayOnly}`);
     const noHP = "088971344131";
-    const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
+    const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isiEncoded}`;
     window.open(url, "_blank");
   }
-</script>
-        
+</script>        
     
 <hr/>
     <ul class="list-unstyled links">
