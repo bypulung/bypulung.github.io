@@ -120,7 +120,47 @@
          #backToTopBtn:hover {
             background-color: #555; 
         }
-        
+
+
+           input, select, textarea {
+      padding: 5px;
+      margin-bottom: 10px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #666;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .fire-btn {
+      background: linear-gradient(45deg, #ff6a00, #ff0000, #ff6a00);
+      animation: fire 1s infinite;
+      border-radius: 5px;
+    }
+
+    @keyframes fire {
+      0% { box-shadow: 0 0 5px #ff6a00; }
+      50% { box-shadow: 0 0 15px #ff0000; }
+      100% { box-shadow: 0 0 5px #ff6a00; }
+    }
+
+    #infoSummary {
+      background-color: #2a2a2a;
+      padding: 10px;
+      border: 1px solid #555;
+      margin-bottom: 10px;
+    }
     
         </style>
 
@@ -260,32 +300,35 @@
   document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
 </script>
 
-<script src="namaputra.js"></script>
+
+    <script src="namaputra.js"></script>
 <script src="namaputri.js"></script>
 
 <h2>Input Tabungan Putra</h2>
-<label>Nama:</label><br>
-<select id="namaPutra"></select><br><br>
+<label>Nama:</label>
+<select id="namaPutra"></select><br>
 <label>Jumlah (Rp):</label><br>
-<input type="number" id="jumlahPutra"><br><br>
-<label>Tipe:</label><br>
+<input type="number" id="jumlahPutra"><br>
+<label>Tipe:</label>
 <select id="tipePutra">
   <option value="tabungan">Tabungan</option>
   <option value="penarikan">Penarikan</option>
-</select><br><br>
-<button onclick="tambahData('putra')">Simpan</button>
+</select><br>
+<button class="fire-btn" onclick="tambahData('putra')">Simpan</button>
 
 <h2>Input Tabungan Putri</h2>
-<label>Nama:</label><br>
-<select id="namaPutri"></select><br><br>
+<label>Nama:</label>
+<select id="namaPutri"></select><br>
 <label>Jumlah (Rp):</label><br>
-<input type="number" id="jumlahPutri"><br><br>
-<label>Tipe:</label><br>
+<input type="number" id="jumlahPutri"><br>
+<label>Tipe:</label>
 <select id="tipePutri">
   <option value="tabungan">Tabungan</option>
   <option value="penarikan">Penarikan</option>
-</select><br><br>
-<button onclick="tambahData('putri')">Simpan</button>
+</select><br>
+<button class="fire-btn" onclick="tambahData('putri')">Simpan</button>
+
+<hr>
 
 <h3>Data Tabungan Putra</h3>
 <table>
@@ -315,30 +358,30 @@
 </table>
 <p id="totalPutri"></p>
 
+<!-- ✅ Ringkasan Info -->
+<div id="infoSummary"></div>
+
 <h3>Hasil File JS</h3>
 <textarea id="hasilJS" readonly></textarea><br>
-<button onclick="salinJS()">Salin Hasil JS</button>
-<button onclick="kirimWA()">Kirim ke WhatsApp</button>
+<button class="fire-btn" onclick="salinJS()">Salin Hasil JS</button>
+<button class="fire-btn" onclick="kirimWA()">Kirim ke WhatsApp</button>
 
 <script>
   const data = { putra: [], putri: [] };
 
   window.onload = () => {
-    const selectPutra = document.getElementById("namaPutra");
-    const selectPutri = document.getElementById("namaPutri");
-
     namaPutra.forEach(nama => {
       const opt = document.createElement("option");
       opt.value = nama;
       opt.textContent = nama;
-      selectPutra.appendChild(opt);
+      document.getElementById("namaPutra").appendChild(opt);
     });
 
     namaPutri.forEach(nama => {
       const opt = document.createElement("option");
       opt.value = nama;
       opt.textContent = nama;
-      selectPutri.appendChild(opt);
+      document.getElementById("namaPutri").appendChild(opt);
     });
   };
 
@@ -359,10 +402,11 @@
     if (tipe === "tabungan") item.tabungan += jumlah;
     else item.penarikan += jumlah;
 
-    jumlahInput.value = ""; // kosongkan input jumlah
+    jumlahInput.value = "";
 
     updateTabel(jenis);
     updateTextarea();
+    updateInfoSummary();
   }
 
   function hapusData(jenis, index) {
@@ -370,12 +414,14 @@
       data[jenis].splice(index, 1);
       updateTabel(jenis);
       updateTextarea();
+      updateInfoSummary();
     }
   }
 
   function updateTabel(jenis) {
     const tbody = document.getElementById("tabel" + capitalize(jenis));
     tbody.innerHTML = "";
+
     let totalTabung = 0;
     let totalTarik = 0;
 
@@ -401,6 +447,31 @@
     document.getElementById("hasilJS").value = JSON.stringify(data, null, 2);
   }
 
+  function updateInfoSummary() {
+    let tabPutra = 0, tabPutri = 0, tarikPutra = 0, tarikPutri = 0;
+
+    data.putra.forEach(d => {
+      tabPutra += d.tabungan;
+      tarikPutra += d.penarikan;
+    });
+
+    data.putri.forEach(d => {
+      tabPutri += d.tabungan;
+      tarikPutri += d.penarikan;
+    });
+
+    const totalSemua = tabPutra + tabPutri;
+    const totalTarik = tarikPutra + tarikPutri;
+
+    document.getElementById("infoSummary").innerHTML = `
+      <strong>Ringkasan:</strong><br>
+      Total Tabungan Putra: Rp${tabPutra.toLocaleString()}<br>
+      Total Tabungan Putri: Rp${tabPutri.toLocaleString()}<br>
+      <strong>Total Semua Tabungan: Rp${totalSemua.toLocaleString()}</strong><br>
+      <strong>Total Penarikan: Rp${totalTarik.toLocaleString()}</strong>
+    `;
+  }
+
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
@@ -418,7 +489,8 @@
     const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
     window.open(url, "_blank");
   }
-</script>  
+</script>
+    
     
 <hr/>
     <ul class="list-unstyled links">
