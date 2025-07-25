@@ -270,8 +270,8 @@
 <input type="number" id="jumlahPutra"><br><br>
 <label>Tipe:</label><br>
 <select id="tipePutra">
-  <option value="tabungan">Tabung</option>
-  <option value="penarikan">Ambil</option>
+  <option value="tabungan">Tabungan</option>
+  <option value="penarikan">Penarikan</option>
 </select><br><br>
 <button onclick="tambahData('putra')">Simpan</button>
 
@@ -282,14 +282,13 @@
 <input type="number" id="jumlahPutri"><br><br>
 <label>Tipe:</label><br>
 <select id="tipePutri">
-  <option value="tabungan">Tabung</option>
-  <option value="penarikan">Ambil</option>
+  <option value="tabungan">Tabungan</option>
+  <option value="penarikan">Penarikan</option>
 </select><br><br>
 <button onclick="tambahData('putri')">Simpan</button>
 
-<br/>
-<h5>Data Tabungan Putra</h5>
-<table border="1" style="border-collapse: collapse; width:100%">
+<h3>Data Tabungan Putra</h3>
+<table>
   <thead>
     <tr>
       <th>Nama</th>
@@ -300,9 +299,10 @@
   </thead>
   <tbody id="tabelPutra"></tbody>
 </table>
+<p id="totalPutra"></p>
 
-<h5>Data Tabungan Putri</h5>
-<table border="1" style="border-collapse: collapse; width:100%">
+<h3>Data Tabungan Putri</h3>
+<table>
   <thead>
     <tr>
       <th>Nama</th>
@@ -313,19 +313,17 @@
   </thead>
   <tbody id="tabelPutri"></tbody>
 </table>
+<p id="totalPutri"></p>
 
-<h5>Hasil File JS</h5>
+<h3>Hasil File JS</h3>
 <textarea id="hasilJS" readonly></textarea><br>
 <button onclick="salinJS()">Salin Hasil JS</button>
-<button onclick="kirimWhatsApp()">Kirim via WhatsApp</button>
+<button onclick="kirimWA()">Kirim ke WhatsApp</button>
 
 <script>
-  const data = {
-    putra: [],
-    putri: []
-  };
+  const data = { putra: [], putri: [] };
 
-  window.onload = function () {
+  window.onload = () => {
     const selectPutra = document.getElementById("namaPutra");
     const selectPutri = document.getElementById("namaPutri");
 
@@ -346,8 +344,11 @@
 
   function tambahData(jenis) {
     const nama = document.getElementById("nama" + capitalize(jenis)).value;
-    const jumlah = parseInt(document.getElementById("jumlah" + capitalize(jenis)).value) || 0;
+    const jumlahInput = document.getElementById("jumlah" + capitalize(jenis));
     const tipe = document.getElementById("tipe" + capitalize(jenis)).value;
+    const jumlah = parseInt(jumlahInput.value) || 0;
+
+    if (jumlah <= 0) return alert("Masukkan jumlah yang valid");
 
     let item = data[jenis].find(d => d.nama === nama);
     if (!item) {
@@ -358,37 +359,46 @@
     if (tipe === "tabungan") item.tabungan += jumlah;
     else item.penarikan += jumlah;
 
+    jumlahInput.value = ""; // kosongkan input jumlah
+
     updateTabel(jenis);
     updateTextarea();
   }
 
-  function hapusData(jenis, nama) {
-    data[jenis] = data[jenis].filter(d => d.nama !== nama);
-    updateTabel(jenis);
-    updateTextarea();
+  function hapusData(jenis, index) {
+    if (confirm("Yakin ingin menghapus data ini?")) {
+      data[jenis].splice(index, 1);
+      updateTabel(jenis);
+      updateTextarea();
+    }
   }
 
   function updateTabel(jenis) {
     const tbody = document.getElementById("tabel" + capitalize(jenis));
     tbody.innerHTML = "";
-    data[jenis].forEach(item => {
+    let totalTabung = 0;
+    let totalTarik = 0;
+
+    data[jenis].forEach((item, i) => {
+      totalTabung += item.tabungan;
+      totalTarik += item.penarikan;
+
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${item.nama}</td>
         <td>${item.tabungan}</td>
         <td>${item.penarikan}</td>
-        <td><button onclick="hapusData('${jenis}', '${item.nama}')">Hapus</button></td>
+        <td><button onclick="hapusData('${jenis}', ${i})">Hapus</button></td>
       `;
       tbody.appendChild(row);
     });
+
+    document.getElementById("total" + capitalize(jenis)).innerText =
+      `Total Tabungan: Rp${totalTabung.toLocaleString()} | Total Penarikan: Rp${totalTarik.toLocaleString()}`;
   }
 
   function updateTextarea() {
-    const hasil = {
-      putra: data.putra,
-      putri: data.putri
-    };
-    document.getElementById("hasilJS").value = JSON.stringify(hasil, null, 2);
+    document.getElementById("hasilJS").value = JSON.stringify(data, null, 2);
   }
 
   function capitalize(str) {
@@ -399,18 +409,16 @@
     const textarea = document.getElementById("hasilJS");
     textarea.select();
     document.execCommand("copy");
-    alert("Hasil JS berhasil disalin!");
+    alert("Disalin ke clipboard!");
   }
 
-  function kirimWhatsApp() {
-    const hasil = document.getElementById("hasilJS").value;
-    const pesan = encodeURIComponent("Berikut hasil tabungan:\n\n" + hasil);
-    const nomor = "6288971344131"; // 088971344131 diubah jadi format internasional
-    const url = `https://wa.me/${nomor}?text=${pesan}`;
-    window.open(url, '_blank');
+  function kirimWA() {
+    const isi = encodeURIComponent(document.getElementById("hasilJS").value);
+    const noHP = "088971344131";
+    const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
+    window.open(url, "_blank");
   }
-</script>
-  
+</script>  
     
 <hr/>
     <ul class="list-unstyled links">
