@@ -317,7 +317,22 @@
 <label>Nama:</label>
 <select id="namaPutri"></select><br>
 
-<label>Jumlah (Rp):</label><br>
+<label>Jumlah (Rp):</label> <button onclick="tambahNol()">+000</button>
+
+<script>
+function tambahNol() {
+  const input = document.getElementById("jumlahPutri");
+  let nilai = input.value;
+
+  if (nilai === "") {
+    alert("Isi jumlah dulu ya!");
+    return;
+  }
+
+  // Tambahkan tiga nol
+  input.value = nilai + "000";
+}
+</script><br>
 <input type="number" id="jumlahPutri"><br>
 
 <label>Tipe:</label>
