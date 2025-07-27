@@ -310,13 +310,12 @@
 </script>  
   
   
-  <!-- Panggil nama dari file JS -->
-<script src="namaputra.js"></script>
+    <script src="namaputra.js"></script>
 <script src="namaputri.js"></script>
 
 <h2>Input Tabungan Bulanan</h2>
 <label>Kategori:</label>
-<select id="kategori">
+<select id="kategori" onchange="updateNamaOptions()">
   <option value="putra">Putra</option>
   <option value="putri">Putri</option>
 </select><br>
@@ -334,76 +333,42 @@
   <option value="penarikan">Penarikan</option>
 </select><br>
 
-<button class="fire-btn" onclick="tambahData()">Tambahkan</button>
+<button onclick="tambahData()" style="margin-top:10px; background:#444; color:white; padding:8px 14px; border:none; border-radius:5px; font-weight:bold;">➕ Tambahkan</button>
 
 <hr>
+
 <h3>Data Tabungan Putra</h3>
-<table border="1" cellpadding="5">
+<table border="1" cellspacing="0" cellpadding="5">
   <thead>
-    <tr>
-      <th>Nama</th>
-      <th>Tabungan</th>
-      <th>Penarikan</th>
-      <th>Aksi</th>
-    </tr>
+    <tr><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Aksi</th></tr>
   </thead>
-  <tbody id="tabelPutra"></tbody>
+  <tbody id="tabelputra"></tbody>
 </table>
 
 <hr>
+
 <h3>Data Tabungan Putri</h3>
-<table border="1" cellpadding="5">
+<table border="1" cellspacing="0" cellpadding="5">
   <thead>
-    <tr>
-      <th>Nama</th>
-      <th>Tabungan</th>
-      <th>Penarikan</th>
-      <th>Aksi</th>
-    </tr>
+    <tr><th>Nama</th><th>Tabungan</th><th>Penarikan</th><th>Aksi</th></tr>
   </thead>
-  <tbody id="tabelPutri"></tbody>
+  <tbody id="tabelputri"></tbody>
 </table>
 
 <div id="infoSummary" style="margin-top:20px; font-size: 1.1em;"></div>
 
 <!-- Tombol Aksi -->
-<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-width: 300px;">
-  <button onclick="salinRisma()" style="
-    background-color: #ff9800;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-  ">📋 Salin Data Untuk Petinggi RISMA</button>
+<div style="margin-top: 30px; display: flex; flex-direction: column; gap: 10px;">
+  <button onclick="salinRisma()" style="padding: 12px; font-weight: bold; font-size: 16px; background-color:#ffc107; color:black; border:none; border-radius:6px;">📋 Salin Data Untuk Petinggi RISMA</button>
 
-  <button onclick="salinJS()" style="
-    background-color: #333;
-    color: white;
-    padding: 10px 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  ">📄 Salin Kode JS</button>
+  <div style="display: flex; gap: 10px;">
+    <button onclick="salinJS()" style="background-color: #333; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">📋 Salin Kode</button>
 
-  <button onclick="kirimWA()" style="
-    background-color: #25D366;
-    color: white;
-    padding: 10px 16px;
-    border: none;
-    font-weight: bold;
-    border-radius: 6px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  ">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" height="20" style="background:white; border-radius:50%;">
-    Kirim ke WA
-  </button>
+    <button onclick="kirimWA()" style="background-color: #25D366; color: white; padding: 10px 20px; border: none; font-weight: bold; border-radius: 5px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" height="20" style="background:white; border-radius:50%;">
+      Kirim ke WA
+    </button>
+  </div>
 </div>
 
 <script>
@@ -411,7 +376,6 @@
 
   window.onload = () => {
     updateNamaOptions();
-    document.getElementById("kategori").addEventListener("change", updateNamaOptions);
   };
 
   function updateNamaOptions() {
@@ -419,8 +383,8 @@
     const select = document.getElementById("nama");
     select.innerHTML = "";
 
-    const namaList = kategori === "putra" ? namaPutra : namaPutri;
-    namaList.forEach(nama => {
+    const list = kategori === "putra" ? namaPutra : namaPutri;
+    list.forEach(nama => {
       const opt = document.createElement("option");
       opt.value = nama;
       opt.textContent = nama;
@@ -431,11 +395,11 @@
   function tambahData() {
     const jenis = document.getElementById("kategori").value;
     const nama = document.getElementById("nama").value;
-    const jumlahInput = document.getElementById("jumlah");
     const tipe = document.getElementById("tipe").value;
+    const jumlahInput = document.getElementById("jumlah");
     const jumlah = parseInt(jumlahInput.value) || 0;
 
-    if (jumlah <= 0) return alert("Masukkan jumlah yang valid");
+    if (jumlah <= 0) return alert("Masukkan jumlah valid!");
 
     let item = data[jenis].find(d => d.nama === nama);
     if (!item) {
@@ -447,13 +411,12 @@
     else item.penarikan += jumlah;
 
     jumlahInput.value = "";
-
     updateTabel(jenis);
     updateInfoSummary();
   }
 
   function hapusData(jenis, index) {
-    if (confirm("Yakin ingin menghapus data ini?")) {
+    if (confirm("Hapus data ini?")) {
       data[jenis].splice(index, 1);
       updateTabel(jenis);
       updateInfoSummary();
@@ -461,18 +424,18 @@
   }
 
   function updateTabel(jenis) {
-    const tbody = document.getElementById("tabel" + capitalize(jenis));
+    const tbody = document.getElementById("tabel" + jenis);
     tbody.innerHTML = "";
 
     data[jenis].forEach((item, i) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item.nama}</td>
-        <td>${item.tabungan}</td>
-        <td>${item.penarikan}</td>
-        <td><span onclick="hapusData('${jenis}', ${i})" style="color:red; cursor:pointer;">Hapus</span></td>
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.nama}</td>
+          <td>${item.tabungan}</td>
+          <td>${item.penarikan}</td>
+          <td><span style="color:red; cursor:pointer;" onclick="hapusData('${jenis}', ${i})">Hapus</span></td>
+        </tr>
       `;
-      tbody.appendChild(row);
     });
   }
 
@@ -483,32 +446,24 @@
       tabPutra += d.tabungan;
       tarikPutra += d.penarikan;
     });
-
     data.putri.forEach(d => {
       tabPutri += d.tabungan;
       tarikPutri += d.penarikan;
     });
 
-    const totalSemua = tabPutra + tabPutri;
-    const totalTarik = tarikPutra + tarikPutri;
-
     document.getElementById("infoSummary").innerHTML = `
       <strong>Ringkasan:</strong><br>
       Tabungan Putra: Rp${tabPutra.toLocaleString()}<br>
       Tabungan Putri: Rp${tabPutri.toLocaleString()}<br>
-      <strong>Total Tabungan: Rp${totalSemua.toLocaleString()}</strong><br>
-      <strong>Total Penarikan: Rp${totalTarik.toLocaleString()}</strong>
+      <strong>Total Tabungan: Rp${(tabPutra + tabPutri).toLocaleString()}</strong><br>
+      <strong>Total Penarikan: Rp${(tarikPutra + tarikPutri).toLocaleString()}</strong>
     `;
   }
 
   function tambahNol() {
     const input = document.getElementById("jumlah");
-    let nilai = input.value;
-    if (nilai === "") {
-      alert("Isi jumlah dulu ya!");
-      return;
-    }
-    input.value = nilai + "000";
+    if (!input.value) return alert("Isi jumlah dulu ya!");
+    input.value = input.value + "000";
   }
 
   function capitalize(str) {
@@ -517,42 +472,7 @@
 
   function salinJS() {
     const teks = JSON.stringify(data, null, 2);
-    navigator.clipboard.writeText(teks).then(() => {
-      alert("Kode JS disalin!");
-    });
-  }
-
-  function salinRisma() {
-    const bulan = new Date().toLocaleString('id-ID', { month: 'long' });
-    const tahun = new Date().getFullYear();
-    let hasil = `*Input Tabungan Bulan ${bulan} ${tahun}*\n\n`;
-
-    hasil += `👨 *Data Tabungan Putra*\n`;
-    data.putra.forEach((d, i) => {
-      if (d.tabungan > 0) hasil += `${i + 1}. ${d.nama} +${d.tabungan.toLocaleString()}\n`;
-      if (d.penarikan > 0) hasil += `${i + 1}. ${d.nama} -${d.penarikan.toLocaleString()}\n`;
-    });
-
-    hasil += `\n👧 *Data Tabungan Putri*\n`;
-    data.putri.forEach((d, i) => {
-      if (d.tabungan > 0) hasil += `${i + 1}. ${d.nama} +${d.tabungan.toLocaleString()}\n`;
-      if (d.penarikan > 0) hasil += `${i + 1}. ${d.nama} -${d.penarikan.toLocaleString()}\n`;
-    });
-
-    let tabPutra = 0, tabPutri = 0, tarikPutra = 0, tarikPutri = 0;
-    data.putra.forEach(d => { tabPutra += d.tabungan; tarikPutra += d.penarikan; });
-    data.putri.forEach(d => { tabPutri += d.tabungan; tarikPutri += d.penarikan; });
-
-    hasil += `\n💡 *Ringkasan*\n`;
-    hasil += `Tabungan Putra : Rp${tabPutra.toLocaleString()}\n`;
-    hasil += `Tabungan Putri : Rp${tabPutri.toLocaleString()}\n`;
-    hasil += `Total Tabungan : Rp${(tabPutra + tabPutri).toLocaleString()}\n`;
-    hasil += `Total Penarikan : Rp${(tarikPutra + tarikPutri).toLocaleString()}\n\n`;
-    hasil += `Tolong dicek ulang teman-teman, dan beri respon 👍 jika data sudah sesuai dengan buku tabungan yg ditulis Tama dan Putri. Terimakasih🙏`;
-
-    navigator.clipboard.writeText(hasil).then(() => {
-      alert("📋 Data untuk petinggi RISMA telah disalin!");
-    });
+    navigator.clipboard.writeText(teks).then(() => alert("Disalin ke clipboard!"));
   }
 
   function kirimWA() {
@@ -561,8 +481,45 @@
     const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
     window.open(url, "_blank");
   }
-</script>  
-  
+
+  function salinRisma() {
+    const bulanTahun = new Date().toLocaleString('id-ID', { month: 'long', year: 'numeric' });
+    let isi = `✍️*Input Tabungan Bulan ${bulanTahun}*\n\n`;
+
+    isi += `👨*Data Tabungan Putra*\n`;
+    if (data.putra.length === 0) isi += "-\n";
+    else data.putra.forEach((d, i) => {
+      const total = d.tabungan - d.penarikan;
+      const simbol = total >= 0 ? "➕" : "➖";
+      isi += `${i + 1}. ${d.nama} ${simbol}${Math.abs(total).toLocaleString("id-ID")}\n`;
+    });
+
+    isi += `\n👧*Data Tabungan Putri*\n`;
+    if (data.putri.length === 0) isi += "-\n";
+    else data.putri.forEach((d, i) => {
+      const total = d.tabungan - d.penarikan;
+      const simbol = total >= 0 ? "➕" : "➖";
+      isi += `${i + 1}. ${d.nama} ${simbol}${Math.abs(total).toLocaleString("id-ID")}\n`;
+    });
+
+    const totalTabPutra = data.putra.reduce((a, b) => a + b.tabungan, 0);
+    const totalTabPutri = data.putri.reduce((a, b) => a + b.tabungan, 0);
+    const totalTarik = [...data.putra, ...data.putri].reduce((a, b) => a + b.penarikan, 0);
+    const totalTab = totalTabPutra + totalTabPutri;
+
+    isi += `\n💡*Ringkasan*\n`;
+    isi += `Tabungan Putra : Rp${totalTabPutra.toLocaleString("id-ID")}\n`;
+    isi += `Tabungan Putri : Rp${totalTabPutri.toLocaleString("id-ID")}\n`;
+    isi += `Total Tabungan : Rp${totalTab.toLocaleString("id-ID")}\n`;
+    isi += `Total Penarikan : Rp${totalTarik.toLocaleString("id-ID")}\n\n`;
+
+    isi += `_Tolong dicek ulang ya teman-teman, dan beri respon 👍 jika data sudah sesuai dengan buku tabungan yg ditulis oleh Tama dan Putri. makasih🙏_`;
+
+    navigator.clipboard.writeText(isi).then(() => {
+      alert("📋 Data untuk petinggi RISMA disalin!");
+    });
+  }
+</script>
           
       
 <hr/>  
