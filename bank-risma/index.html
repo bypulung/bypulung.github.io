@@ -358,11 +358,14 @@ function renderBulananSemua() {
         Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
         Penarikan Saldo: ${formatRupiah(totalTarik)}
       </p>
+
+</script>
       
 <h2>Laporan Bulanan</h2>                
 <div id="tabungan-bulanan"></div>
 
 
+<script>
 <button onclick="salinTabunganBulan('${namaFile}')" style="background-color:#00695c;color:white;padding:8px 14px;border:none;border-radius:6px;font-weight:bold;font-size:15px;margin-bottom:20px;cursor:pointer;">
         📋 Salin Tabungan Bulan ${bulanTahun}
       </button>
@@ -601,7 +604,7 @@ async function loadSemua() {
         
 loadSemua();        
 </script>        
-    
+
         
     <p></p>
 <~ Made in RISMA ~>
