@@ -1,319 +1,320 @@
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
-
-<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
-
-
-<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-  <script src="https://tanjungbulan.my.id/bank-risma/daftarnama.js"></script>
+<!DOCTYPE html>  
+<html lang="id">  
   
-   <style>
-
-       body { font-family: sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
-    th { background-color: #eee; }
-    h2 { margin-top: 40px; }
-
-       .profil {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #333;
-  /* commented for demo
-  float: left;
-  margin-left: 125px;
-  margin-top: 20px;
-  */
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="/css/style.css">  
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"  
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">  
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"  
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->  
   
-  /*for demo*/
-  display:inline-block;
-  vertical-align:middle;
-}
-.profil img{
-  width:100%;
-}
-
-
-       
-       
-        h2 {
-            width: 95%;
-            font-size:30px; 
-            background-color: #778899; 
-            
-       }
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>  
   
-        table {
-            width: 98%;
-            border-collapse: collapse; justify-content: center; /* Horizontal center */
-            align-items: center;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #696969;
-        }
-        
-        
-    .navbar {
-            position: fixed; /* Membuat navbar tetap di atas */
-            top: 0;
-            width: 100%;
-            background-color: #7FFF00;
-            overflow: hidden;
-            z-index: 1000; /* Memastikan navbar berada di atas konten lain */
-        }
-
-        /* Gaya untuk tautan dalam navbar */
-        .navbar a {
-            float: left;
-            display: block;
-            color: black;
-            text-align: center;
-            padding: 5px 5px;
-            text-decoration: blink;
-            font-size: 17px;
-        }
-
-    /* Ubah warna tautan saat dihover */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        /* Tambahkan padding ke konten halaman untuk menghindari konten terpotong oleh navbar */
-        .content {
-            padding: 60px 20px;
-            height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */
-        }
-
-        #backToTopBtn {
-            display: block; /* Tampilkan tombol dari awal */
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            z-index: 99;
-            border: none;
-            outline: none;
-            background-color: #7FFF00;
-            color: black;
-            cursor: pointer;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-        }
-         #backToTopBtn:hover {
-            background-color: #555; 
-        }
-
-
-           input, select, textarea {
-      padding: 5px;
-      margin-bottom: 10px;
-      background-color: #333;
-      color: #fff;
-      border: 1px solid #666;
-    }
-
-    textarea {
-      width: 100%;
-      height: 150px;
-    }
-
-    button {
-      padding: 8px 16px;
-      margin: 5px;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-       .fire-btn {
-      background: linear-gradient(45deg, #ff6a00, #ff0000, #ff6a00);
-      animation: fire 1s infinite;
-      border-radius: 5px;
-    }
-
-    @keyframes fire {
-      0% { box-shadow: 0 0 5px #ff6a00; }
-      50% { box-shadow: 0 0 15px #ff0000; }
-      100% { box-shadow: 0 0 5px #ff6a00; }
-    }
-
-    #infoSummary {
-      background-color: #2a2a2a;
-      padding: 10px;
-      border: 1px solid #555;
-      margin-bottom: 10px;
-    }
+  
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>  
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>  
+  <script src="https://tanjungbulan.my.id/bank-risma/daftarnama.js"></script>  
     
-  .hapus-btn {
-    color: red;
-    font-weight: bold;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-
+   <style>  
+  
+       body { font-family: sans-serif; margin: 20px; }  
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }  
+    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }  
+    th { background-color: #eee; }  
+    h2 { margin-top: 40px; }  
+  
+       .profil {  
+  width: 150px;  
+  height: 150px;  
+  border-radius: 50%;  
+  overflow: hidden;  
+  background-color: #333;  
+  /* commented for demo  
+  float: left;  
+  margin-left: 125px;  
+  margin-top: 20px;  
+  */  
     
-        </style>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>Input Tabungan Bulanan | BANK RISMA</title>
-</head>
-
-<body class="bg-dark text-light">
-   
+  /*for demo*/  
+  display:inline-block;  
+  vertical-align:middle;  
+}  
+.profil img{  
+  width:100%;  
+}  
+  
+  
+         
+         
+        h2 {  
+            width: 95%;  
+            font-size:30px;   
+            background-color: #778899;   
+              
+       }  
     
-    <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
-           
-    
-        
-        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
-                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
-        
-                <img class="img-fluid">
-            </div>
-            <span class="pt-3 text-center">
-
-                 <h1><i class="fas fa-wallet">
-        
-    </i> BANK RISMA</h1>
-                
-            </span>
-
-        
-            
-       </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="showImageLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="showImageLabel">RISMA Tanjung Bulan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img class="img-fluid img-thumbnail profile">
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <script>
-        // * img position
-        const position = '/risma_1.png';
-
-        // ! Don't change this line
-        $(document).ready(() => {
-            $('#profile img').attr('src', position);
-        });
-    </script>
-
-    <center>
-
-    
-<!--
-    <script>
-        // list links
-        const links = [
-            
-            
-            {
-
-                url: 'jadwal.html',
-                icon: 'fas fa-calendar-alt',
-                text: 'Jadwal Pertandingan',
-            },
-           
-            
-            {
-
-                url: 'hasil.html',
-                icon: 'fas fa-hourglass-end',
-                text: 'Hasil Pertandingan',
-            },
-
-            
-           
-        ];
-
-        // ! Don't change this line
-        $(document).ready(() => {
-            const callbackMap = (element, i) => {
-                return  /*html*/`
-                <li class="my-3 py-3 px-5 border border-light">
-                    <a target="" href="${element.url}" class="text-decoration-none"
-                        style="font-weight: 450;">
-                        <i class="fa-fw ${element.icon}"></i>
-                        ${element.text}
-                    </a>
-                </li>
-                `;
-            };
-            $('.list-unstyled.links').append($.map(links, callbackMap));
-        });
-    </script>
-
- -->
-        
-        
-   
-
-       
-
-    </center>
-    
-
-    <script>
-        $(document).ready(() => {
-            $('#profile').on('click', () => {
-                $('img.img-fluid.profile').attr('src',
-                    $('#profile img').attr('src')
-                );
-            })
-        });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
-
-
-<center>
-
-    <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
-
-<script>
-  const updatedAt = new Date(document.lastModified);
-  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
-  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
-</script>
-
-
-  <script src="namaputra.js"></script>
+        table {  
+            width: 98%;  
+            border-collapse: collapse; justify-content: center; /* Horizontal center */  
+            align-items: center;  
+        }  
+        th, td {  
+            border: 1px solid black;  
+            padding: 8px;  
+            text-align: left;  
+        }  
+        th {  
+            background-color: #696969;  
+        }  
+          
+          
+    .navbar {  
+            position: fixed; /* Membuat navbar tetap di atas */  
+            top: 0;  
+            width: 100%;  
+            background-color: #7FFF00;  
+            overflow: hidden;  
+            z-index: 1000; /* Memastikan navbar berada di atas konten lain */  
+        }  
+  
+        /* Gaya untuk tautan dalam navbar */  
+        .navbar a {  
+            float: left;  
+            display: block;  
+            color: black;  
+            text-align: center;  
+            padding: 5px 5px;  
+            text-decoration: blink;  
+            font-size: 17px;  
+        }  
+  
+    /* Ubah warna tautan saat dihover */  
+        .navbar a:hover {  
+            background-color: #ddd;  
+            color: black;  
+        }  
+  
+        /* Tambahkan padding ke konten halaman untuk menghindari konten terpotong oleh navbar */  
+        .content {  
+            padding: 60px 20px;  
+            height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */  
+        }  
+  
+        #backToTopBtn {  
+            display: block; /* Tampilkan tombol dari awal */  
+            position: fixed;  
+            bottom: 15px;  
+            right: 15px;  
+            z-index: 99;  
+            border: none;  
+            outline: none;  
+            background-color: #7FFF00;  
+            color: black;  
+            cursor: pointer;  
+            padding: 15px;  
+            border-radius: 10px;  
+            font-size: 18px;  
+        }  
+         #backToTopBtn:hover {  
+            background-color: #555;   
+        }  
+  
+  
+           input, select, textarea {  
+      padding: 5px;  
+      margin-bottom: 10px;  
+      background-color: #333;  
+      color: #fff;  
+      border: 1px solid #666;  
+    }  
+  
+    textarea {  
+      width: 100%;  
+      height: 150px;  
+    }  
+  
+    button {  
+      padding: 8px 16px;  
+      margin: 5px;  
+      color: white;  
+      border: none;  
+      cursor: pointer;  
+    }  
+  
+       .fire-btn {  
+      background: linear-gradient(45deg, #ff6a00, #ff0000, #ff6a00);  
+      animation: fire 1s infinite;  
+      border-radius: 5px;  
+    }  
+  
+    @keyframes fire {  
+      0% { box-shadow: 0 0 5px #ff6a00; }  
+      50% { box-shadow: 0 0 15px #ff0000; }  
+      100% { box-shadow: 0 0 5px #ff6a00; }  
+    }  
+  
+    #infoSummary {  
+      background-color: #2a2a2a;  
+      padding: 10px;  
+      border: 1px solid #555;  
+      margin-bottom: 10px;  
+    }  
+      
+  .hapus-btn {  
+    color: red;  
+    font-weight: bold;  
+    background: none;  
+    border: none;  
+    cursor: pointer;  
+  }  
+  
+      
+        </style>  
+  
+  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"  
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>  
+    <title>Input Tabungan Bulanan | BANK RISMA</title>  
+</head>  
+  
+<body class="bg-dark text-light">  
+     
+      
+    <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">  
+             
+      
+          
+        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"  
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">  
+          
+                <img class="img-fluid">  
+            </div>  
+            <span class="pt-3 text-center">  
+  
+                 <h1><i class="fas fa-wallet">  
+          
+    </i> BANK RISMA</h1>  
+                  
+            </span>  
+  
+          
+              
+       </div>  
+  
+    <!-- Modal -->  
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  
+        aria-labelledby="showImageLabel" aria-hidden="true">  
+        <div class="modal-dialog">  
+            <div class="modal-content">  
+                <div class="modal-header">  
+                    <h5 class="modal-title" id="showImageLabel">RISMA Tanjung Bulan</h5>  
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  
+                </div>  
+                <div class="modal-body">  
+                    <img class="img-fluid img-thumbnail profile">  
+                </div>  
+            </div>  
+        </div>  
+    </div>   
+  
+    <script>  
+        // * img position  
+        const position = '/risma_1.png';  
+  
+        // ! Don't change this line  
+        $(document).ready(() => {  
+            $('#profile img').attr('src', position);  
+        });  
+    </script>  
+  
+    <center>  
+  
+      
+<!--  
+    <script>  
+        // list links  
+        const links = [  
+              
+              
+            {  
+  
+                url: 'jadwal.html',  
+                icon: 'fas fa-calendar-alt',  
+                text: 'Jadwal Pertandingan',  
+            },  
+             
+              
+            {  
+  
+                url: 'hasil.html',  
+                icon: 'fas fa-hourglass-end',  
+                text: 'Hasil Pertandingan',  
+            },  
+  
+              
+             
+        ];  
+  
+        // ! Don't change this line  
+        $(document).ready(() => {  
+            const callbackMap = (element, i) => {  
+                return  /*html*/`  
+                <li class="my-3 py-3 px-5 border border-light">  
+                    <a target="" href="${element.url}" class="text-decoration-none"  
+                        style="font-weight: 450;">  
+                        <i class="fa-fw ${element.icon}"></i>  
+                        ${element.text}  
+                    </a>  
+                </li>  
+                `;  
+            };  
+            $('.list-unstyled.links').append($.map(links, callbackMap));  
+        });  
+    </script>  
+  
+ -->  
+          
+          
+     
+  
+         
+  
+    </center>  
+      
+  
+    <script>  
+        $(document).ready(() => {  
+            $('#profile').on('click', () => {  
+                $('img.img-fluid.profile').attr('src',  
+                    $('#profile img').attr('src')  
+                );  
+            })  
+        });  
+    </script>  
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"  
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"  
+        crossorigin="anonymous"></script>  
+  
+  
+<center>  
+  
+    <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>  
+  
+<script>  
+  const updatedAt = new Date(document.lastModified);  
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };  
+  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);  
+</script>  
+  
+  
+  <!-- Panggil nama dari file JS -->
+<script src="namaputra.js"></script>
 <script src="namaputri.js"></script>
 
-<h2>Input Tabungan</h2><br>
+<h2>Input Tabungan Bulanan</h2>
 <label>Kategori:</label>
 <select id="kategori">
   <option value="putra">Putra</option>
@@ -336,9 +337,8 @@
 <button class="fire-btn" onclick="tambahData()">Tambahkan</button>
 
 <hr>
-
 <h3>Data Tabungan Putra</h3>
-<table border="1" cellspacing="0" cellpadding="5">
+<table border="1" cellpadding="5">
   <thead>
     <tr>
       <th>Nama</th>
@@ -350,8 +350,9 @@
   <tbody id="tabelPutra"></tbody>
 </table>
 
+<hr>
 <h3>Data Tabungan Putri</h3>
-<table border="1" cellspacing="0" cellpadding="5">
+<table border="1" cellpadding="5">
   <thead>
     <tr>
       <th>Nama</th>
@@ -363,37 +364,45 @@
   <tbody id="tabelPutri"></tbody>
 </table>
 
-<!-- Ringkasan -->
 <div id="infoSummary" style="margin-top:20px; font-size: 1.1em;"></div>
 
 <!-- Tombol Aksi -->
-<div style="margin-top: 20px; display: flex; gap: 10px;">
+<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; max-width: 300px;">
+  <button onclick="salinRisma()" style="
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+  ">📋 Salin Data Untuk Petinggi RISMA</button>
+
   <button onclick="salinJS()" style="
     background-color: #333;
     color: white;
-    border: none;
     padding: 10px 16px;
+    font-weight: bold;
+    border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-  ">
-    📋 Salin Kode
-  </button>
+  ">📄 Salin Kode JS</button>
 
   <button onclick="kirimWA()" style="
     background-color: #25D366;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 16px;
     border: none;
     font-weight: bold;
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
   ">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" height="20" style="background:white; border-radius:50%;">
-    Kirim WA
+    Kirim ke WA
   </button>
 </div>
 
@@ -485,9 +494,9 @@
 
     document.getElementById("infoSummary").innerHTML = `
       <strong>Ringkasan:</strong><br>
-      Total Tabungan Putra: Rp${tabPutra.toLocaleString()}<br>
-      Total Tabungan Putri: Rp${tabPutri.toLocaleString()}<br>
-      <strong>Total Semua Tabungan: Rp${totalSemua.toLocaleString()}</strong><br>
+      Tabungan Putra: Rp${tabPutra.toLocaleString()}<br>
+      Tabungan Putri: Rp${tabPutri.toLocaleString()}<br>
+      <strong>Total Tabungan: Rp${totalSemua.toLocaleString()}</strong><br>
       <strong>Total Penarikan: Rp${totalTarik.toLocaleString()}</strong>
     `;
   }
@@ -495,12 +504,10 @@
   function tambahNol() {
     const input = document.getElementById("jumlah");
     let nilai = input.value;
-
     if (nilai === "") {
       alert("Isi jumlah dulu ya!");
       return;
     }
-
     input.value = nilai + "000";
   }
 
@@ -511,7 +518,40 @@
   function salinJS() {
     const teks = JSON.stringify(data, null, 2);
     navigator.clipboard.writeText(teks).then(() => {
-      alert("Disalin ke clipboard!");
+      alert("Kode JS disalin!");
+    });
+  }
+
+  function salinRisma() {
+    const bulan = new Date().toLocaleString('id-ID', { month: 'long' });
+    const tahun = new Date().getFullYear();
+    let hasil = `*Input Tabungan Bulan ${bulan} ${tahun}*\n\n`;
+
+    hasil += `👨 *Data Tabungan Putra*\n`;
+    data.putra.forEach((d, i) => {
+      if (d.tabungan > 0) hasil += `${i + 1}. ${d.nama} +${d.tabungan.toLocaleString()}\n`;
+      if (d.penarikan > 0) hasil += `${i + 1}. ${d.nama} -${d.penarikan.toLocaleString()}\n`;
+    });
+
+    hasil += `\n👧 *Data Tabungan Putri*\n`;
+    data.putri.forEach((d, i) => {
+      if (d.tabungan > 0) hasil += `${i + 1}. ${d.nama} +${d.tabungan.toLocaleString()}\n`;
+      if (d.penarikan > 0) hasil += `${i + 1}. ${d.nama} -${d.penarikan.toLocaleString()}\n`;
+    });
+
+    let tabPutra = 0, tabPutri = 0, tarikPutra = 0, tarikPutri = 0;
+    data.putra.forEach(d => { tabPutra += d.tabungan; tarikPutra += d.penarikan; });
+    data.putri.forEach(d => { tabPutri += d.tabungan; tarikPutri += d.penarikan; });
+
+    hasil += `\n💡 *Ringkasan*\n`;
+    hasil += `Tabungan Putra : Rp${tabPutra.toLocaleString()}\n`;
+    hasil += `Tabungan Putri : Rp${tabPutri.toLocaleString()}\n`;
+    hasil += `Total Tabungan : Rp${(tabPutra + tabPutri).toLocaleString()}\n`;
+    hasil += `Total Penarikan : Rp${(tarikPutra + tarikPutri).toLocaleString()}\n\n`;
+    hasil += `Tolong dicek ulang teman-teman, dan beri respon 👍 jika data sudah sesuai dengan buku tabungan yg ditulis Tama dan Putri. Terimakasih🙏`;
+
+    navigator.clipboard.writeText(hasil).then(() => {
+      alert("📋 Data untuk petinggi RISMA telah disalin!");
     });
   }
 
@@ -521,20 +561,20 @@
     const url = `https://wa.me/${noHP.replace(/^0/, "62")}?text=${isi}`;
     window.open(url, "_blank");
   }
-</script>
-
-        
-    
-<hr/>
-    <ul class="list-unstyled links">
-    </ul>
-
-
-
-
-<p></p> <br/>
-    
-    Made With ❤️ by Hamba Allah</center>
-<br></body>
-
-</html>
+</script>  
+  
+          
+      
+<hr/>  
+    <ul class="list-unstyled links">  
+    </ul>  
+  
+  
+  
+  
+<p></p> <br/>  
+      
+    Made With ❤️ by Hamba Allah</center>  
+<br></body>  
+  
+</html>  
