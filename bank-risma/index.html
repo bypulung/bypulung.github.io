@@ -260,7 +260,14 @@
 <div id="rekap-tabungan"></div>   
 
 
-<!-- Tombol Salin Rekap Total -->
+
+      
+<h2>Laporan Bulanan</h2>                
+<div id="tabungan-bulanan"></div>
+
+
+
+          <!-- Tombol Salin Rekap Total -->
 <div style="margin-top: 10px;">
   <button onclick="salinRekapTotal()" style="background-color:#4a148c;color:#fff;padding:10px 20px;border:none;border-radius:8px;font-weight:bold;font-size:16px;cursor:pointer;">
     📋 Salin Rekap Total Tabungan
@@ -270,6 +277,46 @@
 <!-- Script tambahan -->
 <script>
 function salinRekapTotal() {
+  // Ambil nama file terbaru dari reversedFiles
+  const namaFileTerbaru = reversedFiles[0];
+  const dataTerbaru = dataBulananTersimpan[namaFileTerbaru];
+  if (!dataTerbaru) {
+    alert("Data bulan terbaru belum tersedia.");
+    return;
+  }
+
+  const bulanTahun = formatNamaBulan(namaFileTerbaru);
+
+  // Persiapan data bulanan terbaru
+  const combinedDataBulan = [];
+  let totalPutraBulan = 0, totalPutriBulan = 0, totalTabunganBulan = 0, totalTarikBulan = 0;
+
+  ["putra", "putri"].forEach(jenis => {
+    dataTerbaru[jenis]?.forEach(item => {
+      combinedDataBulan.push({ ...item, jenis });
+      if (jenis === "putra") totalPutraBulan += item.tabungan;
+      else totalPutriBulan += item.tabungan;
+      totalTabunganBulan += item.tabungan;
+      totalTarikBulan += item.penarikan;
+    });
+  });
+
+  combinedDataBulan.sort((a, b) => (b.tabungan - b.penarikan) - (a.tabungan - a.penarikan));
+
+  let teks = `💰 *Tabungan Bulan ${bulanTahun}*\n`;
+  combinedDataBulan.forEach(({ nama, tabungan, penarikan }) => {
+    const simbol = tabungan > 0 ? '➕' : '➖';
+    const nilai = tabungan > 0 ? tabungan : penarikan;
+    teks += `${nama} ${simbol} ${formatRupiah(nilai)}\n`;
+  });
+
+  teks += `\n💡 *Ringkasan Bulan ${bulanTahun}*\n`;
+  teks += `👨Tabungan Putra: ${formatRupiah(totalPutraBulan)}\n`;
+  teks += `👧Tabungan Putri: ${formatRupiah(totalPutriBulan)}\n`;
+  teks += `🤑Total Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
+  teks += `🏧Total Penarikan: ${formatRupiah(totalTarikBulan)}\n\n`;
+
+  // Rekap Total
   const dataArray = Object.entries(rekapData).map(([nama, val]) => {
     const saldo = val.tabungan - val.penarikan;
     return { nama, ...val, saldo };
@@ -277,7 +324,7 @@ function salinRekapTotal() {
 
   dataArray.sort((a, b) => b.saldo - a.saldo);
 
-  let teks = "🏦 *Total Tabungan BANK RISMA*\n";
+  teks += `🏦 *Total Tabungan BANK RISMA*\n`;
   dataArray.forEach((item, idx) => {
     teks += `${idx + 1}. ${item.nama} ${formatRupiah(item.saldo)}\n`;
   });
@@ -293,127 +340,23 @@ function salinRekapTotal() {
   });
 
   teks += `\n💡 *Ringkasan*\n`;
-  teks += `Tabungan Putra: ${formatRupiah(totalPutra)}\n`;
-  teks += `Tabungan Putri: ${formatRupiah(totalPutri)}\n`;
-  teks += `Total Tabungan: ${formatRupiah(totalTabungan)}\n`;
-  teks += `Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
-  teks += `Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
-  teks += `’📍Tabungan di urutkan otomatis dari yang terbanyak’\n`;
-  teks += `\nInfo selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
-
-  navigator.clipboard.writeText(teks).then(() => {
-    alert("Rekap total disalin ke clipboard!");
-  });
-}
-
-// Tambahan di renderBulananSemua
-function renderBulananSemua() {
-  const container = document.getElementById("tabungan-bulanan");
-
-  reversedFiles.forEach(namaFile => {
-    const data = dataBulananTersimpan[namaFile];
-    if (!data) return;
-
-    const combinedData = [];
-    let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0;
-
-    ["putra", "putri"].forEach(jenis => {
-      data[jenis]?.forEach(item => {
-        combinedData.push({ ...item, jenis });
-        if (jenis === "putra") totalPutra += item.tabungan;
-        else totalPutri += item.tabungan;
-        totalTabungan += item.tabungan;
-        totalTarik += item.penarikan;
-      });
-    });
-
-    combinedData.sort((a, b) => (b.tabungan - b.penarikan) - (a.tabungan - a.penarikan));
-
-    const bulanTahun = formatNamaBulan(namaFile);
-
-    let rows = '';
-    combinedData.forEach(({ nama, tabungan, penarikan }) => {
-      rows += `<tr>
-        <td>${nama}</td>
-        <td>${formatRupiah(tabungan)}</td>
-        <td>${formatRupiah(penarikan)}</td>
-      </tr>`;
-    });
-
-    container.innerHTML += `
-      <h3>${bulanTahun}</h3>
-      <table border="1" cellspacing="0" cellpadding="5">
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Tabungan</th>
-            <th>Penarikan</th>
-          </tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <p><br/>
-        Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
-        Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
-        Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>
-        Penarikan Saldo: ${formatRupiah(totalTarik)}
-      </p>
-
-<button onclick="salinTabunganBulan('${namaFile}')" style="background-color:#00695c;color:white;padding:8px 14px;border:none;border-radius:6px;font-weight:bold;font-size:15px;margin-bottom:20px;cursor:pointer;">
-        📋 Salin Tabungan Bulan ${bulanTahun}
-      </button>
-      <hr/>
-    `;
-  });
-}
-
-function salinTabunganBulan(namaFile) {
-  const data = dataBulananTersimpan[namaFile];
-  if (!data) return;
-
-  const bulanTahun = formatNamaBulan(namaFile);
-
-  const combinedData = [];
-  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0;
-
-  ["putra", "putri"].forEach(jenis => {
-    data[jenis]?.forEach(item => {
-      combinedData.push({ ...item, jenis });
-      if (jenis === "putra") totalPutra += item.tabungan;
-      else totalPutri += item.tabungan;
-      totalTabungan += item.tabungan;
-      totalTarik += item.penarikan;
-    });
-  });
-
-  combinedData.sort((a, b) => (b.tabungan - b.penarikan) - (a.tabungan - a.penarikan));
-
-  let teks = `💰 *Tabungan Bulan ${bulanTahun}* (urutkan dari yg terbanyak)\n\n`;
-  combinedData.forEach(({ nama, tabungan, penarikan }) => {
-    const simbol = tabungan > 0 ? '➕' : '➖';
-    const nilai = tabungan > 0 ? tabungan : penarikan;
-    teks += `${nama} ${simbol} ${formatRupiah(nilai)}\n`;
-  });
-
-  teks += `\n💡 *Ringkasan Bulan ${bulanTahun}*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutra)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutri)}\n`;
   teks += `🤑Total Tabungan: ${formatRupiah(totalTabungan)}\n`;
-  teks += `🏧Total Penarikan: ${formatRupiah(totalTarik)}\n`;
+  teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
+  teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
+
+  teks += `📍Tabungan di urutkan otomatis dari yang terbanyak\n`;
+  teks += `📍Tidak boleh diambil kecuali kondisi darurat dan puasa Ramadhan.\n`;
+  teks += `📍Tidak boleh dipinjam untuk keperluan pribadi\n`;
+  teks += `📍Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
+  teks += `Info selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
 
   navigator.clipboard.writeText(teks).then(() => {
-    alert(`Data bulan ${bulanTahun} disalin ke clipboard!`);
+    alert("Rekap tabungan lengkap disalin ke clipboard!");
   });
 }
-</script>
-
-      
-<h2>Laporan Bulanan</h2>                
-<div id="tabungan-bulanan"></div>
-
-
-
-             
+</script>   
 
               
                 
