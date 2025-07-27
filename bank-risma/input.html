@@ -232,7 +232,7 @@
     <center>  
   
       
-<!--  
+  
     <script>  
         // list links  
         const links = [  
@@ -240,17 +240,17 @@
               
             {  
   
-                url: 'jadwal.html',  
-                icon: 'fas fa-calendar-alt',  
-                text: 'Jadwal Pertandingan',  
+                url: '/bank-risma',  
+                icon: 'fa-solid fa-building-columns',  
+                text: 'Laporan BANK RISMA',  
             },  
              
               
             {  
   
-                url: 'hasil.html',  
-                icon: 'fas fa-hourglass-end',  
-                text: 'Hasil Pertandingan',  
+                url: '/risma',  
+                icon: 'fa-solid fa-rupiah-sign',  
+                text: 'Laporan KAS RISMA',  
             },  
   
               
@@ -274,7 +274,7 @@
         });  
     </script>  
   
- -->  
+   
           
           
      
@@ -313,7 +313,7 @@
     <script src="namaputra.js"></script>
 <script src="namaputri.js"></script>
 
-<h2>Input Tabungan Bulanan</h2>
+<h2>Input Tabungan</h2><br>
 <label>Kategori:</label>
 <select id="kategori" onchange="updateNamaOptions()">
   <option value="putra">Putra</option>
@@ -333,7 +333,7 @@
   <option value="penarikan">Penarikan</option>
 </select><br>
 
-<button onclick="tambahData()" style="margin-top:10px; background:#444; color:white; padding:8px 14px; border:none; border-radius:5px; font-weight:bold;">➕ Tambahkan</button>
+<button class="fire-btn" onclick="tambahData()">Tambahkan</button>            
 
 <hr>
 
@@ -513,7 +513,7 @@
     isi += `Total Tabungan : Rp${totalTab.toLocaleString("id-ID")}\n`;
     isi += `Total Penarikan : Rp${totalTarik.toLocaleString("id-ID")}\n\n`;
 
-    isi += `_Tolong dicek ulang ya teman-teman, dan beri respon 👍 jika data sudah sesuai dengan buku tabungan yg ditulis oleh Tama dan Putri. makasih🙏_`;
+    isi += `Tolong dicek ulang ya teman-teman, dan beri respon 👍 jika data sudah sesuai dengan buku tabungan yg ditulis oleh Tama dan Putri. makasih🙏`;
 
     navigator.clipboard.writeText(isi).then(() => {
       alert("📋 Data untuk petinggi RISMA disalin!");
