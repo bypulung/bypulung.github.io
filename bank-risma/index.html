@@ -206,7 +206,44 @@
     <button onclick="document.getElementById('notifRisma').style.display='none'">Ok Lanjut</button>
   </div>
 </div>    
+
+
+<!-- Tombol Chat WhatsApp -->
             
+            <div id="popup-notif" class="popup-notif">
+  <p>hai ges, butuh bantuan?</p>
+  <button onclick="tutupNotif()">❌</button>
+</div>
+
+<!-- WA FLOATING BUTTON -->
+<div class="whatsapp-float" onclick="toggleChatForm()">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA Icon">
+</div>
+
+<!-- CHAT FORM -->
+<div id="chat-form" class="chat-form hidden">
+  <div class="admin-info">
+    <img id="profileImage" src="/risma/img/pulung.png" alt="Profile" />
+    <span id="profileName">Pulung</span>
+  </div>
+  
+  <label><strong>Pilih Keluhan:</strong></label>
+  <select id="adminSelect" onchange="updateAdmin()">
+    <option value="putra">Tabungan Putra</option>
+    <option value="putri">Tabungan Putri</option>
+    <option value="server">Dukungan Server</option>
+  </select>
+  
+  <textarea id="isiPesan" placeholder="Isi pesan kamu disini ges..."></textarea>
+  <button onclick="kirimChat()">Kirim ke WhatsApp</button>
+</div>
+
+<!-- POPUP BANTUAN -->
+<div id="popup-bantuan" class="popup-bantuan hidden">
+  <img src="/risma/img/pulung.png" id="bantuanImage" alt="Bantuan" />
+  <p>Butuh bantuan? Klik tombol chat di bawah!</p>
+</div>
+
     
     </body>
 
