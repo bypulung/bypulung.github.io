@@ -251,10 +251,10 @@ function salinRekapTotal() {
   teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
-  teks += `📌Tabungan di urutkan otomatis dari yang terbanyak\n`;
-  teks += `📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
-  teks += `📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
-  teks += `📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
+  teks += `> 📌Tabungan di urutkan otomatis dari yang terbanyak\n`;
+  teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
+  teks += `> 📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
+  teks += `> 📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
   teks += `Info selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
 
   navigator.clipboard.writeText(teks).then(() => {
