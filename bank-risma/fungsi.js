@@ -302,6 +302,13 @@ function salinRekapTotal() {
 
 
 // Tombol chat WhatsApp 
+const popupBantuan = document.getElementById("popupBantuan");
+const chatForm = document.getElementById("chatForm");
+const profileImage = document.getElementById("profileImage");
+const profileName = document.getElementById("profileName");
+const isiChat = document.getElementById("isiChat");
+const waLink = document.getElementById("waLink");
+
 const admins = {
   server: {
     name: "Pulung",
@@ -320,28 +327,31 @@ const admins = {
   }
 };
 
-let selectedAdmin = admins.server;
+// Klik tombol WA (kanan bawah)
+document.getElementById("waBtn").addEventListener("click", () => {
+  chatForm.classList.remove("hidden");
+  popupBantuan.style.display = "none";
+});
 
-function toggleHelpPopup() {
-  const body = document.getElementById("helpBody");
-  body.style.display = body.style.display === "flex" ? "none" : "flex";
+// Klik popup kiri bawah
+popupBantuan.addEventListener("click", () => {
+  chatForm.classList.remove("hidden");
+  popupBantuan.style.display = "none";
+});
+
+// Pilih Admin
+function pilihAdmin(role) {
+  const admin = admins[role];
+  profileName.textContent = admin.name;
+  profileImage.src = admin.img;
+
+  // Buat link WA dengan isi chat
+  const pesan = encodeURIComponent(document.getElementById("isiChat").value || "");
+  waLink.href = `https://wa.me/${admin.number}?text=${pesan}`;
 }
 
-function selectAdmin(role) {
-  selectedAdmin = admins[role];
-  document.getElementById("profileImage").src = selectedAdmin.img;
-  document.getElementById("profileName").innerText = selectedAdmin.name;
-  document.getElementById("chatForm").style.display = "block";
-}
-
-function toggleChatForm() {
-  const form = document.getElementById("chatForm");
-  form.style.display = form.style.display === "block" ? "none" : "block";
-}
-
-function sendChat() {
-  const message = document.getElementById("chatText").value.trim();
-  if (!message) return alert("Tulis pesan terlebih dahulu.");
-  const link = `https://wa.me/${selectedAdmin.number}?text=${encodeURIComponent(message)}`;
-  window.open(link, "_blank");
+// Tutup form
+function tutupForm() {
+  chatForm.classList.add("hidden");
+  popupBantuan.style.display = "flex";
 }
