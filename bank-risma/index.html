@@ -14,113 +14,7 @@
 <script src="fungsi.js"></script>
     <script src="/bank-risma/layout.js"></script>
 
-   <style>
-
-       body { font-family: sans-serif; margin: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
-    th { background-color: #eee; }
-    h2 { margin-top: 40px; }
-
-       .profil {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #333;
-  /* commented for demo
-  float: left;
-  margin-left: 125px;
-  margin-top: 20px;
-  */
-  
-  /*for demo*/
-  display:inline-block;
-  vertical-align:middle;
-}
-.profil img{
-  width:100%;
-}
-
-
-       
-       
-        h2 {
-            width: 95%;
-            font-size:30px; 
-            background-color: #778899; 
-            
-       }
-  
-        table {
-            width: 98%;
-            border-collapse: collapse; justify-content: center; /* Horizontal center */
-            align-items: center;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #696969;
-        }
-        
-        
-    .navbar {
-            position: fixed; /* Membuat navbar tetap di atas */
-            top: 0;
-            width: 100%;
-            background-color: #7FFF00;
-            overflow: hidden;
-            z-index: 1000; /* Memastikan navbar berada di atas konten lain */
-        }
-
-        /* Gaya untuk tautan dalam navbar */
-        .navbar a {
-            float: left;
-            display: block;
-            color: black;
-            text-align: center;
-            padding: 5px 5px;
-            text-decoration: blink;
-            font-size: 17px;
-        }
-
-    /* Ubah warna tautan saat dihover */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        /* Tambahkan padding ke konten halaman untuk menghindari konten terpotong oleh navbar */
-        .content {
-            padding: 60px 20px;
-            height: 1500px; /* Menambah tinggi halaman untuk memungkinkan pengguliran */
-        }
-
-        #backToTopBtn {
-            display: block; /* Tampilkan tombol dari awal */
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            z-index: 99;
-            border: none;
-            outline: none;
-            background-color: #7FFF00;
-            color: black;
-            cursor: pointer;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-        }
-         #backToTopBtn:hover {
-            background-color: #555; 
-        }
-        
-    
-        </style>
-
+   <link rel="stylesheet" href="/bank-risma/tampilan.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -131,25 +25,44 @@
     <body class="bg-dark text-light">
    
 
-    <div id="header-placeholder"></div>
+    <!-- HEADER -->
+<div id="header-placeholder"></div>
 
 <script>
-  fetch("/bank-risma/header.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("header-placeholder").innerHTML = html;
-      
-      // Sekarang DOM header sudah ada → selipkan gambar
-      const position = '/img/risma_1.png';
-      $('#profile img').attr('src', position);
+  function loadHeader() {
+    fetch("header.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("header-placeholder").innerHTML = html;
 
-      $('#profile').on('click', () => {
-        $('.profile').attr('src', $('#profile img').attr('src'));
-      });
-    })
-    .catch(console.error);
+        // Setelah header selesai dimuat, baru manipulasi gambar
+        const position = 'img/risma_1.png';
+
+        // Set gambar profil
+        const profileImg = document.querySelector('#profile img');
+        if (profileImg) {
+          profileImg.src = position;
+        }
+
+        // Modal handler
+        const profileWrapper = document.getElementById('profile');
+        if (profileWrapper) {
+          profileWrapper.addEventListener('click', () => {
+            const modalImg = document.querySelector('img.profile');
+            if (modalImg && profileImg) {
+              modalImg.src = profileImg.src;
+            }
+          });
+        }
+      })
+      .catch(err => console.error("Gagal memuat header:", err));
+  }
+
+  // Panggil fungsi
+  loadHeader();
 </script>
 
+        
         <center>
 
 
