@@ -159,12 +159,12 @@ h5 {
   padding: 10px 14px;
   border-radius: 10px;
   max-width: 300px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .chat-question {
   margin: 16px 0 8px;
-  font-size: 14px;
+  font-size: 16px;
   color: #444;
 }
 
@@ -174,7 +174,7 @@ h5 {
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
