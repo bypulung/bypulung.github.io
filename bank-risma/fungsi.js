@@ -76,8 +76,8 @@ function renderTabelRekap() {
     <p><br/>        
       Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
       Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
-      Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>        
-      Jumlah Penarikan: ${formatRupiah(totalTarik)}<br/>        
+      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>        
+      Total Penarikan: ${formatRupiah(totalTarik)}<br/>        
       Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>        
     </p><br/>        
     <hr/>        
