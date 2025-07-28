@@ -34,56 +34,61 @@ function updateRekap(nama, jenis, tabungan, penarikan) {
   rekapData[nama].penarikan += penarikan;        
 }        
         
-function renderTabelRekap() {        
-  const container = document.getElementById("rekap-tabungan");        
-  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;        
-        
-  const dataArray = Object.entries(rekapData).map(([nama, val]) => {        
-    const saldo = val.tabungan - val.penarikan;        
-    return { nama, ...val, saldo };        
-  });        
-        
-  dataArray.sort((a, b) => b.saldo - a.saldo);        
-        
-  let rows = '';        
-  dataArray.forEach(({ nama, jenis, tabungan, penarikan, saldo }) => {        
-    if (jenis === "putra") totalPutra += tabungan;        
-    else totalPutri += tabungan;        
-    totalTabungan += tabungan;        
-    totalTarik += penarikan;        
-    totalSaldo += saldo;        
-        
-    rows += `<tr>        
-      <td>${nama}</td>        
-      <td>${formatRupiah(tabungan)}</td>        
-      <td>${formatRupiah(penarikan)}</td>        
-      <td><span style="color:green">${formatRupiah(saldo)}</span></td>        
-    </tr>`;        
-  });        
-        
-  container.innerHTML = `        
-    <table border="1" cellspacing="0" cellpadding="5">        
-      <thead>        
-        <tr>        
-          <th>Nama</th>        
-          <th>Tabungan</th>        
-          <th>Penarikan</th>        
-          <th>Saldo</th>        
-        </tr>        
-      </thead>        
-      <tbody>${rows}</tbody>        
-    </table>        
-    <p><br/>        
-      Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
-      Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
-      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>        
-      Total Penarikan: ${formatRupiah(totalTarik)}<br/>        
-      Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>        
-    </p><br/>        
-    <hr/>        
-  `;        
-}        
-        
+function renderTabelRekap() {
+  const container = document.getElementById("rekap-tabungan");
+  let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0, totalSaldo = 0;
+
+  const dataArray = Object.entries(rekapData).map(([nama, val]) => {
+    const saldo = val.tabungan - val.penarikan;
+    return { nama, ...val, saldo };
+  });
+
+  dataArray.sort((a, b) => b.saldo - a.saldo);
+
+  let rows = '';
+  dataArray.forEach(({ nama, jenis, tabungan, penarikan, saldo }) => {
+    if (jenis === "putra") totalPutra += tabungan;
+    else totalPutri += tabungan;
+    totalTabungan += tabungan;
+    totalTarik += penarikan;
+    totalSaldo += saldo;
+
+    const warnaSaldo = saldo > 0 ? 'green' : 'black'; // ✅ Warna saldo baris
+
+    rows += `<tr>
+      <td>${nama}</td>
+      <td>${formatRupiah(tabungan)}</td>
+      <td>${formatRupiah(penarikan)}</td>
+      <td><span style="color:${warnaSaldo}">${formatRupiah(saldo)}</span></td>
+    </tr>`;
+  });
+
+  const warnaTotalSaldo = totalSaldo > 0 ? 'green' : 'black'; // ✅ Warna total
+
+  container.innerHTML = `
+    <table border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Tabungan</th>
+          <th>Penarikan</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p><br/>
+      Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+      Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+      Total Tabungan: ${formatRupiah(totalTabungan)}<br/>
+      Total Penarikan: ${formatRupiah(totalTarik)}<br/>
+      Sisa Saldo: <span style="color:${warnaTotalSaldo}">${formatRupiah(totalSaldo)}</span>
+    </p><br/>
+    <hr/>
+  `;
+}
+
+
 function formatNamaBulan(namaFile) {        
   const nama = namaFile.replace('.json', '');        
   const match = nama.match(/([a-z]+)(\d+)/i);        
