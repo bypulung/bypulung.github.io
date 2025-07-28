@@ -53,7 +53,7 @@ function renderTabelRekap() {
     totalTarik += penarikan;
     totalSaldo += saldo;
 
-    const warnaSaldo = saldo > 0 ? 'green' : 'black'; // ✅ Warna saldo baris
+    const warnaSaldo = saldo > 0 ? 'green' : 'white'; // ✅ Warna saldo baris
 
     rows += `<tr>
       <td>${nama}</td>
@@ -63,7 +63,7 @@ function renderTabelRekap() {
     </tr>`;
   });
 
-  const warnaTotalSaldo = totalSaldo > 0 ? 'green' : 'black'; // ✅ Warna total
+  const warnaTotalSaldo = totalSaldo > 0 ? 'green' : 'white'; // ✅ Warna total
 
   container.innerHTML = `
     <table border="1" cellspacing="0" cellpadding="5">
@@ -134,7 +134,7 @@ function renderBulananSemua() {
         warna = 'red';
       } else {
         simbol = '';
-        warna = 'black';
+        warna = 'white';
       }
 
       rows += `<tr>
@@ -147,7 +147,7 @@ function renderBulananSemua() {
 
     // Tentukan warna saldo masuk keseluruhan
     const simbolSaldo = saldoMasuk > 0 ? '➕' : saldoMasuk < 0 ? '➖' : '';
-    const warnaSaldo = saldoMasuk > 0 ? 'green' : saldoMasuk < 0 ? 'red' : 'black';
+    const warnaSaldo = saldoMasuk > 0 ? 'green' : saldoMasuk < 0 ? 'red' : 'white';
 
     container.innerHTML += `
       <h3>${formatNamaBulan(namaFile)}</h3>
