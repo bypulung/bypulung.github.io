@@ -1,10 +1,10 @@
 {
   "putra": [
-    { "nama": "Tama", "tabungan": 0, "penarikan": 5000 },
-    { "nama": "Pulung", "tabungan":30000, "penarikan": 5000 }
+    { "nama": "Tama", "tabungan": 0, "penarikan": 10000 },
+    { "nama": "Faisol", "tabungan":0, "penarikan": 5000 }
   ],
   "putri": [
-    { "nama": "Putri", "tabungan": 25000, "penarikan": 0 },
-    { "nama": "Sasa", "tabungan": 50000, "penarikan": 10000 }
+    { "nama": "Nadia", "tabungan": 0, "penarikan": 15000 },
+    { "nama": "Anis", "tabungan": 0, "penarikan": 10000 }
   ]
 }
