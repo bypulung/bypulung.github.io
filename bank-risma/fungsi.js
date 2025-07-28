@@ -302,7 +302,12 @@ function salinRekapTotal() {
 
 
 // Tombol chat WhatsApp 
-const profileData = {
+const admins = {
+  server: {
+    name: "Pulung",
+    img: "/risma/img/pulung.png",
+    number: "6288971344131"
+  },
   putra: {
     name: "Tama",
     img: "/risma/img/tama.jpg",
@@ -312,38 +317,31 @@ const profileData = {
     name: "Salsabila",
     img: "/risma/img/putri.jpg",
     number: "6282282546432"
-  },
-  server: {
-    name: "Pulung",
-    img: "/risma/img/pulung.png",
-    number: "6288971344131"
   }
 };
 
+let selectedAdmin = admins.server;
+
+function toggleHelpPopup() {
+  const body = document.getElementById("helpBody");
+  body.style.display = body.style.display === "flex" ? "none" : "flex";
+}
+
+function selectAdmin(role) {
+  selectedAdmin = admins[role];
+  document.getElementById("profileImage").src = selectedAdmin.img;
+  document.getElementById("profileName").innerText = selectedAdmin.name;
+  document.getElementById("chatForm").style.display = "block";
+}
+
 function toggleChatForm() {
-  document.getElementById("chat-form").classList.toggle("hidden");
+  const form = document.getElementById("chatForm");
+  form.style.display = form.style.display === "block" ? "none" : "block";
 }
 
-function updateAdmin() {
-  const admin = document.getElementById("adminSelect").value;
-  const data = profileData[admin];
-
-  document.getElementById("profileName").textContent = data.name;
-  document.getElementById("profileImage").src = data.img;
-  document.getElementById("bantuanImage").src = data.img;
+function sendChat() {
+  const message = document.getElementById("chatText").value.trim();
+  if (!message) return alert("Tulis pesan terlebih dahulu.");
+  const link = `https://wa.me/${selectedAdmin.number}?text=${encodeURIComponent(message)}`;
+  window.open(link, "_blank");
 }
-
-function kirimChat() {
-  const admin = document.getElementById("adminSelect").value;
-  const pesan = document.getElementById("isiPesan").value;
-  const nomor = profileData[admin].number;
-
-  const link = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
-  window.open(link, '_blank');
-}
-
-function tutupNotif() {
-  document.getElementById("popup-notif").style.display = "none";
-  document.getElementById("popup-bantuan").classList.remove("hidden");
-}
-
