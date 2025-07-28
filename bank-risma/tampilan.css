@@ -179,3 +179,103 @@ h5 {
   width: 100%;
   margin-top: 10px;
 }
+
+
+/* Tombol chat WhatsApp */
+/* WA Button */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: none;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.whatsapp-float img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+/* Chat Form */
+.chat-form {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  width: 280px;
+  z-index: 1001;
+}
+
+.chat-form textarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+}
+
+.chat-form button {
+  margin-top: 10px;
+  width: 100%;
+  background-color: #25D366;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Admin Info */
+.admin-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.admin-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.popup-notif {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #ffd;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  z-index: 999;
+}
+
+.popup-bantuan {
+  position: fixed;
+  bottom: 85px;
+  right: 95px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  z-index: 1001;
+}
+
+.popup-bantuan img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.hidden {
+  display: none;
+}
