@@ -299,3 +299,51 @@ function salinRekapTotal() {
     alert("Rekap tabungan berhasil disalin ges!");
   });
 }
+
+
+// Tombol chat WhatsApp 
+const profileData = {
+  putra: {
+    name: "Tama",
+    img: "/risma/img/tama.jpg",
+    number: "6288286786888"
+  },
+  putri: {
+    name: "Salsabila",
+    img: "/risma/img/putri.jpg",
+    number: "6282282546432"
+  },
+  server: {
+    name: "Pulung",
+    img: "/risma/img/pulung.png",
+    number: "6288971344131"
+  }
+};
+
+function toggleChatForm() {
+  document.getElementById("chat-form").classList.toggle("hidden");
+}
+
+function updateAdmin() {
+  const admin = document.getElementById("adminSelect").value;
+  const data = profileData[admin];
+
+  document.getElementById("profileName").textContent = data.name;
+  document.getElementById("profileImage").src = data.img;
+  document.getElementById("bantuanImage").src = data.img;
+}
+
+function kirimChat() {
+  const admin = document.getElementById("adminSelect").value;
+  const pesan = document.getElementById("isiPesan").value;
+  const nomor = profileData[admin].number;
+
+  const link = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
+  window.open(link, '_blank');
+}
+
+function tutupNotif() {
+  document.getElementById("popup-notif").style.display = "none";
+  document.getElementById("popup-bantuan").classList.remove("hidden");
+}
+
