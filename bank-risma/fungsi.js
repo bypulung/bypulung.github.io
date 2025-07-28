@@ -182,7 +182,6 @@ loadSemua();
 
 
 function salinRekapTotal() {
-  // Ambil nama file terbaru dari reversedFiles
   const namaFileTerbaru = reversedFiles[0];
   const dataTerbaru = dataBulananTersimpan[namaFileTerbaru];
   if (!dataTerbaru) {
@@ -206,13 +205,15 @@ function salinRekapTotal() {
     });
   });
 
+  // Urutkan berdasarkan selisih terbesar
   combinedDataBulan.sort((a, b) => (b.tabungan - b.penarikan) - (a.tabungan - a.penarikan));
 
+  // ✅ Ubah format tampilan tabungan bulanan
   let teks = `💰 *Tabungan Bulan ${bulanTahun}*\n`;
-  combinedDataBulan.forEach(({ nama, tabungan, penarikan }) => {
-    const simbol = tabungan > 0 ? '➕' : '➖';
-    const nilai = tabungan > 0 ? tabungan : penarikan;
-    teks += `${nama} ${simbol} ${formatRupiah(nilai)}\n`;
+  combinedDataBulan.forEach(({ nama, tabungan, penarikan }, i) => {
+    const selisih = tabungan - penarikan;
+    const simbol = selisih > 0 ? '➕' : '➖';
+    teks += `${i + 1}. ${nama} ${simbol} ${formatRupiah(Math.abs(selisih))}\n`;
   });
 
   teks += `\n💡 *${bulanTahun}*\n`;
@@ -251,7 +252,7 @@ function salinRekapTotal() {
   teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
-  teks += `> 📌Tabungan di urutkan otomatis dari yang terbanyak\n`;
+  teks += `> 📌Tabungan diurutkan otomatis dari yang terbanyak\n`;
   teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
   teks += `> 📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
   teks += `> 📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
@@ -260,4 +261,4 @@ function salinRekapTotal() {
   navigator.clipboard.writeText(teks).then(() => {
     alert("Rekap tabungan lengkap disalin ke clipboard!");
   });
-}
+            }
