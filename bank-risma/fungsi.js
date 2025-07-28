@@ -180,7 +180,7 @@ async function loadSemua() {
         
 loadSemua();        
 
-
+// fungsi salin rekap total tabungan
 function salinRekapTotal() {
   const namaFileTerbaru = reversedFiles[0];
   const dataTerbaru = dataBulananTersimpan[namaFileTerbaru];
@@ -216,11 +216,15 @@ function salinRekapTotal() {
     teks += `${i + 1}. ${nama} ${simbol} ${formatRupiah(Math.abs(selisih))}\n`;
   });
 
+  // ✅ Tambahan info saldo masuk bulan ini
+  const saldoMasukBulan = totalTabunganBulan - totalTarikBulan;
+
   teks += `\n💡 *${bulanTahun}*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutraBulan)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutriBulan)}\n`;
   teks += `🤑Jumlah Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
-  teks += `🏧Jumlah Penarikan: ${formatRupiah(totalTarikBulan)}\n\n`;
+  teks += `🏧Jumlah Penarikan: ${formatRupiah(totalTarikBulan)}\n`;
+  teks += `💲Saldo Masuk: ${formatRupiah(saldoMasukBulan)}\n\n`; // ✅ Ditambahkan di sini
 
   // Rekap Total
   const dataArray = Object.entries(rekapData).map(([nama, val]) => {
@@ -252,7 +256,8 @@ function salinRekapTotal() {
   teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
-  teks += `> 📌Tabungan diurutkan otomatis dari yang terbanyak\n`;
+  teks += `_Tabungan diurutkan otomatis dari yang terbanyak_\n\n`;
+          
   teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
   teks += `> 📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
   teks += `> 📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
@@ -261,4 +266,4 @@ function salinRekapTotal() {
   navigator.clipboard.writeText(teks).then(() => {
     alert("Rekap tabungan lengkap disalin ke clipboard!");
   });
-            }
+}
