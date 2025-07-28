@@ -25,42 +25,122 @@
     <body class="bg-dark text-light">
    
 
-    <!-- HEADER -->
-<div id="header-placeholder"></div>
+        <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+           
+    
+        
+        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+        
+                <img class="img-fluid">
+            </div>
+            <span class="pt-3 text-center">
 
-<script>
-  function loadHeader() {
-    fetch("header.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById("header-placeholder").innerHTML = html;
+                 <h1><i class="fas fa-wallet">
+        
+    </i> BANK RISMA</h1>
+                
+            </span>
 
-        // Setelah header selesai dimuat, baru manipulasi gambar
-        const position = 'img/risma_1.png';
+        
+            
+       </div>
 
-        // Set gambar profil
-        const profileImg = document.querySelector('#profile img');
-        if (profileImg) {
-          profileImg.src = position;
-        }
+    <!-- Modal -->
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showImageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showImageLabel">RISMA Tanjung Bulan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid img-thumbnail profile">
+                </div>
+            </div>
+        </div>
+    </div> 
 
-        // Modal handler
-        const profileWrapper = document.getElementById('profile');
-        if (profileWrapper) {
-          profileWrapper.addEventListener('click', () => {
-            const modalImg = document.querySelector('img.profile');
-            if (modalImg && profileImg) {
-              modalImg.src = profileImg.src;
-            }
-          });
-        }
-      })
-      .catch(err => console.error("Gagal memuat header:", err));
-  }
+    <script>
+        // * img position
+        const position = '/img/risma_1.png';
 
-  // Panggil fungsi
-  loadHeader();
-</script>
+        // ! Don't change this line
+        $(document).ready(() => {
+            $('#profile img').attr('src', position);
+        });
+    </script>
+
+    <center>
+
+    
+<!--
+    <script>
+        // list links
+        const links = [
+            
+            
+            {
+
+                url: 'jadwal.html',
+                icon: 'fas fa-calendar-alt',
+                text: 'Jadwal Pertandingan',
+            },
+           
+            
+            {
+
+                url: 'hasil.html',
+                icon: 'fas fa-hourglass-end',
+                text: 'Hasil Pertandingan',
+            },
+
+            
+           
+        ];
+
+        // ! Don't change this line
+        $(document).ready(() => {
+            const callbackMap = (element, i) => {
+                return  /*html*/`
+                <li class="my-3 py-3 px-5 border border-light">
+                    <a target="" href="${element.url}" class="text-decoration-none"
+                        style="font-weight: 450;">
+                        <i class="fa-fw ${element.icon}"></i>
+                        ${element.text}
+                    </a>
+                </li>
+                `;
+            };
+            $('.list-unstyled.links').append($.map(links, callbackMap));
+        });
+    </script>
+
+ -->
+        
+        
+   
+
+       
+
+    </center>
+    
+
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
 
         
         <center>
@@ -95,46 +175,18 @@
     
     <div id="footer-placeholder"></div>
 
-
 <!-- Notifikasi Sambutan -->
-<div id="notifRisma" style="
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-">
-  <div style="
-    background: #fff;
-    padding: 24px;
-    max-width: 400px;
-    width: 90%;
-    border-radius: 8px;
-    text-align: center;
-    font-family: sans-serif;
-  ">
-    <p style="margin-bottom: 16px; font-size: 16px; color: black;">
+<div id="notifRisma">
+  <div class="notif-box">
+    <p>
       <strong>Selamat datang<br/>di server resmi BANK RISMA !!</strong><br><br>
       Server ini diciptakan untuk membantu <strong>Tama</strong> dan <strong>Putri</strong> melakukan pendataan dan pengelolaan uang secara otomatis.<br><br>
       Server baru akan dirilis pada bulan <strong>Agustus 2025</strong> ya ges.<br/><br/>Tapi kalo kamu pengen liat contoh gambarannya seperti apa, boleh banget kok!!<br><br>
       <em>Mau lanjut ngintip dulu gak?</em>
     </p>
-    <button onclick="document.getElementById('notifRisma').style.display='none'" style="
-      padding: 8px 16px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-    ">Ok Lanjut</button>
+    <button onclick="document.getElementById('notifRisma').style.display='none'">Ok Lanjut</button>
   </div>
-  </div>
+</div>
     
     
     </body>
