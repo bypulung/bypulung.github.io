@@ -321,21 +321,43 @@ const admins = {
 };
 
 function toggleForm() {
-  const chatWidget = document.getElementById("chat-widget");
-  const popup = document.getElementById("popup-bantuan");
+  const form = document.getElementById('formPopup');
+  const bantuan = document.getElementById('bantuanPopup');
 
-  if (chatWidget.classList.contains("hidden")) {
-    chatWidget.classList.remove("hidden");
-    popup.classList.add("hidden");
+  if (form.style.display === 'block') {
+    form.style.display = 'none';
+    bantuan.style.display = 'flex';
   } else {
-    chatWidget.classList.add("hidden");
-    popup.classList.remove("hidden");
+    form.style.display = 'block';
+    bantuan.style.display = 'none';
+    updateProfile(); // refresh admin info
   }
 }
 
-function setAdmin(role) {
-  const admin = admins[role];
-  document.getElementById("profile-name").innerText = admin.name;
-  document.getElementById("profile-img").src = admin.img;
-  document.getElementById("chat-link").href = `https://wa.me/${admin.number}`;
+function closeForm() {
+  document.getElementById('formPopup').style.display = 'none';
+  document.getElementById('bantuanPopup').style.display = 'flex';
+}
+
+function updateProfile() {
+  const selected = document.getElementById('adminSelect').value;
+  const data = admins[selected];
+
+  document.getElementById('adminName').textContent = data.name;
+  document.getElementById('adminImg').src = data.img;
+  document.getElementById('bantuanImg').src = data.img;
+}
+
+function sendWA() {
+  const selected = document.getElementById('adminSelect').value;
+  const msg = document.getElementById('message').value.trim();
+
+  if (msg === "") {
+    alert("Silakan isi pesan dulu ges.");
+    return;
+  }
+
+  const phone = admins[selected].number;
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
 }
