@@ -112,35 +112,38 @@ function renderBulananSemua() {
       });
     });
 
-    const saldoMasuk = totalTabungan - totalTarik; // Tambahan
+    const saldoMasuk = totalTabungan - totalTarik;
     combinedData.sort((a, b) => b.tabungan - a.tabungan);
 
     let rows = '';
-            
+
     combinedData.forEach(({ nama, tabungan, penarikan }) => {
-  const selisih = tabungan - penarikan;
-  let simbol = '';
-  let warna = '';
+      const selisih = tabungan - penarikan;
+      let simbol = '', warna = '';
 
-  if (selisih > 0) {
-    simbol = '➕';
-    warna = 'green';
-  } else if (selisih < 0) {
-    simbol = '➖';
-    warna = 'red';
-  } else {
-    simbol = '';
-    warna = 'black';
-  }
+      if (selisih > 0) {
+        simbol = '➕';
+        warna = 'green';
+      } else if (selisih < 0) {
+        simbol = '➖';
+        warna = 'red';
+      } else {
+        simbol = '';
+        warna = 'black';
+      }
 
-  rows += `<tr>
-    <td>${nama}</td>
-    <td>${formatRupiah(tabungan)}</td>
-    <td>${formatRupiah(penarikan)}</td>
-    <td><span style="color:${warna}">${simbol}${formatRupiah(Math.abs(selisih))}</span></td>
-  </tr>`;
-});
-            
+      rows += `<tr>
+        <td>${nama}</td>
+        <td>${formatRupiah(tabungan)}</td>
+        <td>${formatRupiah(penarikan)}</td>
+        <td><span style="color:${warna}">${simbol}${formatRupiah(Math.abs(selisih))}</span></td>
+      </tr>`;
+    });
+
+    // Tentukan warna saldo masuk keseluruhan
+    const simbolSaldo = saldoMasuk > 0 ? '➕' : saldoMasuk < 0 ? '➖' : '';
+    const warnaSaldo = saldoMasuk > 0 ? 'green' : saldoMasuk < 0 ? 'red' : 'black';
+
     container.innerHTML += `
       <h3>${formatNamaBulan(namaFile)}</h3>
       <table border="1" cellspacing="0" cellpadding="5">
@@ -159,12 +162,15 @@ function renderBulananSemua() {
         Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
         Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>
         Jumlah Penarikan: ${formatRupiah(totalTarik)}<br/>
-        <strong>Saldo Masuk: <span style="color:green">${formatRupiah(saldoMasuk)}</span></strong>
+        <strong>Saldo Masuk: 
+          <span style="color:${warnaSaldo}">${simbolSaldo}${formatRupiah(Math.abs(saldoMasuk))}</span>
+        </strong>
       </p><br/>
       <hr/>
     `;
   });
 }
+
 
 async function loadSemua() {        
   for (let namaFile of sortedFiles) {        
