@@ -258,7 +258,7 @@ function salinRekapTotal() {
 
   teks += `_Tabungan diurutkan otomatis dari yang terbanyak_\n\n`;
           
-  teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
+  teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau bulan Ramadhan.\n`;
   teks += `> 📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
   teks += `> 📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
   teks += `Info selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
