@@ -126,141 +126,16 @@
     <title>BANK RISMA | Rekap Tabungan Online</title>
 </head>
 
-<body class="bg-dark text-light">
-   
-    
-    <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
-           
-    
-        
-        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
-                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
-        
-                <img class="img-fluid">
-            </div>
-            <span class="pt-3 text-center">
 
-                 <h1><i class="fas fa-wallet">
-        
-    </i> BANK RISMA</h1>
-                
-            </span>
-
-        
-            
-       </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="showImageLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="showImageLabel">RISMA Tanjung Bulan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img class="img-fluid img-thumbnail profile">
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <script>
-        // * img position
-        const position = '/risma_1.png';
-
-        // ! Don't change this line
-        $(document).ready(() => {
-            $('#profile img').attr('src', position);
-        });
-    </script>
-
-    <center>
-
-    
-<!--
-    <script>
-        // list links
-        const links = [
-            
-            
-            {
-
-                url: 'jadwal.html',
-                icon: 'fas fa-calendar-alt',
-                text: 'Jadwal Pertandingan',
-            },
-           
-            
-            {
-
-                url: 'hasil.html',
-                icon: 'fas fa-hourglass-end',
-                text: 'Hasil Pertandingan',
-            },
-
-            
-           
-        ];
-
-        // ! Don't change this line
-        $(document).ready(() => {
-            const callbackMap = (element, i) => {
-                return  /*html*/`
-                <li class="my-3 py-3 px-5 border border-light">
-                    <a target="" href="${element.url}" class="text-decoration-none"
-                        style="font-weight: 450;">
-                        <i class="fa-fw ${element.icon}"></i>
-                        ${element.text}
-                    </a>
-                </li>
-                `;
-            };
-            $('.list-unstyled.links').append($.map(links, callbackMap));
-        });
-    </script>
-
- -->
-        
-        
+    <body class="bg-dark text-light">
    
 
-       
-
-    </center>
+    <div id="header-placeholder"></div>
     
 
-    <script>
-        $(document).ready(() => {
-            $('#profile').on('click', () => {
-                $('img.img-fluid.profile').attr('src',
-                    $('#profile img').attr('src')
-                );
-            })
-        });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
-
-
-<center>
-
-    <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
-
-<script>
-  const updatedAt = new Date(document.lastModified);
-  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
-  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
-</script>
 
     <h2>Total Tabungan</h2>                
 <div id="rekap-tabungan"></div>   
-
-
-
 
 
           <!-- Tombol Salin Rekap Total -->
@@ -274,169 +149,47 @@
 <h2>Laporan Bulanan</h2>                
 <div id="tabungan-bulanan"></div>
 
-        <hr>
-    <p></p>
-<~ Made in RISMA ~>
-    <center>
-        <hr/>
-        <span class="h5">Leader</span><br/>
-        <div class="profil">
-            <img src="/risma/img/pulung.png"/>
-        </div><br/>
-        Pulung R.
-        <p></p>
         
-        <hr/>
-        <span class="h5">Co-Leader</span><br/>
-        <div class="profil">
-            <img src="/risma/img/faisol.jpg"/>
-        </div><br/>
-        Faisol
-        <p></p>
+    
+    <div id="footer-placeholder"></div>
 
-        
 
-        <hr/>
-        <span class="h5">Sekertaris</span><br/>
-        <div class="profil">
-            <img src="/risma/img/anis.jpg"/>
-        </div><br/>
-        Anis
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/putri.jpg"/>
-        </div><br/>
-        Putri
-        <p></p>
-
-        <hr/>
-        <span class="h5">Bendahara</span><br/>
-        <div class="profil">
-            <img src="/risma/img/tama.jpg"/>
-        </div><br/>
-        Tama
-        <p></p>
-
-        <div class="profil">
-            <img src="/risma/img/nadia.jpg"/>
-        </div><br/>
-        Nadia
-        <p></p>
-
-        <hr/>
-        <span class="h5">Humas</span><br/>
-        <div class="profil">
-            <img src="/risma/img/rifai.jpg"/>
-        </div><br/>
-        Rifai
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/tio.jpg"/>
-        </div><br/>
-        Tio
-        <p></p>
-
-        <hr/>
-        <span class="h5">Marketing</span><br/>
-        <div class="profil">
-            <img src="/risma/img/sasa.jpg"/>
-        </div><br/>
-        Sasa
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/riswadi.jpg"/>
-        </div><br/>
-        Riswadi
-        <p></p>
-
-        <hr/>
-        <span class="h5">Jumat Berkah</span><br/>
-        <div class="profil">
-            <img src="/risma/img/nabila.jpg"/>
-        </div><br/>
-        Nabila
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/irma.jpg"/>
-        </div><br/>
-        Irma
-        <p></p>
-
-        
-
-        <hr/>
-        <span class="h5">Perlengkapan</span><br/>
-        <div class="profil">
-            <img src="/risma/img/rifky.jpg"/>
-        </div><br/>
-        Rifky
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/syifa.jpg"/>
-        </div><br/>
-        Syifa
-        <p></p>
-
-        <hr/>
-        <span class="h5">Yang Punya Kawasan</span><br/>
-
-        <div class="profil">
-            <img src="/risma/img/mul.jpg"/>
-        </div><br/>
-        Mulyono
-        <p></p>
-
-        <div class="profil">
-            <img src="/risma/img/wahyu.jpg"/>
-        </div><br/>
-        Wahyu
-        <p></p>
-        
-        <div class="profil">
-            <img src="/risma/img/rizki.jpg"/>
-        </div><br/>
-        Rizky
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/aril.jpg"/>
-        </div><br/>
-        Aril
-        <p></p>
-
-        <div class="profil">
-            <img src="/risma/img/yogi.jpg"/>
-        </div><br/>
-        Yogi
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/asa.jpg"/>
-        </div><br/>
-        Asa
-        <p></p>
-
-        <div class="profil">
-            <img src="/risma/img/yuyun.jpg"/>
-        </div><br/>
-        Yuyun
-        <p></p>
-        <div class="profil">
-            <img src="/risma/img/firli.jpg"/>
-        </div><br/>
-        Firli
-        <p></p>
-
-        
-        <div class="profil">
-            <img src="/risma/img/hanafi.jpg"/>
-        </div><br/>
-        Hanapi
-        <p></p>
-        
-<hr/>
-    <ul class="list-unstyled links">
-    </ul>
-
-        <!-- Notifikasi Sambutan -->
+    <!-- Notifikasi Sambutan -->
+<div id="notifRisma" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+">
+  <div style="
+    background: #fff;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    border-radius: 8px;
+    text-align: center;
+    font-family: sans-serif;
+  ">
+    <p style="margin-bottom: 16px; font-size: 16px; color: black;">
+      <strong>Selamat datang<br/>di server resmi BANK RISMA !!</strong><br><br>
+      Server ini diciptakan untuk membantu <strong>Tama</strong> dan <strong>Putri</strong> melakukan pendataan dan pengelolaan uang secara otomatis.<br><br>
+      Server baru akan dirilis pada bulan <strong>Agustus 2025</strong> ya ges.<br/><br/>Tapi kalo kamu pengen liat contoh gambarannya seperti apa, boleh banget kok!!<br><br>
+      <em>Mau lanjut ngintip dulu gak?</em>
+    </p>
+    <button onclick="document.getElementById('notifRisma').style.display='none'" style="
+      padding: 8px 16px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointe<!-- Notifikasi Sambutan -->
 <div id="notifRisma" style="
   position: fixed;
   top: 0;
@@ -474,11 +227,9 @@
       cursor: pointer;
     ">Ok Lanjut</button>
   </div>
-</div>
-
-<p></p> <br/>
+  </div>
     
-    Made With ❤️ by Hamba Allah</center>
-<br></body>
+    
+    </body>
 
     </html>
