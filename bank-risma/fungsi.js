@@ -222,7 +222,7 @@ function salinRekapTotal() {
   teks += `\n💡 *${bulanTahun}*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutraBulan)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutriBulan)}\n`;
-  teks += `🤑Jumlah Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
+  teks += `💵Jumlah Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
   teks += `🏧Jumlah Penarikan: ${formatRupiah(totalTarikBulan)}\n`;
   teks += `💲Saldo Masuk: ${formatRupiah(saldoMasukBulan)}\n\n`; // ✅ Ditambahkan di sini
 
@@ -252,7 +252,7 @@ function salinRekapTotal() {
   teks += `\n💡 *Rekap Total*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutra)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutri)}\n`;
-  teks += `🤑Total Tabungan: ${formatRupiah(totalTabungan)}\n`;
+  teks += `💵Total Tabungan: ${formatRupiah(totalTabungan)}\n`;
   teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
