@@ -91,61 +91,81 @@ function formatNamaBulan(namaFile) {
   const [_, bulan, tahun] = match;        
   return bulan.charAt(0).toUpperCase() + bulan.slice(1) + ' ' + tahun;        
 }        
-        
-function renderBulananSemua() {        
-  const container = document.getElementById("tabungan-bulanan");        
-        
-  reversedFiles.forEach(namaFile => {        
-    const data = dataBulananTersimpan[namaFile];        
-    if (!data) return;        
-        
-    const combinedData = [];        
-    let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0;        
-        
-    ["putra", "putri"].forEach(jenis => {        
-      data[jenis]?.forEach(item => {        
-        combinedData.push({ ...item, jenis });        
-        if (jenis === "putra") totalPutra += item.tabungan;        
-        else totalPutri += item.tabungan;        
-        totalTabungan += item.tabungan;        
-        totalTarik += item.penarikan;        
-      });        
-    });        
-        
-    combinedData.sort((a, b) => b.tabungan - a.tabungan);        
-        
-    let rows = '';        
-    combinedData.forEach(({ nama, tabungan, penarikan }) => {        
-      rows += `<tr>        
-        <td>${nama}</td>        
-        <td>${formatRupiah(tabungan)}</td>        
-        <td>${formatRupiah(penarikan)}</td>        
-      </tr>`;        
-    });        
-        
-    container.innerHTML += `        
-      <h3>${formatNamaBulan(namaFile)}</h3>        
-      <table border="1" cellspacing="0" cellpadding="5">        
-        <thead>        
-          <tr>        
-            <th>Nama</th>        
-            <th>Tabungan</th>        
-            <th>Penarikan</th>        
-          </tr>        
-        </thead>        
-        <tbody>${rows}</tbody>        
-      </table>        
-      <p><br/>        
-        Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
-        Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
-        Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>        
-        Jumlah Penarikan: ${formatRupiah(totalTarik)}        
-      </p><br/>        
-      <hr/>        
-    `;        
-  });        
-}        
-        
+
+function renderBulananSemua() {
+  const container = document.getElementById("tabungan-bulanan");
+
+  reversedFiles.forEach(namaFile => {
+    const data = dataBulananTersimpan[namaFile];
+    if (!data) return;
+
+    const combinedData = [];
+    let totalPutra = 0, totalPutri = 0, totalTabungan = 0, totalTarik = 0;
+
+    ["putra", "putri"].forEach(jenis => {
+      data[jenis]?.forEach(item => {
+        combinedData.push({ ...item, jenis });
+        if (jenis === "putra") totalPutra += item.tabungan;
+        else totalPutri += item.tabungan;
+        totalTabungan += item.tabungan;
+        totalTarik += item.penarikan;
+      });
+    });
+
+    const saldoMasuk = totalTabungan - totalTarik; // Tambahan
+    combinedData.sort((a, b) => b.tabungan - a.tabungan);
+
+    let rows = '';
+            
+    combinedData.forEach(({ nama, tabungan, penarikan }) => {
+  const selisih = tabungan - penarikan;
+  let simbol = '';
+  let warna = '';
+
+  if (selisih > 0) {
+    simbol = '➕';
+    warna = 'green';
+  } else if (selisih < 0) {
+    simbol = '➖';
+    warna = 'red';
+  } else {
+    simbol = '';
+    warna = 'black';
+  }
+
+  rows += `<tr>
+    <td>${nama}</td>
+    <td>${formatRupiah(tabungan)}</td>
+    <td>${formatRupiah(penarikan)}</td>
+    <td><span style="color:${warna}">${simbol}${formatRupiah(Math.abs(selisih))}</span></td>
+  </tr>`;
+});
+            
+    container.innerHTML += `
+      <h3>${formatNamaBulan(namaFile)}</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Tabungan</th>
+            <th>Penarikan</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p><br/>
+        Tabungan Putra: ${formatRupiah(totalPutra)}<br/>
+        Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
+        Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>
+        Jumlah Penarikan: ${formatRupiah(totalTarik)}<br/>
+        <strong>Saldo Masuk: <span style="color:green">${formatRupiah(saldoMasuk)}</span></strong>
+      </p><br/>
+      <hr/>
+    `;
+  });
+}
+
 async function loadSemua() {        
   for (let namaFile of sortedFiles) {        
     try {        
