@@ -210,30 +210,44 @@
 
 <!-- Tombol Chat WhatsApp -->
             
-    <!-- Pop up bantuan -->
-  <div id="popup-bantuan" class="popup-bantuan show">
-    <div class="bantuan-teks" onclick="toggleForm()">Butuh Bantuan?</div>
+    <!-- Tombol WA Kanan Bawah -->
+  <div class="chat-wa-btn" onclick="toggleForm()">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat WA">
   </div>
 
-  <!-- Chat WA dengan gambar dan form pilihan -->
-  <div id="chat-widget" class="chat-widget hidden">
-    <div class="chat-header" onclick="toggleForm()">
-      <img id="profile-img" src="/risma/img/pulung.png" alt="Admin" />
-      <div class="chat-name" id="profile-name">Pulung</div>
-    </div>
-
-    <div class="chat-options">
-      <div onclick="setAdmin('server')">Dukungan Server</div>
-      <div onclick="setAdmin('putra')">Tabungan Putra</div>
-      <div onclick="setAdmin('putri')">Tabungan Putri</div>
-    </div>
-
-    <a id="chat-link" href="https://wa.me/6288971344131" target="_blank" class="wa-btn">
-      <!-- WhatsApp SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#fff" d="M19.11 17.18c-.29-.15-1.7-.84-1.96-.94-.26-.1-.45-.15-.64.14-.19.29-.74.93-.91 1.12-.17.19-.34.21-.63.07-.29-.15-1.23-.45-2.35-1.44-.87-.77-1.46-1.72-1.63-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.07-.15-.64-1.54-.88-2.1-.23-.55-.47-.48-.64-.49l-.54-.01c-.19 0-.5.07-.76.36-.26.29-1 1-.98 2.43.02 1.43 1.03 2.8 1.18 2.99.15.19 2.01 3.06 4.88 4.29.68.3 1.21.48 1.62.61.68.22 1.3.19 1.79.12.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path fill="#25d366" d="M16 0C7.16 0 0 7.16 0 16c0 2.82.74 5.45 2.01 7.74L0 32l8.46-2.22A15.88 15.88 0 0 0 16 32c8.84 0 16-7.16 16-16S24.84 0 16 0zm0 29.41c-2.61 0-5.03-.68-7.15-1.86l-.51-.29-5.02 1.32 1.34-4.89-.33-.52A13.43 13.43 0 0 1 2.59 16c0-7.36 6.05-13.41 13.41-13.41S29.41 8.64 29.41 16 23.36 29.41 16 29.41z"/></svg>
-    </a>
+  <!-- Popup Bantuan Kiri Bawah -->
+  <div class="bantuan-popup" id="bantuanPopup" onclick="toggleForm()">
+    <img src="/risma/img/pulung.png" alt="Profil Admin" class="bantuan-img" id="bantuanImg">
+    <div class="bantuan-teks" id="bantuanTeks">Butuh bantuan?</div>
   </div>
 
+  <!-- Form WA -->
+  <div class="form-popup" id="formPopup">
+    <div class="form-header">
+      <span>Hubungi Admin</span>
+      <button onclick="closeForm()">✖</button>
+    </div>
+    <div class="form-body">
+      <label for="adminSelect">Pilih Admin</label>
+      <select id="adminSelect" onchange="updateProfile()">
+        <option value="server">Dukungan Server</option>
+        <option value="putra">Tabungan Putra</option>
+        <option value="putri">Tabungan Putri</option>
+      </select>
+
+      <label for="message">Isi Pesan</label>
+      <textarea id="message" rows="3" placeholder="Tulis pesan..."></textarea>
+
+      <div class="form-admin">
+        <img id="adminImg" src="/risma/img/pulung.png" alt="Foto Admin">
+        <span id="adminName">Pulung</span>
+      </div>
+
+      <button class="kirim-btn" onclick="sendWA()">Kirim via WhatsApp</button>
+    </div>
+  </div>
+
+  
  
             
     
