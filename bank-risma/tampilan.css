@@ -4,26 +4,39 @@ body { font-family: sans-serif; margin: 20px; }
     th { background-color: #eee; }
     h2 { margin-top: 40px; }
 
-       .profil {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #333;
-  /* commented for demo
-  float: left;
-  margin-left: 125px;
-  margin-top: 20px;
-  */
-  
-  /*for demo*/
-  display:inline-block;
-  vertical-align:middle;
-}
-.profil img{
-  width:100%;
+       .profil-single {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5em;
 }
 
+.profil-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5em;
+  justify-items: center;
+  margin-bottom: 2em;
+}
+
+.profil-grid div,
+.profil-single {
+  text-align: center;
+}
+
+.profil-grid img,
+.profil-single img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ccc;
+}
+
+h5 {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
 
        
        
