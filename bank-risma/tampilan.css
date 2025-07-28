@@ -183,104 +183,122 @@ h5 {
 
 /* Tombol chat WhatsApp */
 
-/* Tombol Bantuan */
-.popup-bantuan {
+/* Tombol WA */
+.chat-wa-btn {
   position: fixed;
-  bottom: 100px;
-  left: 20px;
+  bottom: 20px;
+  right: 20px;
   z-index: 1000;
-}
-
-.bantuan-teks {
-  background: #25d366;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 20px;
   cursor: pointer;
-  animation: vibrate 1s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.chat-wa-btn img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.chat-wa-btn:hover img {
+  transform: scale(1.1);
 }
 
-@keyframes vibrate {
-  0% { transform: rotate(0deg); }
-  20% { transform: rotate(3deg); }
-  40% { transform: rotate(-3deg); }
-  60% { transform: rotate(3deg); }
-  80% { transform: rotate(-3deg); }
-  100% { transform: rotate(0deg); }
-}
-
-.chat-widget {
+/* Popup Bantuan */
+.bantuan-popup {
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  width: 250px;
-  z-index: 999;
-}
-
-.chat-header {
   display: flex;
   align-items: center;
-  padding: 10px;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   cursor: pointer;
-  border-bottom: 1px solid #eee;
+  z-index: 1000;
+  animation: shake 1.2s ease;
+}
+.bantuan-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.bantuan-teks {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
 }
 
-.chat-header img {
-  width: 40px;
-  height: 40px;
+@keyframes shake {
+  0% { transform: translateX(0px); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0px); }
+}
+
+/* Form Pop Up */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 280px;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1001;
+}
+.form-header {
+  background-color: #128C7E;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-body {
+  padding: 15px;
+}
+.form-body label {
+  font-size: 14px;
+  margin-top: 8px;
+  display: block;
+}
+.form-body select,
+.form-body textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.form-admin {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.form-admin img {
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   margin-right: 10px;
 }
-
-.chat-name {
+.kirim-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  background-color: #25D366;
+  border: none;
+  border-radius: 6px;
+  color: white;
   font-weight: bold;
-  color: #333;
-}
-
-.chat-options {
-  display: flex;
-  flex-direction: column;
-}
-
-.chat-options div {
-  padding: 10px 15px;
+  font-size: 14px;
   cursor: pointer;
-  border-bottom: 1px solid #f0f0f0;
-  color: #333;
 }
-
-.chat-options div:hover {
-  background: #f9f9f9;
-}
-
-.wa-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #25d366;
-  border-radius: 0 0 12px 12px;
-  padding: 10px;
-  transition: 0.3s;
-}
-
-.wa-btn:hover {
-  background: #20b954;
-}
-
-.wa-btn svg {
-  width: 28px;
-  height: 28px;
-}
-
-/* Sembunyi/tampil */
-.hidden {
-  display: none;
-}
-
-.show {
-  display: block;
+.kirim-btn:hover {
+  background-color: #1ebc5e;
 }
