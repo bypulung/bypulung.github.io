@@ -261,10 +261,6 @@
 
 
 
-      
-<h2>Laporan Bulanan</h2>                
-<div id="tabungan-bulanan"></div>
-
 
 
           <!-- Tombol Salin Rekap Total -->
@@ -310,11 +306,11 @@ function salinRekapTotal() {
     teks += `${nama} ${simbol} ${formatRupiah(nilai)}\n`;
   });
 
-  teks += `\n💡 *Ringkasan Bulan ${bulanTahun}*\n`;
+  teks += `\n💡 *${bulanTahun}*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutraBulan)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutriBulan)}\n`;
-  teks += `🤑Total Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
-  teks += `🏧Total Penarikan: ${formatRupiah(totalTarikBulan)}\n\n`;
+  teks += `🤑Jumlah Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
+  teks += `🏧Jumlah Penarikan: ${formatRupiah(totalTarikBulan)}\n\n`;
 
   // Rekap Total
   const dataArray = Object.entries(rekapData).map(([nama, val]) => {
@@ -339,17 +335,17 @@ function salinRekapTotal() {
     sisa += saldo;
   });
 
-  teks += `\n💡 *Ringkasan*\n`;
+  teks += `\n💡 *Rekap Total*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutra)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutri)}\n`;
   teks += `🤑Total Tabungan: ${formatRupiah(totalTabungan)}\n`;
   teks += `🏧Total Penarikan: ${formatRupiah(totalPenarikan)}\n`;
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
-  teks += `📍Tabungan di urutkan otomatis dari yang terbanyak\n`;
-  teks += `📍Tidak boleh diambil kecuali kondisi darurat dan puasa Ramadhan.\n`;
-  teks += `📍Tidak boleh dipinjam untuk keperluan pribadi\n`;
-  teks += `📍Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
+  teks += `📌Tabungan di urutkan otomatis dari yang terbanyak\n`;
+  teks += `📌Tidak boleh diambil kecuali kondisi darurat atau puasa Ramadhan.\n`;
+  teks += `📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
+  teks += `📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
   teks += `Info selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
 
   navigator.clipboard.writeText(teks).then(() => {
@@ -357,6 +353,13 @@ function salinRekapTotal() {
   });
 }
 </script>   
+
+
+          
+<h2>Laporan Bulanan</h2>                
+<div id="tabungan-bulanan"></div>
+
+
 
               
                 
@@ -437,10 +440,10 @@ function renderTabelRekap() {
       <tbody>${rows}</tbody>        
     </table>        
     <p><br/>        
-      Total Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
-      Total Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
-      Total Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>        
-      Total Penarikan Saldo: ${formatRupiah(totalTarik)}<br/>        
+      Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
+      Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
+      Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>        
+      Jumlah Penarikan: ${formatRupiah(totalTarik)}<br/>        
       Sisa Saldo: <span style="color:green">${formatRupiah(totalSaldo)}</span>        
     </p><br/>        
     <hr/>        
@@ -501,8 +504,8 @@ function renderBulananSemua() {
       <p><br/>        
         Tabungan Putra: ${formatRupiah(totalPutra)}<br/>        
         Tabungan Putri: ${formatRupiah(totalPutri)}<br/>        
-        Semua Tabungan: ${formatRupiah(totalTabungan)}<br/>        
-        Penarikan Saldo: ${formatRupiah(totalTarik)}        
+        Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>        
+        Jumlah Penarikan: ${formatRupiah(totalTarik)}        
       </p><br/>        
       <hr/>        
     `;        
