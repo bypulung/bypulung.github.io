@@ -1,7 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   // Load Header
-  fetch("/header.html")
+  fetch("/bank-risma/header.html")
     .then(res => res.text())
     .then(data => {
       document.getElementById("header-placeholder").innerHTML = data;
@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .catch(err => console.error("Gagal memuat header:", err));
 
   // Load Footer
-  fetch("/footer.html")
+  fetch("/bank-risma/footer.html")
     .then(res => res.text())
     .then(data => {
       document.getElementById("footer-placeholder").innerHTML = data;
