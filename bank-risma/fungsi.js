@@ -302,13 +302,6 @@ function salinRekapTotal() {
 
 
 // Tombol chat WhatsApp 
-const popupBantuan = document.getElementById("popupBantuan");
-const chatForm = document.getElementById("chatForm");
-const profileImage = document.getElementById("profileImage");
-const profileName = document.getElementById("profileName");
-const isiChat = document.getElementById("isiChat");
-const waLink = document.getElementById("waLink");
-
 const admins = {
   server: {
     name: "Pulung",
@@ -327,31 +320,22 @@ const admins = {
   }
 };
 
-// Klik tombol WA (kanan bawah)
-document.getElementById("waBtn").addEventListener("click", () => {
-  chatForm.classList.remove("hidden");
-  popupBantuan.style.display = "none";
-});
+function toggleForm() {
+  const chatWidget = document.getElementById("chat-widget");
+  const popup = document.getElementById("popup-bantuan");
 
-// Klik popup kiri bawah
-popupBantuan.addEventListener("click", () => {
-  chatForm.classList.remove("hidden");
-  popupBantuan.style.display = "none";
-});
-
-// Pilih Admin
-function pilihAdmin(role) {
-  const admin = admins[role];
-  profileName.textContent = admin.name;
-  profileImage.src = admin.img;
-
-  // Buat link WA dengan isi chat
-  const pesan = encodeURIComponent(document.getElementById("isiChat").value || "");
-  waLink.href = `https://wa.me/${admin.number}?text=${pesan}`;
+  if (chatWidget.classList.contains("hidden")) {
+    chatWidget.classList.remove("hidden");
+    popup.classList.add("hidden");
+  } else {
+    chatWidget.classList.add("hidden");
+    popup.classList.remove("hidden");
+  }
 }
 
-// Tutup form
-function tutupForm() {
-  chatForm.classList.add("hidden");
-  popupBantuan.style.display = "flex";
+function setAdmin(role) {
+  const admin = admins[role];
+  document.getElementById("profile-name").innerText = admin.name;
+  document.getElementById("profile-img").src = admin.img;
+  document.getElementById("chat-link").href = `https://wa.me/${admin.number}`;
 }
