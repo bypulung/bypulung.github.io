@@ -209,7 +209,7 @@ function salinRekapTotal() {
   combinedDataBulan.sort((a, b) => (b.tabungan - b.penarikan) - (a.tabungan - a.penarikan));
 
   // ✅ Ubah format tampilan tabungan bulanan
-  let teks = `💰 *Tabungan Bulan ${bulanTahun}*\n`;
+  let teks = `💰 *Tabungan ${bulanTahun}*\n`;
   combinedDataBulan.forEach(({ nama, tabungan, penarikan }, i) => {
     const selisih = tabungan - penarikan;
     const simbol = selisih > 0 ? '➕' : '➖';
@@ -234,7 +234,7 @@ function salinRekapTotal() {
 
   dataArray.sort((a, b) => b.saldo - a.saldo);
 
-  teks += `🏦 *Total Tabungan BANK RISMA*\n`;
+  teks += `🏦 *TOTAL SALDO BANK RISMA*\n`;
   dataArray.forEach((item, idx) => {
     teks += `${idx + 1}. ${item.nama} ${formatRupiah(item.saldo)}\n`;
   });
