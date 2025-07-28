@@ -133,6 +133,22 @@
 
     <div id="header-placeholder"></div>
 
+<script>
+  fetch("/header.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("header-placeholder").innerHTML = html;
+      
+      // Sekarang DOM header sudah ada → selipkan gambar
+      const position = '/img/risma_1.png';
+      $('#profile img').attr('src', position);
+
+      $('#profile').on('click', () => {
+        $('.profile').attr('src', $('#profile img').attr('src'));
+      });
+    })
+    .catch(console.error);
+</script>
 
         <center>
 
