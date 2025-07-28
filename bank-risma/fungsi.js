@@ -162,7 +162,7 @@ function renderBulananSemua() {
         Tabungan Putri: ${formatRupiah(totalPutri)}<br/>
         Jumlah Tabungan: ${formatRupiah(totalTabungan)}<br/>
         Jumlah Penarikan: ${formatRupiah(totalTarik)}<br/>
-        <strong>Saldo Masuk: 
+        <strong>Jumlah Saldo: 
           <span style="color:${warnaSaldo}">${simbolSaldo}${formatRupiah(Math.abs(saldoMasuk))}</span>
         </strong>
       </p><br/>
@@ -244,13 +244,15 @@ function salinRekapTotal() {
 
   // ✅ Tambahan info saldo masuk bulan ini
   const saldoMasukBulan = totalTabunganBulan - totalTarikBulan;
+  const simbolSaldo = saldoMasukBulan > 0 ? '➕' : saldoMasukBulan < 0 ? '➖' : '';
+  const nilaiSaldo = formatRupiah(Math.abs(saldoMasukBulan));
 
   teks += `\n💡 *${bulanTahun}*\n`;
   teks += `👨Tabungan Putra: ${formatRupiah(totalPutraBulan)}\n`;
   teks += `👧Tabungan Putri: ${formatRupiah(totalPutriBulan)}\n`;
   teks += `💵Jumlah Tabungan: ${formatRupiah(totalTabunganBulan)}\n`;
   teks += `🏧Jumlah Penarikan: ${formatRupiah(totalTarikBulan)}\n`;
-  teks += `💲Saldo Masuk: ${formatRupiah(saldoMasukBulan)}\n\n`; // ✅ Ditambahkan di sini
+  teks += `💲Jumlah Saldo: ${simbolSaldo}${nilaiSaldo}\n\n`; // ✅ Ubah di sini
 
   // Rekap Total
   const dataArray = Object.entries(rekapData).map(([nama, val]) => {
@@ -283,13 +285,12 @@ function salinRekapTotal() {
   teks += `💲Sisa Saldo: ${formatRupiah(sisa)}\n\n`;
 
   teks += `_Tabungan diurutkan otomatis dari yang terbanyak_\n\n`;
-          
   teks += `> 📌Tidak boleh diambil kecuali kondisi darurat atau bulan Ramadhan.\n`;
   teks += `> 📌Tidak boleh dipinjam untuk keperluan pribadi\n`;
   teks += `> 📌Uang akan dikelola secara bijak demi kemakmuran bersama\n\n`;
   teks += `Info selengkapnya👉 https://tanjungbulan.my.id/bank-risma`;
 
   navigator.clipboard.writeText(teks).then(() => {
-    alert("Rekap tabungan lengkap disalin ke clipboard!");
+    alert("Rekap tabungan berhasil disalin ges!");
   });
 }
