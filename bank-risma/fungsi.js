@@ -244,7 +244,7 @@ function salinRekapTotal() {
   combinedDataBulan.forEach(({ nama, tabungan, penarikan }, i) => {
     const selisih = tabungan - penarikan;
     const simbol = selisih > 0 ? '➕' : '➖';
-    teks += `${i + 1}. ${nama} ${simbol} ${formatRupiah(Math.abs(selisih))}\n`;
+    teks += `${i + 1}. ${nama} ${simbol}${formatRupiah(Math.abs(selisih))}\n`;
   });
 
   // ✅ Tambahan info saldo masuk bulan ini
