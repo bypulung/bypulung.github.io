@@ -14,24 +14,57 @@
 
 
    <style>
-        h2 {
-         font-size:30px;
-       }
-  
-        table {
-            width: 90%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #1e1e1e;
-        }
-        
-        
+                
+        body {
+  font-family: system-ui, sans-serif;
+  padding: 16px;
+  max-width: 1024px;
+  margin: auto;
+}
+h1 {
+  margin-bottom: 8px;
+}
+.controls {
+  margin-bottom: 12px;
+}
+.layout {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.card {
+  flex: 1 1 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  margin-bottom: 16px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 6px;
+}
+th, td {
+  border: 1px solid #444;
+  padding: 6px;
+  text-align: center;
+}
+th {
+  background: #f0f0f0;
+}
+.upcoming {
+  color: #555;
+  font-style: italic;
+}
+.win {
+  font-weight: bold;
+}
+.note {
+  font-size: 0.8em;
+  color: #555;
+  margin-top: 4px;
+}
     
         </style>
 
