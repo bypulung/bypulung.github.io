@@ -112,30 +112,47 @@
       <h2 id="TopGlobal"><i class="fa-solid fa-ranking-star"></i> Klasemen LigaDusun</h2><br>
     </header>
 
-<!--
-<button onclick="refreshKlasemen()">🔄 Refresh Klasemen</button><br>
--->
-
-
-    <table aria-label="Klasemen LigaDusun">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Tim</th>
-          <th>Main</th>
-          <th>M</th>
-          <th>K</th>
-          <th>Set</th>
-          <th>Poin</th>
-        </tr>
-      </thead>
-      <tbody id="klasemen-body">
-        <!-- diisi oleh JS -->
-      </tbody>
-    </table>
+<div class="controls">
+    <button id="btn-refresh">🔄 Refresh Semua</button>
   </div>
 
+  <div class="layout">
+    <div class="card">
+      <h2>Roster Tim</h2>
+      <div id="roster-container">Memuat...</div>
+    </div>
 
+    <div class="card">
+      <h2>Klasemen</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
+          </tr>
+        </thead>
+        <tbody id="klasemen-body">
+          <!-- diisi oleh klasemen.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Jadwal & Hasil Pertandingan</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Home</th><th>Away</th><th>Hasil</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="jadwal-body">
+        <!-- diisi oleh klasemen.js -->
+      </tbody>
+    </table>
+    <div class="note">Catatan: pertandingan tanpa skor berarti belum dimainkan.</div>
+  </div>
+
+  <!-- muat data dan script -->
   <script src="tim.js"></script>
   <script src="main.js"></script>
   <script src="klasemen.js"></script>
