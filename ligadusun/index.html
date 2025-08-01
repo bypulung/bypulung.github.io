@@ -15,64 +15,62 @@
 
    <style>
                 
-        body {
+        /* Background gelap untuk seluruh halaman */
+body {
   font-family: system-ui, sans-serif;
   padding: 16px;
   max-width: 1024px;
   margin: auto;
+  background-color: #1e1e1e; /* gelap */
+  color: #f0f0f0; /* teks default putih */
 }
-h1 {
-  margin-bottom: 8px;
-}
-.controls {
-  margin-bottom: 12px;
-}
-.layout {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
+
+/* Kartu */
 .card {
   flex: 1 1 300px;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   border-radius: 8px;
   padding: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  background-color: #2a2a2a; /* gelap */
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
   margin-bottom: 16px;
 }
+
+/* Tabel */
 table {
   border-collapse: collapse;
   width: 100%;
   margin-top: 6px;
+  background-color: #2a2a2a; /* latar tabel gelap */
+  color: #f0f0f0; /* teks putih */
 }
+
 th, td {
-  border: 1px solid #444;
+  border: 1px solid #555; /* border abu terang */
   padding: 6px;
   text-align: center;
 }
+
 th {
-  background: #f0f0f0;
+  background: #333; /* header sedikit lebih gelap */
+  color: #fff; /* teks header putih */
 }
+
+/* Status pertandingan */
 .upcoming {
-  color: #555;
+  color: #bbb; /* abu-abu terang */
   font-style: italic;
 }
 .win {
   font-weight: bold;
-}
-.note {
-  font-size: 0.8em;
-  color: #555;
-  margin-top: 4px;
+  color: #4caf50; /* hijau kemenangan */
 }
 
-#klasemen-body td,
-#klasemen-body th,
-#jadwal-body td,
-#jadwal-body th {
-  color: black;
-}
-    
+/* Catatan kecil */
+.note, .small {
+  font-size: 0.8em;
+  color: #ccc;
+}    
         </style>
 
 
