@@ -146,59 +146,63 @@
   }
 
   // === rendering ===
-  function renderKlasemen() {
-    const tabel = computeKlasemen(typeof teams !== "undefined" ? teams : [], typeof matches !== "undefined" ? matches : []);
-    const tbody = document.getElementById("klasemen-body");
-    if (!tbody) return;
-    tbody.innerHTML = "";
+  
 
-    tabel.forEach((tim, i) => {
-      const tr = document.createElement("tr");
-      if (i === 0) tr.classList.add("top"); // leader highlight
 
-      // No
-      const tdNo = document.createElement("td");
-      tdNo.setAttribute("data-label", "No");
-      tdNo.textContent = i + 1;
-      tr.appendChild(tdNo);
+function renderKlasemen() {
+  const teamList = Array.isArray(window.teams) ? window.teams : [];
+  const matchList = Array.isArray(window.matches) ? window.matches : [];
+  const tabel = computeKlasemen(teamList, matchList);
+  const tbody = document.getElementById("klasemen-body");
+  if (!tbody) return;
+  tbody.innerHTML = "";
 
-      // Tim with tooltip
-      const tdTim = document.createElement("td");
-      tdTim.setAttribute("data-label", "Tim");
-      if (Array.isArray(tim.pemain) && tim.pemain.length) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "tooltip";
-        wrapper.textContent = tim.nama;
+  tabel.forEach((tim, i) => {
+    const tr = document.createElement("tr");
+    // (kalau kamu sudah menghapus highlight leader, jangan tambahkan kelas 'top')
 
-        const tip = document.createElement("div");
-        tip.className = "tooltip-text";
-        tip.textContent = `Pemain: ${tim.pemain.join(", ")}`;
+    const tdNo = document.createElement("td");
+    tdNo.setAttribute("data-label", "No");
+    tdNo.textContent = i + 1;
+    tr.appendChild(tdNo);
 
-        wrapper.appendChild(tip);
-        tdTim.appendChild(wrapper);
-      } else {
-        tdTim.textContent = tim.nama;
-      }
-      tr.appendChild(tdTim);
+    const tdTim = document.createElement("td");
+    tdTim.setAttribute("data-label", "Tim");
+    const namaTim = tim.nama || tim.name || "—";
+    if (Array.isArray(tim.pemain) && tim.pemain.length) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "tooltip";
+      wrapper.textContent = namaTim;
 
-      // Stats
-      const fields = [
-        { label: "Main", value: tim.main },
-        { label: "M", value: tim.menang },
-        { label: "K", value: tim.kalah },
-        { label: "Set", value: `${tim.setMenang}-${tim.setKalah}` },
-        { label: "Poin", value: tim.poin }
-      ];
-      fields.forEach(f => {
-        const td = document.createElement("td");
-        td.setAttribute("data-label", f.label);
-        td.textContent = f.value;
-        tr.appendChild(td);
-      });
+      const tip = document.createElement("div");
+      tip.className = "tooltip-text";
+      tip.textContent = `Pemain: ${tim.pemain.join(", ")}`;
 
-      tbody.appendChild(tr);
+      wrapper.appendChild(tip);
+      tdTim.appendChild(wrapper);
+    } else {
+      tdTim.textContent = namaTim;
+    }
+    tr.appendChild(tdTim);
+
+    const stats = [
+      { label: "Main", value: tim.main },
+      { label: "M", value: tim.menang },
+      { label: "K", value: tim.kalah },
+      { label: "Set", value: `${tim.setMenang}-${tim.setKalah}` },
+      { label: "Poin", value: tim.poin }
+    ];
+    stats.forEach(s => {
+      const td = document.createElement("td");
+      td.setAttribute("data-label", s.label);
+      td.textContent = s.value;
+      tr.appendChild(td);
     });
-  }
+
+    tbody.appendChild(tr);
+  });
+}
+
 
   function renderRoster() {
     const container = document.getElementById("roster-container");
