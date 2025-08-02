@@ -86,7 +86,7 @@ tbody tr.top {
   position: relative;
 }
 tbody tr.top::before {
-  content: "Leader";
+  
   position: absolute;
   left: -4px;
   top: 50%;
