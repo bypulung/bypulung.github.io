@@ -152,25 +152,59 @@
     });
   }
 
-  function renderRoster() {
-    const container = document.getElementById("roster-container");
-    if (!container) return;
-    container.innerHTML = "";
-    if (!Array.isArray(teams) || !teams.length) {
-      container.textContent = "Tidak ada data tim.";
-      return;
+  
+function renderRoster() {
+  const container = document.getElementById("roster-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const listTeams = Array.isArray(teams) ? teams : [];
+  if (!listTeams.length) {
+    container.innerHTML = `<div class="no-players">Tidak ada data tim.</div>`;
+    return;
+  }
+
+  listTeams.forEach(team => {
+    const name = team.nama || team.name || "Unnamed Team";
+    const players = Array.isArray(team.pemain) ? team.pemain : [];
+
+    const card = document.createElement("div");
+    card.className = "team-card";
+
+    const header = document.createElement("div");
+    header.className = "team-header";
+    header.innerHTML = `
+      <h3 class="team-name-title">${name}</h3>
+      <div class="player-count">${players.length} Pemain</div>
+    `;
+
+    const listWrapper = document.createElement("ul");
+    listWrapper.className = "player-list";
+    if (players.length) {
+      players.forEach(p => {
+        const li = document.createElement("li");
+        li.innerHTML = `<div class="player-bullet"></div><div>${p}</div>`;
+        listWrapper.appendChild(li);
+      });
+    } else {
+      const no = document.createElement("div");
+      no.className = "no-players";
+      no.textContent = "Belum ada pemain.";
+      listWrapper.appendChild(no);
     }
 
-    teams.forEach(t => {
-      const div = document.createElement("div");
-      div.className = "team-roster";
-      div.innerHTML = `
-        <strong>${t.nama}</strong>
-        <div class="small">Pemain: ${Array.isArray(t.pemain) ? t.pemain.join(", ") : "-"}</div>
-      `;
-      container.appendChild(div);
-    });
-  }
+    const meta = document.createElement("div");
+    meta.className = "team-meta";
+    meta.textContent = "Roster otomatis disinkronkan dari tim.js";
+
+    card.appendChild(header);
+    card.appendChild(listWrapper);
+    card.appendChild(meta);
+    container.appendChild(card);
+  });
+}
+
+
 
   function refreshAll() {
     renderRoster();
