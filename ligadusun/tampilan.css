@@ -81,23 +81,6 @@ tbody tr {
   background: rgba(255,255,255,0.005);
   transition: background .2s ease;
 }
-tbody tr.top {
-  background: linear-gradient(90deg, rgba(126,217,87,.15), rgba(126,217,87,0));
-  position: relative;
-}
-tbody tr.top::before {
-  
-  position: absolute;
-  left: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--winner);
-  color: #0f111f;
-  padding: 4px 8px;
-  border-radius: 0 6px 6px 0;
-  font-size: .65rem;
-  font-weight: 700;
-}
 
 /* Tooltip for player list in klasemen */
 .tooltip {
