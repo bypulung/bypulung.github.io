@@ -213,126 +213,144 @@
 
 
 
-// schedule.js
-// Mengasumsikan global `teams` ada (dari tim.js)
-// Jadwal: 3 hari 8-10 Agustus 2025, tiap tim sekali per hari,
-// pasangan fixed agar tidak bentrok: 
-// Hari1: A vs B, C vs D
-// Hari2: A vs C, B vs D
-// Hari3: A vs D, B vs C
-// Waktu per hari: 15:30 dan 16:30
-
+// non-table schedule render, mengambil teams dari tim.js dan hasil dari main.js
 (function () {
-  function formatDate(date) {
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    });
+  // fallback jika teams tidak tersedia
+  const teamNames = Array.isArray(window.teams)
+    ? window.teams.map(t => t.nama || t.name).filter(Boolean).slice(0, 4)
+    : ["Tim A", "Tim B", "Tim C", "Tim D"];
+
+  // pasangan agar tiap tim sekali per hari
+  const dailyMatchups = [
+    [{ home: teamNames[0], away: teamNames[1] }, { home: teamNames[2], away: teamNames[3] }], // 8 Aug
+    [{ home: teamNames[0], away: teamNames[2] }, { home: teamNames[1], away: teamNames[3] }], // 9 Aug
+    [{ home: teamNames[0], away: teamNames[3] }, { home: teamNames[1], away: teamNames[2] }]  //10 Aug
+  ];
+
+  const dates = [
+    new Date("2025-08-08"),
+    new Date("2025-08-09"),
+    new Date("2025-08-10")
+  ];
+  const times = ["15:30", "16:30"];
+
+  // cari hasil dalam matches (mendukung reversed order)
+  function findMatch(home, away) {
+    if (!Array.isArray(window.matches)) return null;
+    return window.matches.find(m => {
+      const exact = m.home === home && m.away === away;
+      const reversed = m.home === away && m.away === home;
+      return exact || reversed;
+    }) || null;
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "short", year: "numeric" });
   }
 
   function buildSchedule() {
-    if (!Array.isArray(teams) || teams.length < 4) {
-      console.warn("`teams` harus array dengan minimal 4 tim."); 
-      return [];
-    }
-
-    // Ambil nama tim pertama 4 (jika lebih diabaikan)
-    const [t0, t1, t2, t3] = teams.map(t => t.nama || t.name);
-
-    const dailyMatchups = [
-      [{ home: t0, away: t1 }, { home: t2, away: t3 }], // 8 Aug
-      [{ home: t0, away: t2 }, { home: t1, away: t3 }], // 9 Aug
-      [{ home: t0, away: t3 }, { home: t1, away: t2 }]  //10 Aug
-    ];
-
-    const timeSlots = ["15:30", "16:30"];
-    const baseDates = [
-      new Date("2025-08-08"),
-      new Date("2025-08-09"),
-      new Date("2025-08-10")
-    ];
-
-    const schedule = [];
-
-    for (let day = 0; day < 3; day++) {
-      for (let m = 0; m < 2; m++) {
-        const matchup = dailyMatchups[day][m];
-        const [hour, minute] = timeSlots[m].split(":").map(Number);
-        const dt = new Date(baseDates[day]);
-        dt.setHours(hour, minute, 0, 0);
-        schedule.push({
+    return dates.map((day, di) => {
+      const matches = dailyMatchups[di].map((pair, mi) => {
+        const [hh, mm] = times[mi].split(":").map(Number);
+        const dt = new Date(day);
+        dt.setHours(hh, mm, 0, 0);
+        // cari hasil
+        const resultMatch = findMatch(pair.home, pair.away);
+        let played = false;
+        let result = null;
+        if (resultMatch && typeof resultMatch.setHome === "number" && typeof resultMatch.setAway === "number") {
+          played = true;
+          // jika reversed, swap
+          if (resultMatch.home === pair.home && resultMatch.away === pair.away) {
+            result = { home: resultMatch.setHome, away: resultMatch.setAway };
+          } else {
+            result = { home: resultMatch.setAway, away: resultMatch.setHome };
+          }
+        }
+        return {
           dateObj: dt,
-          date: formatDate(dt),
-          time: timeSlots[m],
-          home: matchup.home,
-          away: matchup.away,
-          played: false,
-          result: null // nanti bisa diisi { home: x, away: y }
-        });
-      }
-    }
-
-    return schedule;
-  }
-
-  function renderSchedule(schedule) {
-    const container = document.getElementById("schedule-container");
-    if (!container) return;
-    container.innerHTML = "";
-
-    if (!Array.isArray(schedule) || !schedule.length) {
-      container.textContent = "Gagal membangun jadwal. Pastikan `teams` valid (minimal 4).";
-      return;
-    }
-
-    const table = document.createElement("table");
-    table.innerHTML = `
-      <thead>
-        <tr>
-          <th>#</th><th>Tanggal</th><th>Waktu</th><th>Home</th><th>Away</th><th>Hasil</th><th>Status</th>
-        </tr>
-      </thead>
-    `;
-    const tbody = document.createElement("tbody");
-
-    schedule.forEach((match, i) => {
-      const tr = document.createElement("tr");
-      const hasil = match.played && match.result
-        ? `${match.result.home} - ${match.result.away}`
-        : "-";
-      const status = match.played ? "Selesai" : "Belum dimainkan";
-      tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td>${match.date}</td>
-        <td>${match.time}</td>
-        <td>${match.home}</td>
-        <td>${match.away}</td>
-        <td>${hasil}</td>
-        <td>${status}</td>
-      `;
-      tbody.appendChild(tr);
+          dateLabel: fmtDate(dt),
+          time: times[mi],
+          home: pair.home,
+          away: pair.away,
+          played,
+          result
+        };
+      });
+      return { day, matches };
     });
-
-    table.appendChild(tbody);
-    container.appendChild(table);
   }
 
-  // Ekspos untuk referensi eksternal
-  window.buildSchedule = buildSchedule;
-  window.renderSchedule = renderSchedule;
+  function render() {
+    const wrapper = document.getElementById("schedule-wrapper");
+    if (!wrapper) return;
+    wrapper.innerHTML = "";
 
-  // Inisialisasi otomatis saat DOM siap
-  function init() {
     const schedule = buildSchedule();
-    renderSchedule(schedule);
-    // simpan untuk penggunaan lain
-    window.currentSchedule = schedule;
+    schedule.forEach(block => {
+      const dayName = block.day.toLocaleDateString("id-ID", { weekday: "long" });
+      const dateShort = block.day.toLocaleDateString("id-ID", { day:"2-digit", month:"short", year:"numeric" });
+
+      const dayCard = document.createElement("div");
+      dayCard.className = "day-card";
+      dayCard.setAttribute("data-day", dayName);
+
+      const header = document.createElement("div");
+      header.className = "day-header";
+      header.innerHTML = `
+        <div class="date-label">${dayName}, ${dateShort}</div>
+        <div class="small">2 pertandingan</div>
+      `;
+      dayCard.appendChild(header);
+
+      block.matches.forEach(m => {
+        const matchEl = document.createElement("div");
+        matchEl.className = "match";
+
+        const left = document.createElement("div");
+        left.style.flex = "1";
+        const timeEl = document.createElement("div");
+        timeEl.className = "time";
+        timeEl.textContent = m.time;
+
+        const teamsEl = document.createElement("div");
+        teamsEl.className = "teams";
+        teamsEl.innerHTML = `
+          <div class="team">
+            <div class="team-name">${m.home}</div>
+          </div>
+          <div class="vs">vs</div>
+          <div class="team">
+            <div class="team-name">${m.away}</div>
+          </div>
+        `;
+        left.appendChild(timeEl);
+        left.appendChild(teamsEl);
+
+        const right = document.createElement("div");
+        right.className = "result";
+        if (m.played && m.result) {
+          right.innerHTML = `<div class="badge">Hasil: ${m.result.home} - ${m.result.away}</div><div class="status">Selesai</div>`;
+        } else {
+          right.innerHTML = `<div class="badge">Belum dimainkan</div>`;
+        }
+
+        matchEl.appendChild(left);
+        matchEl.appendChild(right);
+        dayCard.appendChild(matchEl);
+      });
+
+      wrapper.appendChild(dayCard);
+    });
   }
+
+  // expose untuk debug/update manual
+  window.buildScheduleUI = buildSchedule;
+  window.renderScheduleUI = render;
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", render);
   } else {
-    init();
+    render();
   }
 })();
