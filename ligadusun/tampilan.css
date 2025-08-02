@@ -54,60 +54,118 @@ h1, h2 {
   color: var(--text-secondary);
 }
 
-/* === Klasemen Table === */
-table {
-  width:100%;
+/* === Klasemen - Dark & Clean === */
+.klasemen-table {
+  width: 100%;
   border-collapse: collapse;
-  background: rgba(255,255,255,0.02);
-  border-radius: 8px;
+  background: #1f2233; /* latar tabel */
+  border-radius: 10px;
   overflow: hidden;
-  font-size: .9rem;
-  margin-top: 8px;
-}
-thead {
-  background: rgba(255,255,255,.06);
-}
-th, td {
-  padding: 10px 12px;
-  text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,.07);
-  position: relative;
-}
-th {
-  font-weight: 600;
-  color: #d9e3ff;
-}
-tbody tr {
-  background: rgba(255,255,255,0.005);
-  transition: background .2s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
-/* Tooltip for player list in klasemen */
+.klasemen-table thead {
+  background: #292d42;
+}
+
+.klasemen-table th, 
+.klasemen-table td {
+  padding: 10px 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.klasemen-table th {
+  font-weight: 600;
+  color: #e4e7f5;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.klasemen-table tbody tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.klasemen-table td {
+  font-size: 0.9rem;
+  color: #d1d6f0;
+}
+
+/* Tooltip nama tim */
 .tooltip {
   position: relative;
-  display: inline-block;
   cursor: help;
 }
-.tooltip .tooltip-text {
+
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  background: #333a5a;
+  color: #fff;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 6px;
   position: absolute;
-  top: 110%;
+  bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,.9);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: .65rem;
+  z-index: 1;
   white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .2s ease;
-  z-index: 10;
+  transition: opacity 0.2s ease;
+  font-size: 0.8rem;
 }
+
 .tooltip:hover .tooltip-text {
-  opacity: 1;
   visibility: visible;
+  opacity: 1;
 }
+
+/* Highlight Pemenang / Kalah */
+.winner {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.loser {
+  color: #f44336;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .klasemen-table thead {
+    display: none;
+  }
+  .klasemen-table, 
+  .klasemen-table tbody, 
+  .klasemen-table tr, 
+  .klasemen-table td {
+    display: block;
+    width: 100%;
+  }
+  .klasemen-table tr {
+    margin-bottom: 10px;
+    background: #1f2233;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .klasemen-table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  .klasemen-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #a3a9cc;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+}
+
 
 /* === Schedule Cards === */
 .days {
