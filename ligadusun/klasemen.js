@@ -210,3 +210,129 @@
     tryInit();
   }
 })();
+
+
+
+// schedule.js
+// Mengasumsikan global `teams` ada (dari tim.js)
+// Jadwal: 3 hari 8-10 Agustus 2025, tiap tim sekali per hari,
+// pasangan fixed agar tidak bentrok: 
+// Hari1: A vs B, C vs D
+// Hari2: A vs C, B vs D
+// Hari3: A vs D, B vs C
+// Waktu per hari: 15:30 dan 16:30
+
+(function () {
+  function formatDate(date) {
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+  }
+
+  function buildSchedule() {
+    if (!Array.isArray(teams) || teams.length < 4) {
+      console.warn("`teams` harus array dengan minimal 4 tim."); 
+      return [];
+    }
+
+    // Ambil nama tim pertama 4 (jika lebih diabaikan)
+    const [t0, t1, t2, t3] = teams.map(t => t.nama || t.name);
+
+    const dailyMatchups = [
+      [{ home: t0, away: t1 }, { home: t2, away: t3 }], // 8 Aug
+      [{ home: t0, away: t2 }, { home: t1, away: t3 }], // 9 Aug
+      [{ home: t0, away: t3 }, { home: t1, away: t2 }]  //10 Aug
+    ];
+
+    const timeSlots = ["15:30", "16:30"];
+    const baseDates = [
+      new Date("2025-08-08"),
+      new Date("2025-08-09"),
+      new Date("2025-08-10")
+    ];
+
+    const schedule = [];
+
+    for (let day = 0; day < 3; day++) {
+      for (let m = 0; m < 2; m++) {
+        const matchup = dailyMatchups[day][m];
+        const [hour, minute] = timeSlots[m].split(":").map(Number);
+        const dt = new Date(baseDates[day]);
+        dt.setHours(hour, minute, 0, 0);
+        schedule.push({
+          dateObj: dt,
+          date: formatDate(dt),
+          time: timeSlots[m],
+          home: matchup.home,
+          away: matchup.away,
+          played: false,
+          result: null // nanti bisa diisi { home: x, away: y }
+        });
+      }
+    }
+
+    return schedule;
+  }
+
+  function renderSchedule(schedule) {
+    const container = document.getElementById("schedule-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!Array.isArray(schedule) || !schedule.length) {
+      container.textContent = "Gagal membangun jadwal. Pastikan `teams` valid (minimal 4).";
+      return;
+    }
+
+    const table = document.createElement("table");
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>#</th><th>Tanggal</th><th>Waktu</th><th>Home</th><th>Away</th><th>Hasil</th><th>Status</th>
+        </tr>
+      </thead>
+    `;
+    const tbody = document.createElement("tbody");
+
+    schedule.forEach((match, i) => {
+      const tr = document.createElement("tr");
+      const hasil = match.played && match.result
+        ? `${match.result.home} - ${match.result.away}`
+        : "-";
+      const status = match.played ? "Selesai" : "Belum dimainkan";
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${match.date}</td>
+        <td>${match.time}</td>
+        <td>${match.home}</td>
+        <td>${match.away}</td>
+        <td>${hasil}</td>
+        <td>${status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+  }
+
+  // Ekspos untuk referensi eksternal
+  window.buildSchedule = buildSchedule;
+  window.renderSchedule = renderSchedule;
+
+  // Inisialisasi otomatis saat DOM siap
+  function init() {
+    const schedule = buildSchedule();
+    renderSchedule(schedule);
+    // simpan untuk penggunaan lain
+    window.currentSchedule = schedule;
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
