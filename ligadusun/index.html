@@ -71,6 +71,109 @@ th {
   font-size: 0.8em;
   color: #ccc;
 }    
+
+
+:root {
+  --bg:#0f111f;
+  --card:#1f2442;
+  --muted:#8f99b2;
+  --radius:12px;
+  --shadow:0 20px 40px -10px rgba(0,0,0,.6);
+  --gradient:linear-gradient(135deg,#5f6dfa,#b36bf0);
+  --border:1px solid rgba(255,255,255,.08);
+}
+*{box-sizing:border-box;}
+body {
+  margin:0;
+  background: var(--bg);
+  color:#eceff9;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  line-height:1.4;
+  padding:24px;
+}
+h1 {
+  margin:0 0 6px;
+  font-size:1.8rem;
+  letter-spacing:0.5px;
+}
+.subtitle {
+  margin:0 0 20px;
+  color: var(--muted);
+  font-size:.95rem;
+}
+.days {
+  display:grid;
+  gap:24px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  margin-top:16px;
+}
+.day-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding:18px 20px 16px;
+  position:relative;
+  overflow:hidden;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+.day-card::before {
+  content: attr(data-day);
+  position:absolute;
+  top:12px;
+  right:12px;
+  background: var(--gradient);
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#fff;
+}
+.day-header {
+  font-size:1.1rem;
+  margin-bottom:12px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+}
+.date-label { font-weight:600; }
+.small { font-size:.75rem; color: var(--muted); }
+
+.match {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:14px 16px;
+  background: rgba(255,255,255,.03);
+  border-radius:10px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.time { font-size:.9rem; color: #b8c2ff; font-weight:600; margin-bottom:4px; }
+.teams {
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap: nowrap;
+}
+.team { flex:1; text-align:center; }
+.team-name { font-weight:700; font-size:1rem; margin-bottom:4px; }
+.vs { font-size:.9rem; color: var(--muted); flex:0 0 40px; text-align:center; }
+.result { margin-top:6px; display:flex; justify-content:center; gap:12px; font-size:.85rem; align-items:center; flex-wrap:wrap; }
+.badge { padding:5px 12px; border-radius:999px; font-size:.65rem; text-transform:uppercase; letter-spacing:1px; background:#2c3255; }
+.status { font-size:.75rem; padding:4px 10px; border-radius:999px; background:#202c4f; display:inline-block; }
+@media (min-width:800px){
+  .match { flex-direction: row; align-items: center; }
+  .teams { gap:6px; }
+  .time { width:90px; }
+  .result { justify-content:flex-end; margin-top:0; }
+}
+
+
+
         </style>
 
 
@@ -167,11 +270,6 @@ th {
     </div>
   </div>
 
-<div class="layout">
-    <div class="card">
-      <h2>Nama Tim & Pemain</h2>
-      <div id="roster-container">Memuat...</div>
-    </div>
 
 
   <div class="card">
@@ -190,10 +288,23 @@ th {
   </div>
 
 
-  <h2>Jadwal Pertandingan</h2>
-  <div class="note">4 tim, 3 hari, masing-masing bermain sekali per hari. Waktu per hari: 15:30 &amp; 16:30. Tanggal: 8–10 Agustus 2025.</div>
+ 
 
-  <div id="schedule-container">Memuat jadwal...</div>
+<main>
+  <h1>Jadwal Pertandingan</h1>
+  <p class="subtitle">4 tim, 3 hari (8–10 Agustus 2025), setiap tim sekali per hari. Waktu: 15:30 &amp; 16:30. Hasil diambil dari <code>main.js</code>.</p>
+  <div id="schedule-wrapper" class="days">
+    <!-- jadwal akan dirender di sini -->
+  </div>
+</main>
+
+
+
+<div class="layout">
+    <div class="card">
+      <h2>Nama Tim & Pemain</h2>
+      <div id="roster-container">Memuat...</div>
+    </div>
 
 
 
