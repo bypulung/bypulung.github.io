@@ -354,3 +354,11 @@
     render();
   }
 })();
+
+
+// di akhir render()
+if (typeof window.refreshAll === "function") {
+  window.refreshAll();
+} else if (typeof window.refreshKlasemen === "function") {
+  window.refreshKlasemen();
+}
