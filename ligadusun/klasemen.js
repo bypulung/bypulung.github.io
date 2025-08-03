@@ -195,7 +195,7 @@ function renderRoster() {
 
     const meta = document.createElement("div");
     meta.className = "team-meta";
-    meta.textContent = "Roster otomatis disinkronkan dari tim.js";
+    meta.textContent = " ";
 
     card.appendChild(header);
     card.appendChild(listWrapper);
