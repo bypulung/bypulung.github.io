@@ -255,18 +255,16 @@
 
 // non-table schedule render, mengambil teams dari tim.js dan hasil dari main.js
 (function () {
-  // fallback globals
-  if (!Array.isArray(window.teams)) window.teams = [];
-  if (!Array.isArray(window.matches)) window.matches = [];
-
+  // fallback jika teams tidak tersedia
   const teamNames = Array.isArray(window.teams)
     ? window.teams.map(t => t.nama || t.name).filter(Boolean).slice(0, 4)
     : ["Tim A", "Tim B", "Tim C", "Tim D"];
 
+  // pasangan agar tiap tim sekali per hari
   const dailyMatchups = [
-    [{ home: teamNames[0], away: teamNames[1] }, { home: teamNames[2], away: teamNames[3] }],
-    [{ home: teamNames[0], away: teamNames[2] }, { home: teamNames[1], away: teamNames[3] }],
-    [{ home: teamNames[0], away: teamNames[3] }, { home: teamNames[1], away: teamNames[2] }]
+    [{ home: teamNames[0], away: teamNames[1] }, { home: teamNames[2], away: teamNames[3] }], // 8 Aug
+    [{ home: teamNames[0], away: teamNames[2] }, { home: teamNames[1], away: teamNames[3] }], // 9 Aug
+    [{ home: teamNames[0], away: teamNames[3] }, { home: teamNames[1], away: teamNames[2] }]  //10 Aug
   ];
 
   const dates = [
@@ -276,20 +274,18 @@
   ];
   const times = ["15:30", "16:30"];
 
+  // cari hasil dalam matches (mendukung reversed order)
   function findMatch(home, away) {
     if (!Array.isArray(window.matches)) return null;
-    return window.matches.find(m =>
-      (m.home === home && m.away === away) || (m.home === away && m.away === home)
-    ) || null;
+    return window.matches.find(m => {
+      const exact = m.home === home && m.away === away;
+      const reversed = m.home === away && m.away === home;
+      return exact || reversed;
+    }) || null;
   }
 
   function fmtDate(d) {
-    return d.toLocaleDateString("id-ID", {
-      weekday: "long",
-      day: "2-digit",
-      month: "short",
-      year: "numeric"
-    });
+    return d.toLocaleDateString("id-ID", { weekday: "long", day: "2-digit", month: "short", year: "numeric" });
   }
 
   function buildSchedule() {
@@ -298,21 +294,22 @@
         const [hh, mm] = times[mi].split(":").map(Number);
         const dt = new Date(day);
         dt.setHours(hh, mm, 0, 0);
-
-        const record = findMatch(pair.home, pair.away);
+        // cari hasil
+        const resultMatch = findMatch(pair.home, pair.away);
         let played = false;
         let result = null;
-        if (record && typeof record.setHome === "number" && typeof record.setAway === "number") {
+        if (resultMatch && typeof resultMatch.setHome === "number" && typeof resultMatch.setAway === "number") {
           played = true;
-          if (record.home === pair.home && record.away === pair.away) {
-            result = { home: record.setHome, away: record.setAway };
+          // jika reversed, swap
+          if (resultMatch.home === pair.home && resultMatch.away === pair.away) {
+            result = { home: resultMatch.setHome, away: resultMatch.setAway };
           } else {
-            result = { home: record.setAway, away: record.setHome };
+            result = { home: resultMatch.setAway, away: resultMatch.setHome };
           }
         }
-
         return {
           dateObj: dt,
+          dateLabel: fmtDate(dt),
           time: times[mi],
           home: pair.home,
           away: pair.away,
@@ -324,7 +321,7 @@
     });
   }
 
-  function renderScheduleCards() {
+  function render() {
     const wrapper = document.getElementById("schedule-wrapper");
     if (!wrapper) return;
     wrapper.innerHTML = "";
@@ -332,11 +329,7 @@
     const schedule = buildSchedule();
     schedule.forEach(block => {
       const dayName = block.day.toLocaleDateString("id-ID", { weekday: "long" });
-      const dateShort = block.day.toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric"
-      });
+      const dateShort = block.day.toLocaleDateString("id-ID", { day:"2-digit", month:"short", year:"numeric" });
 
       const dayCard = document.createElement("div");
       dayCard.className = "day-card";
@@ -346,7 +339,7 @@
       header.className = "day-header";
       header.innerHTML = `
         <div class="date-label">${dayName}, ${dateShort}</div>
-        <div class="match-count">2 pertandingan</div>
+        <div class="small">2 pertandingan</div>
       `;
       dayCard.appendChild(header);
 
@@ -355,30 +348,24 @@
         matchEl.className = "match";
         if (m.played) matchEl.classList.add("played");
 
-        const timeEl = document.createElement("div");
-        timeEl.className = "time";
-        timeEl.textContent = m.time;
-
-        // determine winner/loser
+        // figure winner/loser
         let homeClass = "";
         let awayClass = "";
-        let hasilText = "-";
-        let statusText = "Belum dimainkan";
-
         if (m.played && m.result) {
-          hasilText = `${m.result.home} - ${m.result.away}`;
           if (m.result.home > m.result.away) {
             homeClass = "winner";
             awayClass = "loser";
-            statusText = `${m.home} menang`;
           } else if (m.result.away > m.result.home) {
             awayClass = "winner";
             homeClass = "loser";
-            statusText = `${m.away} menang`;
-          } else {
-            statusText = "Seri";
           }
         }
+
+        const left = document.createElement("div");
+        left.style.flex = "1";
+        const timeEl = document.createElement("div");
+        timeEl.className = "time";
+        timeEl.textContent = m.time;
 
         const teamsEl = document.createElement("div");
         teamsEl.className = "teams";
@@ -391,48 +378,25 @@
             <div class="team-name ${awayClass}">${m.away}</div>
           </div>
         `;
+        left.appendChild(timeEl);
+        left.appendChild(teamsEl);
 
         const right = document.createElement("div");
         right.className = "result";
         if (m.played && m.result) {
-          right.innerHTML = `
-            <div class="badge result-done">Hasil: ${hasilText}</div>
-            <div class="status">${statusText}</div>
-          `;
+          right.innerHTML = `<div class="badge result-done">Hasil: ${m.result.home} - ${m.result.away}</div><div class="status">Selesai</div>`;
         } else {
           right.innerHTML = `<div class="badge unplayed">Belum dimainkan</div>`;
         }
 
-        if (window.innerWidth >= 800) {
-          // horizontal layout
-          matchEl.appendChild(timeEl);
-          matchEl.appendChild(teamsEl);
-          matchEl.appendChild(right);
-        } else {
-          // stacked
-          matchEl.appendChild(timeEl);
-          matchEl.appendChild(teamsEl);
-          matchEl.appendChild(right);
-        }
-
+        matchEl.appendChild(left);
+        matchEl.appendChild(right);
         dayCard.appendChild(matchEl);
       });
 
       wrapper.appendChild(dayCard);
     });
   }
-
-  // expose
-  window.renderScheduleCards = renderScheduleCards;
-
-  // init
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderScheduleCards);
-  } else {
-    renderScheduleCards();
-  }
-})();
-
 
   // expose untuk debug/update manual
   window.buildScheduleUI = buildSchedule;
