@@ -233,3 +233,77 @@ h1 {
   font-size: .65rem;
   color: #a3aed0;
 }
+
+
+
+/* === Penekanan pemenang/kalah di jadwal === */
+.match {
+  position: relative;
+  transition: transform .2s ease, background .2s ease;
+}
+.match.played {
+  background: linear-gradient(135deg, rgba(126,217,87,.05), rgba(255,255,255,0)); /* lembut kalau sudah dimainkan */
+}
+.match .team-name {
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  min-width: 100px;
+  position: relative;
+  transition: all .2s ease;
+}
+
+/* Pemenang */
+.team-name.winner {
+  background: rgba(126,217,87,.15);
+  color: #7ed957;
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(126,217,87,.4);
+}
+.team-name.winner::after {
+  content: "✓";
+  margin-left: 6px;
+  font-size: .85em;
+  color: #7ed957;
+  vertical-align: middle;
+}
+
+/* Yang kalah */
+.team-name.loser {
+  background: rgba(255,107,107,.1);
+  color: #ff6b6b;
+  opacity: .9;
+}
+
+/* Hasil pertandingan */
+.badge.result-done {
+  background: #2a2f6f;
+  background: linear-gradient(135deg, #5f6dfa, #b36bf0);
+  color: #fff;
+  font-weight: 600;
+}
+.badge.unplayed {
+  background: rgba(255,255,255,.05);
+  color: #b8c2ff;
+}
+
+/* Status label */
+.status {
+  background: rgba(255,255,255,.08);
+  color: #d1d6f0;
+  font-weight: 500;
+}
+.match .status {
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+/* Penambahan garis pemisah halus antara home/away ketika ada pemenang */
+.teams {
+  gap: 12px;
+}
+.vs {
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  position: relative;
+}
