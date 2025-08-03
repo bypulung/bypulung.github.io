@@ -211,63 +211,73 @@
   }
 
 
-function setupCopyKlasemen() {
-  const btn = document.getElementById("btn-copy-klasemen");
-  const feedback = document.getElementById("copy-feedback");
+
+function buildShareText() {
+  const klasemen = computeKlasemen(
+    Array.isArray(window.teams) ? window.teams : [],
+    Array.isArray(window.matches) ? window.matches : []
+  );
+  if (!Array.isArray(klasemen) || !klasemen.length) return "";
+
+  const lines = [];
+  lines.push("----");
+  lines.push("*Klasemen LigaDusun*");
+  klasemen.forEach((tim, i) => {
+    const nomor = i + 1;
+    const nama = tim.nama || tim.name || "—";
+    const setText = `_(${tim.setMenang}-${tim.setKalah})_`;
+    const poinText = `*${tim.poin}*`;
+    lines.push(`${nomor}. ${nama}  ${setText} ${poinText}`);
+  });
+  lines.push("");
+  lines.push("Info selengkapnya 👉 https://tanjungbulan.my.id/ligadusun");
+  lines.push("----");
+  return lines.join("\n");
+}
+
+function setupWhatsappShareButton() {
+  const btn = document.getElementById("btn-share-whatsapp");
+  const feedback = document.getElementById("share-feedback");
   if (!btn) return;
 
-  btn.addEventListener("click", () => {
-    const klasemen = computeKlasemen(
-      Array.isArray(window.teams) ? window.teams : [],
-      Array.isArray(window.matches) ? window.matches : []
-    );
-    if (!Array.isArray(klasemen) || !klasemen.length) {
-      feedback.textContent = "Klasemen kosong."; 
-      setTimeout(() => (feedback.textContent = ""), 1500);
+  btn.addEventListener("click", (e) => {
+    const text = buildShareText();
+    if (!text) {
+      if (feedback) {
+        feedback.textContent = "Klasemen kosong, tidak bisa dibagikan.";
+        setTimeout(() => (feedback.textContent = ""), 1500);
+      }
       return;
     }
 
-    const lines = [];
-    lines.push("----");
-    lines.push("*Klasemen LigaDusun*");
+    const encoded = encodeURIComponent(text);
+    const url = `https://wa.me/?text=${encoded}`;
 
-    klasemen.forEach((tim, i) => {
-      const nomor = i + 1;
-      const nama = tim.nama || tim.name || "—";
-      const setText = `_(${tim.setMenang}-${tim.setKalah})_`;
-      const poinText = `*${tim.poin}*`;
-      lines.push(`${nomor}. ${nama}  ${setText} ${poinText}`);
-    });
+    // Buka share URL (baru tab)
+    window.open(url, "_blank");
 
-    lines.push("");
-    lines.push("Info selengkapnya 👉 https://tanjungbulan.my.id/ligadusun");
-    lines.push("----");
-
-    const payload = lines.join("\n");
-
-    navigator.clipboard.writeText(payload).then(() => {
-      feedback.textContent = "Tersalin!"; 
+    if (feedback) {
+      feedback.textContent = "Membuka WhatsApp..."; 
       setTimeout(() => (feedback.textContent = ""), 1500);
-    }).catch(() => {
-      feedback.textContent = "Gagal menyalin."; 
-      setTimeout(() => (feedback.textContent = ""), 1500);
-    });
+    }
   });
 }
 
-// pasang setelah render
-const origRefresh = window.refreshAll;
+// integrasi dengan refreshAll agar terpasang ulang kalau klasemen di-refresh
+const prevRefresh = window.refreshAll;
 window.refreshAll = function () {
-  origRefresh?.();
-  setupCopyKlasemen();
+  prevRefresh?.();
+  setupWhatsappShareButton();
 };
 
-// inisialisasi awal
+// init awal
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", setupCopyKlasemen);
+  document.addEventListener("DOMContentLoaded", setupWhatsappShareButton);
 } else {
-  setupCopyKlasemen();
+  setupWhatsappShareButton();
 }
+
+
 
 
   function refreshAll() {
