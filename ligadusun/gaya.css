@@ -330,9 +330,9 @@ h1 {
 
 
 .share-controls {
-  margin-top: 14px;
+  margin-top: 18px;
   display: flex;
-  justify-content: center; /* ini yang bikin rata tengah */
+  justify-content: center; /* rata tengah */
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
@@ -349,11 +349,11 @@ h1 {
   font-size: .95rem;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   box-shadow: 0 15px 40px -10px rgba(37,211,102,.6);
   transition: transform .15s ease, filter .15s ease;
+  text-decoration: none;
 }
-
 #btn-share-whatsapp:hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
@@ -361,12 +361,12 @@ h1 {
 #btn-share-whatsapp:active {
   transform: translateY(1px);
 }
-
 #btn-share-whatsapp .icon {
-  display: inline-block;
-  font-size: 1.1rem;
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: invert(1); /* buat ikon putih agar kontras di background hijau */
 }
-
 .small {
   font-size: .75rem;
   color: #c1cfff;
