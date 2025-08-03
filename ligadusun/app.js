@@ -211,6 +211,64 @@
   }
 
 
+function setupCopyKlasemen() {
+  const btn = document.getElementById("btn-copy-klasemen");
+  const feedback = document.getElementById("copy-feedback");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    const klasemen = computeKlasemen(
+      Array.isArray(window.teams) ? window.teams : [],
+      Array.isArray(window.matches) ? window.matches : []
+    );
+    if (!Array.isArray(klasemen) || !klasemen.length) {
+      feedback.textContent = "Klasemen kosong."; 
+      setTimeout(() => (feedback.textContent = ""), 1500);
+      return;
+    }
+
+    const lines = [];
+    lines.push("----");
+    lines.push("*Klasemen LigaDusun*");
+
+    klasemen.forEach((tim, i) => {
+      const nomor = i + 1;
+      const nama = tim.nama || tim.name || "—";
+      const setText = `_${tim.setMenang}-${tim.setKalah}_`;
+      const poinText = `*${tim.poin}*`;
+      lines.push(`${nomor}. ${nama}  ${setText} ${poinText}`);
+    });
+
+    lines.push("");
+    lines.push("Info selengkapnya 👉 https://tanjungbulan.my.id/ligadusun");
+    lines.push("----");
+
+    const payload = lines.join("\n");
+
+    navigator.clipboard.writeText(payload).then(() => {
+      feedback.textContent = "Tersalin!"; 
+      setTimeout(() => (feedback.textContent = ""), 1500);
+    }).catch(() => {
+      feedback.textContent = "Gagal menyalin."; 
+      setTimeout(() => (feedback.textContent = ""), 1500);
+    });
+  });
+}
+
+// pasang setelah render
+const origRefresh = window.refreshAll;
+window.refreshAll = function () {
+  origRefresh?.();
+  setupCopyKlasemen();
+};
+
+// inisialisasi awal
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", setupCopyKlasemen);
+} else {
+  setupCopyKlasemen();
+}
+
 
   function refreshAll() {
     renderRoster();
