@@ -234,7 +234,7 @@ function setupCopyKlasemen() {
     klasemen.forEach((tim, i) => {
       const nomor = i + 1;
       const nama = tim.nama || tim.name || "—";
-      const setText = `_${tim.setMenang}-${tim.setKalah}_`;
+      const setText = `_(${tim.setMenang}-${tim.setKalah})_`;
       const poinText = `*${tim.poin}*`;
       lines.push(`${nomor}. ${nama}  ${setText} ${poinText}`);
     });
