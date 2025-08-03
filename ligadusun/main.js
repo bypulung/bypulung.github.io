@@ -2,8 +2,8 @@
 // Jadwal: 8-10 Agustus 2025, pairing tiap hari sekali (tanpa hasil awal)
 const matches = [
   // 8 Agustus: Banteng Gaspol vs Merdeka Ngacir, Patriot Ngamuk vs Pejuang Santuy
-  { home: "Banteng Gaspol", away: "Merdeka Ngacir" },
-  { home: "Patriot Ngamuk", away: "Pejuang Santuy" },
+  { home: "Banteng Gaspol", away: "Merdeka Ngacir",setHome: 2, setAway: 1 },
+  { home: "Patriot Ngamuk", away: "Pejuang Santuy",setHome: 0, setAway: 2 },
 
   // 9 Agustus: Banteng Gaspol vs Patriot Ngamuk, Merdeka Ngacir vs Pejuang Santuy
   { home: "Banteng Gaspol", away: "Patriot Ngamuk" },
@@ -15,6 +15,6 @@ const matches = [
 ];
 
 // Kalau nanti ingin menambahkan skor, tambahkan properti setHome dan setAway:
-// contoh: { home: "Banteng Gaspol", away: "Merdeka Ngacir", setHome: 2, setAway: 1 }
+// contoh: { home: "Banteng Gaspol", away: "Merdeka Ngacir", setHome: , setAway:  }
 
 window.matches = matches;
