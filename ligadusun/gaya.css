@@ -329,6 +329,7 @@ h1 {
 }
 
 
+
 .share-controls {
   margin-top: 18px;
   display: flex;
@@ -354,6 +355,9 @@ h1 {
   transition: transform .15s ease, filter .15s ease;
   text-decoration: none;
 }
+
+#btn-share-whatsapp .icon { width: 16px; height: 16px; }
+
 #btn-share-whatsapp:hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
