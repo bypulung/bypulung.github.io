@@ -327,3 +327,19 @@ h1 {
   .teams { flex:1; }
   .result { justify-content:flex-end; margin-top:0; }
 }
+
+
+#btn-copy-klasemen {
+  background: linear-gradient(135deg,#5f6dfa,#b36bf0);
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .9rem;
+  transition: filter .15s ease, transform .15s ease;
+}
+#btn-copy-klasemen:hover { filter: brightness(1.1); }
+#btn-copy-klasemen:active { transform: translateY(1px); }
+.copy-klasemen-container { margin-top: 12px; display:inline-flex; align-items:center; gap:6px; }
