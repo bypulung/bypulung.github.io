@@ -318,3 +318,12 @@ h1 {
   color: rgba(255,255,255,.5);
   position: relative;
 }
+
+
+/* responsive */
+@media (min-width: 800px) {
+  .match { flex-direction: row; align-items: center; }
+  .time { width: 80px; margin-right: 12px; }
+  .teams { flex:1; }
+  .result { justify-content:flex-end; margin-top:0; }
+}
