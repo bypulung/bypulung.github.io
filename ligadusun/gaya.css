@@ -253,22 +253,33 @@ h1 {
   transition: all .2s ease;
 }
 
-/* Pemenang */
+/* Nama tim di jadwal: pastikan benar-benar ter-center */
+.team-name {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  min-width: 120px;
+  transition: all .2s ease;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Winner / loser */
 .team-name.winner {
   background: rgba(126,217,87,.15);
   color: #7ed957;
-  font-weight: 700;
   box-shadow: 0 0 15px rgba(126,217,87,.4);
 }
 .team-name.winner::after {
   content: "🏆";
   margin-left: 6px;
   font-size: .85em;
-  color: #7ed957;
-  vertical-align: middle;
 }
 
-/* Yang kalah */
 .team-name.loser {
   background: rgba(255,107,107,.1);
   color: #ff6b6b;
