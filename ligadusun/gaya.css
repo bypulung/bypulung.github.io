@@ -332,6 +332,7 @@ h1 {
 .share-controls {
   margin-top: 14px;
   display: flex;
+  justify-content: center; /* ini yang bikin rata tengah */
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
