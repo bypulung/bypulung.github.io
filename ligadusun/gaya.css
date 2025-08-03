@@ -261,7 +261,7 @@ h1 {
   box-shadow: 0 0 15px rgba(126,217,87,.4);
 }
 .team-name.winner::after {
-  content: "✓";
+  content: "🏆";
   margin-left: 6px;
   font-size: .85em;
   color: #7ed957;
