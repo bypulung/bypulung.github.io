@@ -244,7 +244,7 @@ h1 {
 .match.played {
   background: linear-gradient(135deg, rgba(126,217,87,.05), rgba(255,255,255,0)); /* lembut kalau sudah dimainkan */
 }
-.match .team-name {
+.match {
   padding: 4px 8px;
   border-radius: 6px;
   display: inline-block;
