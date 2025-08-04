@@ -172,41 +172,46 @@ tbody tr:hover {
   }
 }
 
-/* Tombol chat WhatsApp (sesuaikan dengan gelap) */
+/* Tombol chat WhatsApp - terang/berisi */
 .chat-wa-btn {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
   cursor: pointer;
-  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 15px 40px rgba(0,0,0,0.15));
 }
+
 .chat-wa-btn img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   transition: transform 0.3s ease;
-  background: linear-gradient(135deg,#25d366,#128c7e);
-  padding:8px;
-}
-.chat-wa-btn:hover img {
-  transform: scale(1.08);
+  background: #ffffff; /* latar terang */
+  padding: 8px;
+  box-sizing: content-box;
+  border: 2px solid #25D366; /* aksen hijau WA */
 }
 
-/* Popup Bantuan */
+.chat-wa-btn:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 12px 30px rgba(37,211,102,0.35);
+}
+
+/* Popup Bantuan - terang */
 .bantuan-popup {
   position: fixed;
   bottom: 20px;
   left: 20px;
   display: flex;
   align-items: center;
-  background-color: #1f2d4a;
+  background-color: #ffffff;
   padding: 10px 14px;
   border-radius: 60px;
-  box-shadow: 0 20px 60px -5px rgba(0,0,0,0.6);
+  box-shadow: 0 16px 45px rgba(0,0,0,0.12);
   cursor: pointer;
   z-index: 1000;
-  animation: shake 1.5s ease infinite;
+  animation: shake 1.2s ease infinite;
   gap:8px;
 }
 .bantuan-img {
@@ -214,12 +219,12 @@ tbody tr:hover {
   height: 38px;
   border-radius: 50%;
   margin: 0;
-  border:2px solid var(--green);
+  border:2px solid #1f8f4c;
 }
 .bantuan-teks {
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
+  color: #1f2d3a;
   white-space: nowrap;
 }
 
@@ -232,22 +237,22 @@ tbody tr:hover {
   100% { transform: translateX(0px); }
 }
 
-/* Form Pop Up */
+/* Form Pop Up - terang */
 .form-popup {
   display: none;
   position: fixed;
   bottom: 90px;
   right: 20px;
-  width: 320px;
-  background: #1f2d4a;
-  box-shadow: 0 40px 80px -10px rgba(0,0,0,0.7);
+  width: 340px;
+  background: #ffffff;
+  box-shadow: 0 30px 70px -5px rgba(0,0,0,0.15);
   border-radius: 14px;
   overflow: hidden;
   z-index: 1001;
-  color: var(--text);
+  color: #1f2d3a;
 }
 .form-header {
-  background: linear-gradient(135deg,#10b981,#11999e);
+  background-color: #128C7E;
   color: #fff;
   padding: 12px 14px;
   font-weight: 700;
@@ -269,18 +274,18 @@ tbody tr:hover {
   font-size: 13px;
   margin-top: 8px;
   display: block;
-  color: var(--text);
+  color: #374151;
 }
 .form-body select,
 .form-body textarea {
   width: 100%;
-  margin-top: 4px;
-  padding: 8px 10px;
-  border: 1px solid rgba(255,255,255,0.1);
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  background: rgba(255,255,255,0.04);
-  color: var(--text);
+  background: #f7f9fc;
+  color: #1f2d3a;
   resize: vertical;
 }
 .form-admin {
@@ -293,7 +298,7 @@ tbody tr:hover {
   height: 38px;
   border-radius: 50%;
   margin-right: 10px;
-  border:2px solid #fff;
+  border:2px solid #128C7E;
 }
 .kirim-btn {
   width: 100%;
@@ -306,8 +311,8 @@ tbody tr:hover {
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: background .25s ease;
 }
 .kirim-btn:hover {
-  filter: brightness(1.05);
+  background-color: #1ebc5e;
 }
