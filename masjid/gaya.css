@@ -62,55 +62,40 @@ h1, h2 {
 
 /* Tabel kas */
 .table-wrapper {
-  overflow-x: auto;
+  /* nonaktifkan scroll jika ingin muat di satu layar, jangan pakai overflow-x:auto */
   margin-top: 6px;
 }
 
-/* Lebar tabel diperlebar hingga 98% */
 .kas-table {
-  width: 98%; /* override agar lebih lebar */
-  min-width: 600px;
+  width: 98%; /* hampir penuh, sesuaikan container sehingga muat satu layar */
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: transparent;
+  /* hapus min-width agar tidak memaksa scroll */
 }
 
-/* Tanggal link */
-.kas-table a {
-  color: var(--text);
-  text-decoration: underline;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* Separator di riwayat */
-.history-item hr {
-  opacity: 0.3;
-  margin-top: 12px;
-}
-
-/* Format detail di riwayat (jaga jarak vertikal) */
-.history-item .h-details div {
-  margin-bottom: 4px;
+.kas-table th,
+.kas-table td {
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 12px 14px;
+  vertical-align: middle;
 }
 
 .kas-table thead th {
   position: sticky;
   top: 0;
-  background: rgba(255,255,255,0.04);
-  padding: 12px 14px;
-  text-align: left;
+  background: rgba(255,255,255,0.06);
   font-weight: 600;
-  border-bottom: 1px solid var(--border);
+  text-align: left;
   color: var(--text);
 }
 
-.kas-table tbody td,
-.kas-table tfoot td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
+.kas-table tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,0.015);
 }
 
 .kas-table tbody tr:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.08);
 }
 
 .kas-table .income {
@@ -124,7 +109,15 @@ h1, h2 {
 }
 
 .kas-table .totals {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.1);
+}
+
+/* Tanggal link */
+.kas-table a {
+  color: var(--text);
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .legend {
@@ -164,18 +157,33 @@ h1, h2 {
   position: relative;
 }
 
-.h-row {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.95rem;
+/* Keterangan (header) lebih besar */
+.history-item > div:first-child {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #ffffff;
 }
 
+/* Catatan dan detail */
+.history-item .note {
+  font-size: 0.85rem;
+  margin: 6px 0;
+  color: var(--text);
+}
+
+/* detail tipe/nominal/saldo dengan ukuran sama seperti catatan */
 .h-details {
   margin-top: 6px;
-  font-size: 0.75rem;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
   color: var(--muted);
+}
+
+.h-details div {
+  margin: 0;
 }
 
 .type.income {
@@ -184,7 +192,7 @@ h1, h2 {
   padding: 6px 12px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.65rem;
+  font-size: 0.85rem;
 }
 
 .type.expense {
@@ -193,13 +201,19 @@ h1, h2 {
   padding: 6px 12px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.65rem;
+  font-size: 0.85rem;
 }
 
-/* Responsive: tetap mendatar, cukup scroll */
+/* Separator di riwayat */
+.history-item hr {
+  opacity: 0.3;
+  margin-top: 12px;
+}
+
+/* Responsive: tetap mendatar */
 @media (max-width: 1000px) {
   .kas-table {
-    min-width: 600px;
+    width: 100%;
   }
 }
 
@@ -218,10 +232,6 @@ h1, h2 {
 .table-wrapper::-webkit-scrollbar-thumb:hover {
   background: rgba(255,255,255,0.25);
 }
-
-
-
-
 
 /* Tombol chat WhatsApp - terang/berisi */
 .chat-wa-btn {
