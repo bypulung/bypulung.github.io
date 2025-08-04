@@ -159,38 +159,39 @@
 
     
 
-  <div class="container">
-    <div class="card">
-      <h1>Kas Masjid Al-Huda</h1>
-      
+  <!-- Buku Kas Umum -->
+<div class="card">
+  <h1>Buku Kas Umum</h1>
+  <p class="sub">Ringkasan arus kas: Keterangan | Masuk | Keluar | Saldo</p>
 
-      <div style="overflow-x:auto;">
-        <table aria-label="Ringkasan keuangan">
-          <thead>
-            <tr>
-              <th>Keterangan</th>
-              <th>Masuk</th>
-              <th>Keluar</th>
-              <th>Saldo</th>
-            </tr>
-          </thead>
-          <tbody id="summary-body"></tbody>
-          <tfoot id="summary-foot"></tfoot>
-        </table>
-      </div>
-
-      <div style="margin-top:8px;">
-        <small class="badge" style="background:#eef6ff; color:#1f5fa1;">Masuk</small>
-        <small class="badge" style="background:#ffecec; color:#a12f2f;">Keluar</small>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Riwayat Transaksi</h2>
-      <p>Detail lengkap setiap transaksi, termasuk catatan.</p>
-      <div id="history"></div>
-    </div>
+  <div class="table-wrapper">
+    <table class="kas-table" aria-label="Ringkasan keuangan">
+      <thead>
+        <tr>
+          <th>Keterangan</th>
+          <th>Masuk</th>
+          <th>Keluar</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody id="summary-body"></tbody>
+      <tfoot id="summary-foot"></tfoot>
+    </table>
   </div>
+
+  <div class="legend">
+    <span class="badge income-badge">Masuk</span>
+    <span class="badge expense-badge">Keluar</span>
+  </div>
+</div>
+
+<!-- Riwayat Transaksi -->
+<div class="card">
+  <h2>Riwayat Transaksi</h2>
+  <p class="sub">Detail lengkap setiap transaksi, termasuk catatan.</p>
+  <div id="history"></div>
+</div>
+
 
   <!-- scripts: pastikan urutan -->
   <script src="kas.js"></script>
