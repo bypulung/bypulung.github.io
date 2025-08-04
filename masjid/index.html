@@ -13,9 +13,7 @@
 <script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
 
 
-   <script src="kas.js"></script>
-  <script src="fungsi.js"></script>
-
+   
    <link rel="stylesheet" href="/masjid/gaya.css">
 
 
@@ -160,14 +158,13 @@
 
 
     
-<div class="container">
-    <div class="card">
-      <h1>Buku Kas Online</h1>
-      <p style="margin:0.25rem 0; color: #555;">
-        Ringkasan transaksi: pemasukan, pengeluaran, dan saldo berjalan.
-      </p>
 
-      <div style="overflow-x:auto; margin-top:1rem;">
+  <div class="container">
+    <div class="card">
+      <h1>Kas Masjid Al-Huda</h1>
+      
+
+      <div style="overflow-x:auto;">
         <table aria-label="Ringkasan keuangan">
           <thead>
             <tr>
@@ -181,22 +178,23 @@
           <tfoot id="summary-foot"></tfoot>
         </table>
       </div>
-      <div style="margin-top:1rem;">
-        <small>
-          <span class="badge" style="background:#eef6ff; color:#1f5fa1;">Masuk</span>
-          <span class="badge" style="background:#ffecec; color:#a12f2f;">Keluar</span>
-        </small>
+
+      <div style="margin-top:8px;">
+        <small class="badge" style="background:#eef6ff; color:#1f5fa1;">Masuk</small>
+        <small class="badge" style="background:#ffecec; color:#a12f2f;">Keluar</small>
       </div>
     </div>
 
     <div class="card">
       <h2>Riwayat Transaksi</h2>
-      <p style="margin:0.25rem 0; color: #555;">
-        Detail lengkap setiap transaksi (tanggal, tipe, nominal, saldo setelah).
-      </p>
+      <p>Detail lengkap setiap transaksi, termasuk catatan.</p>
       <div id="history"></div>
     </div>
   </div>
+
+  <!-- scripts: pastikan urutan -->
+  <script src="kas.js"></script>
+  <script src="fungsi.js"></script>
 
   
 
