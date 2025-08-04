@@ -162,13 +162,13 @@
   <!-- Buku Kas Umum -->
 <div class="card">
   <h1>Buku Kas Umum</h1>
-  <p class="sub">Ringkasan arus kas: Keterangan | Masuk | Keluar | Saldo</p>
+  <p class="sub">Ringkasan arus kas: Tanggal | Masuk | Keluar | Saldo</p>
 
   <div class="table-wrapper">
-    <table class="kas-table" aria-label="Ringkasan keuangan">
+    <table class="kas-table" aria-label="Ringkasan keuangan" style="width:98%;">
       <thead>
         <tr>
-          <th>Keterangan</th>
+          <th>Tanggal</th>
           <th>Masuk</th>
           <th>Keluar</th>
           <th>Saldo</th>
@@ -188,9 +188,13 @@
 <!-- Riwayat Transaksi -->
 <div class="card">
   <h2>Riwayat Transaksi</h2>
-  <p class="sub">Detail lengkap setiap transaksi, termasuk catatan.</p>
+  <p class="sub">Detail lengkap setiap transaksi. Klik tanggal di tabel untuk memfilter berdasarkan tanggal.</p>
   <div id="history"></div>
+  <div style="margin-top:8px;">
+    <button id="clearFilter" style="background:rgba(255,255,255,0.08); border:none; padding:6px 12px; border-radius:6px; cursor:pointer; color: var(--text);">Bersihkan filter</button>
+  </div>
 </div>
+
 
 
   <!-- scripts: pastikan urutan -->
