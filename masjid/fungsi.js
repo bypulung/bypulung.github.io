@@ -1,32 +1,3 @@
-// API sederhana untuk arus kas
-function addTransaction({ date, description, type, amount }) {
-  if (!date || !description || !["income", "expense"].includes(type) || typeof amount !== "number") {
-    throw new Error("Format transaksi tidak valid");
-  }
-  transactions.push({ date, description, type, amount });
-}
-
-function getAllTransactions() {
-  // return shallow copy
-  return transactions.slice();
-}
-
-if (typeof window !== "undefined") {
-  // expose untuk fungsi.js atau UI
-  window.kas = {
-    addTransaction,
-    getAllTransactions,
-    raw: transactions, // untuk debugging/inspeksi
-  };
-}
-
-module.exports = {
-  addTransaction,
-  getAllTransactions,
-  transactions, // untuk penggunaan di Node if needed
-};
-
-
 // fungsi.js
 
 // Utility
@@ -42,9 +13,18 @@ function sortByDate(a, b) {
   return toDate(a.date) - toDate(b.date);
 }
 
-// Ambil transaksi dari kas.js (global window.kas)
+// Safety: jika kas belum tersedia, jangan crash
+function getRawTransactions() {
+  if (window.kas && typeof window.kas.getAllTransactions === "function") {
+    return window.kas.getAllTransactions();
+  }
+  console.warn("window.kas tidak tersedia, menggunakan array kosong.");
+  return [];
+}
+
+// Hitung ledger dengan saldo berjalan
 function computeLedger(startingBalance = 0) {
-  const raw = window.kas.getAllTransactions();
+  const raw = getRawTransactions();
   const sorted = raw.slice().sort(sortByDate);
   let balance = startingBalance;
   return sorted.map(tx => {
@@ -55,7 +35,7 @@ function computeLedger(startingBalance = 0) {
 }
 
 function summary() {
-  const raw = window.kas.getAllTransactions();
+  const raw = getRawTransactions();
   const income = raw
     .filter(t => t.type === "income")
     .reduce((s, t) => s + t.amount, 0);
@@ -66,16 +46,19 @@ function summary() {
   return { income, expense, net };
 }
 
-// Rendering
+// Rendering ringkasan tabel
 function renderSummaryTable() {
   const ledger = computeLedger();
   const tbody = document.querySelector("#summary-body");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   ledger.forEach(row => {
     const tr = document.createElement("tr");
+
     const desc = document.createElement("td");
     desc.textContent = row.description;
+
     const incomeTd = document.createElement("td");
     const expenseTd = document.createElement("td");
     if (row.type === "income") {
@@ -87,6 +70,7 @@ function renderSummaryTable() {
       expenseTd.textContent = formatRupiah(row.amount);
       expenseTd.classList.add("expense");
     }
+
     const balanceTd = document.createElement("td");
     balanceTd.textContent = formatRupiah(row.balanceAfter);
 
@@ -96,6 +80,7 @@ function renderSummaryTable() {
 
   const sums = summary();
   const tfoot = document.querySelector("#summary-foot");
+  if (!tfoot) return;
   tfoot.innerHTML = `
     <tr class="totals">
       <td><strong>Total</strong></td>
@@ -106,8 +91,10 @@ function renderSummaryTable() {
   `;
 }
 
+// Rendering riwayat non-tabel
 function renderHistoryList() {
   const historyContainer = document.querySelector("#history");
+  if (!historyContainer) return;
   historyContainer.innerHTML = "";
   const ledger = computeLedger();
   ledger.forEach(tx => {
@@ -133,9 +120,5 @@ function initUI() {
 
 // Auto-init setelah DOM siap
 document.addEventListener("DOMContentLoaded", () => {
-  if (!window.kas) {
-    console.warn("kas.js belum dimuat, data tidak tersedia.");
-    return;
-  }
   initUI();
-}
+});
