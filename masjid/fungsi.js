@@ -13,7 +13,6 @@ function sortByDate(a, b) {
   return toDate(a.date) - toDate(b.date);
 }
 
-// Ambil transaksi dengan fallback
 function getRawTransactions() {
   if (window.kas && typeof window.kas.getAllTransactions === "function") {
     return window.kas.getAllTransactions();
@@ -22,7 +21,7 @@ function getRawTransactions() {
   return [];
 }
 
-// Hitung ledger (running balance)
+// Compute running balance
 function computeLedger(startingBalance = 0) {
   const raw = getRawTransactions();
   const sorted = raw.slice().sort(sortByDate);
@@ -34,7 +33,7 @@ function computeLedger(startingBalance = 0) {
   });
 }
 
-// Ringkasan
+// Summary totals
 function summary() {
   const raw = getRawTransactions();
   const income = raw
@@ -47,7 +46,10 @@ function summary() {
   return { income, expense, net };
 }
 
-// Render tabel mendatar: keterangan | masuk | keluar | saldo
+// Render summary table (tanggal | masuk | keluar | saldo)
+// Tanggal jadi link untuk filter history
+let activeFilterDate = null; // "YYYY-MM-DD" string
+
 function renderSummaryTable() {
   const ledger = computeLedger();
   const tbody = document.querySelector("#summary-body");
@@ -57,14 +59,25 @@ function renderSummaryTable() {
   ledger.forEach(row => {
     const tr = document.createElement("tr");
 
-    // Keterangan
-    const desc = document.createElement("td");
-    desc.textContent = row.description;
+    // Tanggal (link)
+    const dateTd = document.createElement("td");
+    const a = document.createElement("a");
+    a.href = "#";
+    a.textContent = row.date;
+    a.dataset.date = row.date;
+    a.style.color = "var(--text)";
+    a.style.textDecoration = "underline";
+    a.addEventListener("click", e => {
+      e.preventDefault();
+      activeFilterDate = e.currentTarget.dataset.date;
+      renderHistoryList(); // re-render history filtered
+    });
+    dateTd.appendChild(a);
 
     // Masuk
     const incomeTd = document.createElement("td");
     if (row.type === "income") {
-      incomeTd.textContent = formatRupiah(row.amount);
+      incomeTd.textContent = row.amount.toLocaleString("id-ID"); // tanpa "Rp"
       incomeTd.classList.add("income");
     } else {
       incomeTd.textContent = "-";
@@ -73,7 +86,7 @@ function renderSummaryTable() {
     // Keluar
     const expenseTd = document.createElement("td");
     if (row.type === "expense") {
-      expenseTd.textContent = formatRupiah(row.amount);
+      expenseTd.textContent = row.amount.toLocaleString("id-ID"); // tanpa "Rp"
       expenseTd.classList.add("expense");
     } else {
       expenseTd.textContent = "-";
@@ -81,57 +94,103 @@ function renderSummaryTable() {
 
     // Saldo
     const balanceTd = document.createElement("td");
-    balanceTd.textContent = formatRupiah(row.balanceAfter);
+    balanceTd.textContent = row.balanceAfter.toLocaleString("id-ID"); // tanpa "Rp"
 
-    tr.append(desc, incomeTd, expenseTd, balanceTd);
+    tr.append(dateTd, incomeTd, expenseTd, balanceTd);
     tbody.appendChild(tr);
   });
 
-  // Total
+  // Totals row
   const sums = summary();
   const tfoot = document.querySelector("#summary-foot");
   if (!tfoot) return;
   tfoot.innerHTML = `
     <tr class="totals">
       <td><strong>Total</strong></td>
-      <td class="income"><strong>${formatRupiah(sums.income)}</strong></td>
-      <td class="expense"><strong>${formatRupiah(sums.expense)}</strong></td>
-      <td><strong>${formatRupiah(sums.net)}</strong></td>
+      <td class="income"><strong>${sums.income.toLocaleString("id-ID")}</strong></td>
+      <td class="expense"><strong>${sums.expense.toLocaleString("id-ID")}</strong></td>
+      <td><strong>${(sums.income - sums.expense).toLocaleString("id-ID")}</strong></td>
     </tr>
   `;
 }
 
-// Render riwayat dengan detail termasuk catatan
+// Render history with detailed format and filter
 function renderHistoryList() {
   const historyContainer = document.querySelector("#history");
   if (!historyContainer) return;
   historyContainer.innerHTML = "";
+
   const ledger = computeLedger();
-  ledger.forEach(tx => {
-    const div = document.createElement("div");
-    div.className = "history-item";
-    div.innerHTML = `
-      <div class="h-row">
-        <div><strong>${tx.date}</strong> — ${tx.description}</div>
-        <div class="type ${tx.type}">${tx.type === "income" ? "Masuk" : "Keluar"}</div>
-      </div>
-      <div class="h-details">
-        Tipe: ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"} |
-        Nominal: <strong>${formatRupiah(tx.amount)}</strong> |
-        Saldo setelah: <strong>${formatRupiah(tx.balanceAfter)}</strong>
-        ${tx.note ? `| Catatan: <em>${tx.note}</em>` : ""}
-      </div>
+  const filtered = activeFilterDate
+    ? ledger.filter(tx => tx.date === activeFilterDate)
+    : ledger;
+
+  if (filtered.length === 0) {
+    const msg = document.createElement("div");
+    msg.style.opacity = "0.9";
+    msg.style.padding = "12px";
+    msg.style.borderRadius = "8px";
+    msg.style.background = "rgba(255,255,255,0.05)";
+    msg.textContent = activeFilterDate
+      ? `Tidak ada transaksi di tanggal ${activeFilterDate}.`
+      : "Belum ada transaksi.";
+    historyContainer.appendChild(msg);
+    return;
+  }
+
+  filtered.forEach(tx => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "history-item";
+
+    // Header line: tanggal - keterangan
+    const header = document.createElement("div");
+    header.style.marginBottom = "6px";
+    header.innerHTML = `<strong>${tx.date}</strong> - ${tx.description}`;
+
+    // Catatan
+    const noteDiv = document.createElement("div");
+    noteDiv.style.margin = "6px 0";
+    noteDiv.textContent = tx.note || "-";
+
+    // Detail block
+    const detail = document.createElement("div");
+    detail.className = "h-details";
+    detail.innerHTML = `
+      <div><strong>Tipe:</strong> ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"}</div>
+      <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
+      <div><strong>Saldo setelah:</strong> ${formatRupiah(tx.balanceAfter)}</div>
     `;
-    historyContainer.appendChild(div);
+
+    // Separator line
+    const sep = document.createElement("hr");
+    sep.style.border = "none";
+    sep.style.height = "1px";
+    sep.style.background = "rgba(255,255,255,0.08)";
+    sep.style.margin = "10px 0";
+
+    wrapper.append(header, noteDiv, detail, sep);
+    historyContainer.appendChild(wrapper);
   });
 }
 
+// Clear filter button
+function setupClearFilter() {
+  const btn = document.getElementById("clearFilter");
+  if (!btn) return;
+  btn.addEventListener("click", e => {
+    activeFilterDate = null;
+    renderHistoryList();
+  });
+}
+
+// Init UI
 function initUI() {
   renderSummaryTable();
   renderHistoryList();
+  setupClearFilter();
 }
 
-// Inisialisasi setelah DOM siap
+// Auto init
 document.addEventListener("DOMContentLoaded", () => {
   initUI();
 });
