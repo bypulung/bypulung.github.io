@@ -1,3 +1,65 @@
+// Tombol chat WhatsApp 
+const admins = {
+  bendahara: {
+    name: "Pulung Riswanto",
+    img: "/risma/img/pulung.png",
+    number: "6288971344131"
+  },
+  ketua: {
+    name: "Nurman Wibowo",
+    img: "/risma/img/nurman.jpg",
+    number: "6282373877424"
+  },
+  wakil: {
+    name: "Suhdi Efendi",
+    img: "/risma/img/suhdi.jpg",
+    number: "6283811530676"
+  }
+};
+
+function toggleForm() {
+  const form = document.getElementById('formPopup');
+  const bantuan = document.getElementById('bantuanPopup');
+
+  if (form.style.display === 'block') {
+    form.style.display = 'none';
+    bantuan.style.display = 'flex';
+  } else {
+    form.style.display = 'block';
+    bantuan.style.display = 'none';
+    updateProfile(); // refresh admin info
+  }
+}
+
+function closeForm() {
+  document.getElementById('formPopup').style.display = 'none';
+  document.getElementById('bantuanPopup').style.display = 'flex';
+}
+
+function updateProfile() {
+  const selected = document.getElementById('adminSelect').value;
+  const data = admins[selected];
+
+  document.getElementById('adminName').textContent = data.name;
+  document.getElementById('adminImg').src = data.img;
+  document.getElementById('bantuanImg').src = data.img;
+}
+
+function sendWA() {
+  const selected = document.getElementById('adminSelect').value;
+  const msg = document.getElementById('message').value.trim();
+
+  if (msg === "") {
+    alert("Silakan isi pesan dulu ges.");
+    return;
+  }
+
+  const phone = admins[selected].number;
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+
 // API sederhana untuk arus kas
 function addTransaction({ date, description, type, amount }) {
   if (!date || !description || !["income", "expense"].includes(type) || typeof amount !== "number") {
