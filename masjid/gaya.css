@@ -66,12 +66,29 @@ h1, h2 {
   margin-top: 6px;
 }
 
+/* Lebar tabel diperlebar hingga 98% */
 .kas-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 640px;
-  font-size: 0.9rem;
-  background: transparent;
+  width: 98%; /* override agar lebih lebar */
+  min-width: 600px;
+}
+
+/* Tanggal link */
+.kas-table a {
+  color: var(--text);
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Separator di riwayat */
+.history-item hr {
+  opacity: 0.3;
+  margin-top: 12px;
+}
+
+/* Format detail di riwayat (jaga jarak vertikal) */
+.history-item .h-details div {
+  margin-bottom: 4px;
 }
 
 .kas-table thead th {
