@@ -13,7 +13,7 @@ function sortByDate(a, b) {
   return toDate(a.date) - toDate(b.date);
 }
 
-// Safety: jika kas belum tersedia, jangan crash
+// Ambil transaksi dengan fallback
 function getRawTransactions() {
   if (window.kas && typeof window.kas.getAllTransactions === "function") {
     return window.kas.getAllTransactions();
@@ -22,7 +22,7 @@ function getRawTransactions() {
   return [];
 }
 
-// Hitung ledger dengan saldo berjalan
+// Hitung ledger (running balance)
 function computeLedger(startingBalance = 0) {
   const raw = getRawTransactions();
   const sorted = raw.slice().sort(sortByDate);
@@ -34,6 +34,7 @@ function computeLedger(startingBalance = 0) {
   });
 }
 
+// Ringkasan
 function summary() {
   const raw = getRawTransactions();
   const income = raw
@@ -46,7 +47,7 @@ function summary() {
   return { income, expense, net };
 }
 
-// Rendering ringkasan tabel
+// Render tabel mendatar: keterangan | masuk | keluar | saldo
 function renderSummaryTable() {
   const ledger = computeLedger();
   const tbody = document.querySelector("#summary-body");
@@ -56,21 +57,29 @@ function renderSummaryTable() {
   ledger.forEach(row => {
     const tr = document.createElement("tr");
 
+    // Keterangan
     const desc = document.createElement("td");
     desc.textContent = row.description;
 
+    // Masuk
     const incomeTd = document.createElement("td");
-    const expenseTd = document.createElement("td");
     if (row.type === "income") {
       incomeTd.textContent = formatRupiah(row.amount);
       incomeTd.classList.add("income");
-      expenseTd.textContent = "-";
     } else {
       incomeTd.textContent = "-";
-      expenseTd.textContent = formatRupiah(row.amount);
-      expenseTd.classList.add("expense");
     }
 
+    // Keluar
+    const expenseTd = document.createElement("td");
+    if (row.type === "expense") {
+      expenseTd.textContent = formatRupiah(row.amount);
+      expenseTd.classList.add("expense");
+    } else {
+      expenseTd.textContent = "-";
+    }
+
+    // Saldo
     const balanceTd = document.createElement("td");
     balanceTd.textContent = formatRupiah(row.balanceAfter);
 
@@ -78,6 +87,7 @@ function renderSummaryTable() {
     tbody.appendChild(tr);
   });
 
+  // Total
   const sums = summary();
   const tfoot = document.querySelector("#summary-foot");
   if (!tfoot) return;
@@ -91,7 +101,7 @@ function renderSummaryTable() {
   `;
 }
 
-// Rendering riwayat non-tabel
+// Render riwayat dengan detail termasuk catatan
 function renderHistoryList() {
   const historyContainer = document.querySelector("#history");
   if (!historyContainer) return;
@@ -106,7 +116,10 @@ function renderHistoryList() {
         <div class="type ${tx.type}">${tx.type === "income" ? "Masuk" : "Keluar"}</div>
       </div>
       <div class="h-details">
-        Tipe: ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"} | Nominal: <strong>${formatRupiah(tx.amount)}</strong> | Saldo setelah: <strong>${formatRupiah(tx.balanceAfter)}</strong>
+        Tipe: ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"} |
+        Nominal: <strong>${formatRupiah(tx.amount)}</strong> |
+        Saldo setelah: <strong>${formatRupiah(tx.balanceAfter)}</strong>
+        ${tx.note ? `| Catatan: <em>${tx.note}</em>` : ""}
       </div>
     `;
     historyContainer.appendChild(div);
@@ -118,7 +131,7 @@ function initUI() {
   renderHistoryList();
 }
 
-// Auto-init setelah DOM siap
+// Inisialisasi setelah DOM siap
 document.addEventListener("DOMContentLoaded", () => {
   initUI();
 });
