@@ -148,3 +148,128 @@ tbody tr:hover {
     flex:1;
   }
 }
+
+
+
+/* Tombol chat WhatsApp */
+
+/* Tombol WA */
+.chat-wa-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+}
+.chat-wa-btn img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.chat-wa-btn:hover img {
+  transform: scale(1.1);
+}
+
+/* Popup Bantuan */
+.bantuan-popup {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 1000;
+  animation: shake 1.2s ease;
+}
+.bantuan-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.bantuan-teks {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0px); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0px); }
+}
+
+/* Form Pop Up */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 280px;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1001;
+}
+.form-header {
+  background-color: #128C7E;
+  color: #fff;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-body {
+  padding: 15px;
+  color: black;
+}
+.form-body label {
+  font-size: 14px;
+  margin-top: 8px;
+  display: block;
+}
+.form-body select,
+.form-body textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.form-admin {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.form-admin img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.kirim-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  background-color: #25D366;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+.kirim-btn:hover {
+  background-color: #1ebc5e;
+}
