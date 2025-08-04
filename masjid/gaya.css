@@ -1,47 +1,58 @@
-/* gaya.css - versi gelap elegan */
+/* Reset ringan */
+* { box-sizing:border-box; }
 
 :root {
-  --bg:#0f172a;
-  --card:#1f2d4a;
-  --radius:14px;
-  --shadow:0 25px 50px -12px rgba(0,0,0,0.7);
-  --text:#e3e8ff;
-  --muted:#a0a8c0;
-  --green:#3dd598;
-  --red:#ff6b6b;
-  --border:#2c3e72;
-  --surface:#1e2b48;
-  --transition:.35s cubic-bezier(.4,.2,.2,1);
+  --bg: #0f172a;
+  --surface: #1f2d4a;
+  --card: #1f2d4a;
+  --radius: 14px;
+  --shadow: 0 30px 70px -10px rgba(0,0,0,0.6);
+  --text: #e3e8ff;
+  --muted: #8fa3c1;
+  --border: #2c3e72;
+  --highlight: #3dd598;
+  --danger: #ff6b6b;
+  --transition: .35s cubic-bezier(.4,.2,.2,1);
   font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
-* { box-sizing:border-box; }
-
 body {
-  margin:0;
+  margin: 0;
   background: var(--bg);
   color: var(--text);
-  line-height:1.5;
-  min-height:100vh;
-  padding:2rem;
+  min-height: 100vh;
+  line-height: 1.5;
+  padding: 2rem;
 }
 
 .container {
-  max-width: 1024px;
+  max-width: 1100px;
   margin: 0 auto;
-  gap:1.5rem;
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h1, h2 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.sub {
+  margin: 6px 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .card {
   background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding:1.75rem 1.5rem;
+  padding: 1.75rem 1.5rem;
   box-shadow: var(--shadow);
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--border);
   transition: var(--transition);
 }
 
@@ -49,128 +60,151 @@ body {
   transform: translateY(-2px);
 }
 
-h1, h2 {
-  margin-top:0;
-  font-weight:700;
-  letter-spacing:0.5px;
+/* Tabel kas */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 6px;
 }
 
-p { margin:0.4rem 0; }
-
-table {
-  width:100%;
+.kas-table {
+  width: 100%;
   border-collapse: collapse;
-  margin-top:0.5rem;
-  font-size:0.9rem;
+  min-width: 640px;
+  font-size: 0.9rem;
   background: transparent;
 }
 
-thead th {
-  text-align:left;
-  padding:0.85rem 1rem;
-  background: rgba(255,255,255,0.04);
+.kas-table thead th {
   position: sticky;
-  top:0;
-  z-index:1;
-  font-weight:600;
+  top: 0;
+  background: rgba(255,255,255,0.04);
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
   color: var(--text);
 }
 
-tbody td, tfoot td {
-  padding:0.7rem 1rem;
-  border-bottom:1px solid var(--border);
+.kas-table tbody td,
+.kas-table tfoot td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
-  font-size:0.85rem;
 }
 
-tbody tr:hover {
+.kas-table tbody tr:hover {
   background: rgba(255,255,255,0.05);
 }
 
-.income {
-  color: var(--green);
+.kas-table .income {
+  color: var(--highlight);
+  font-weight: 600;
 }
 
-.expense {
-  color: var(--red);
+.kas-table .expense {
+  color: var(--danger);
+  font-weight: 600;
 }
 
-.totals {
+.kas-table .totals {
   background: rgba(255,255,255,0.07);
 }
 
-.badge {
-  display:inline-block;
-  padding:5px 12px;
-  border-radius:999px;
-  font-size:0.55rem;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  font-weight:600;
-  margin-right:4px;
+.legend {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.income-badge {
+  background: rgba(61,213,152,0.15);
+  color: var(--highlight);
+}
+
+.expense-badge {
+  background: rgba(255,107,107,0.15);
+  color: var(--danger);
+}
+
+/* Riwayat */
 .history-item {
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px;
-  padding:1rem 1rem;
-  margin-bottom:1rem;
-  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: #1e2b48;
   position: relative;
-  overflow: hidden;
 }
 
 .h-row {
-  display:flex;
+  display: flex;
   justify-content: space-between;
-  gap:0.5rem;
-  flex-wrap:wrap;
-  font-size:0.9rem;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.95rem;
 }
 
 .h-details {
-  font-size:0.75rem;
-  margin-top:6px;
+  margin-top: 6px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
 .type.income {
   background: rgba(61,213,152,0.15);
-  color: var(--green);
-  padding:5px 10px;
-  border-radius:999px;
-  font-weight:600;
-  font-size:0.65rem;
+  color: var(--highlight);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.65rem;
 }
 
 .type.expense {
   background: rgba(255,107,107,0.15);
-  color: var(--red);
-  padding:5px 10px;
-  border-radius:999px;
-  font-weight:600;
-  font-size:0.65rem;
+  color: var(--danger);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.65rem;
 }
 
-/* responsive */
-@media (max-width: 900px) {
-  table, thead, tbody, th, td, tr { display: block; }
-  thead { display: none; }
-  tbody tr { margin-bottom: 1rem; }
-  tbody td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.6rem;
-    position: relative;
-  }
-  tbody td:before {
-    content: attr(data-label);
-    font-weight:600;
-    flex:1;
-    margin-right:8px;
-    color: var(--muted);
+/* Responsive: tetap mendatar, cukup scroll */
+@media (max-width: 1000px) {
+  .kas-table {
+    min-width: 600px;
   }
 }
+
+/* Scrollbar custom (optional) */
+.table-wrapper::-webkit-scrollbar {
+  height: 10px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.04);
+  border-radius: 5px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 5px;
+}
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+
+
+
 
 /* Tombol chat WhatsApp - terang/berisi */
 .chat-wa-btn {
