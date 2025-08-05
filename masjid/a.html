@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
+
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
+
+
+
+   <link rel="stylesheet" href="/masjid/gaya.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+
+    <title>input Kas Masjid Al-Huda Tanjung Bulan</title>
+</head>
+
+
+    <body class="bg-dark text-light">
+
+
+        <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+
+
+
+        <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+
+                <img class="img-fluid">
+            </div>
+            <span class="pt-3 text-center">
+
+                 <h1><i class="fas fa-wallet">
+
+    </i> Kas Masjid Al-Huda</h1>
+
+            </span>
+
+
+
+       </div>
+
+    
+
+
+
+
+    </center>
+
+
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
+
+
+        <center>
+
+
+
+<p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
+
+<script>
+  const updatedAt = new Date(document.lastModified);
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
+  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
+</script>
+
+
+
+
+<h2>Input Kas Masjid Al-Huda</h2>
+
+<div class="form-container">
+  <label for="tanggal">Tanggal:</label>
+  <input type="date" id="tanggal">
+
+  <label for="keterangan">Keterangan:</label>
+  <input type="text" id="keterangan">
+
+  <label for="jenis">Jenis:</label>
+  <select id="jenis">
+    <option value="pemasukan">Pemasukan</option>
+    <option value="pengeluaran">Pengeluaran</option>
+  </select>
+
+  <label for="jumlah">Jumlah (angka):</label>
+  <input type="number" id="jumlah">
+
+  <label for="catatan">Catatan (opsional):</label>
+  <textarea id="catatan" rows="3"></textarea>
+
+  <button onclick="tambahKas()">Tambah Riwayat</button>
+</div>
+
+<div class="output-container">
+  <h3>Riwayat Kas Terbaru</h3>
+  <pre id="output">{  
+  date: "",  
+  description: "",  
+  type: "",  
+  amount: 0,  
+  note: ""  
+},</pre>
+  <button onclick="salinKode()">Salin Kode</button><span id="status" class="copied"></span>
+</div>
+
+<script>
+  function tambahKas() {
+    const tanggal = document.getElementById("tanggal").value;
+    const keterangan = document.getElementById("keterangan").value;
+    const jenis = document.getElementById("jenis").value;
+    const jumlah = parseInt(document.getElementById("jumlah").value);
+    const catatan = document.getElementById("catatan").value;
+
+    if (!tanggal || !keterangan || !jenis || isNaN(jumlah)) {
+      alert("Harap lengkapi semua kolom wajib.");
+      return;
+    }
+
+    const hasil = `{
+  date: "${tanggal}",
+  description: "${keterangan}",
+  type: "${jenis}",
+  amount: ${jumlah},
+  note: "${catatan}"
+},`;
+
+    document.getElementById("output").textContent = hasil;
+    document.getElementById("status").textContent = "";
+  }
+
+  function salinKode() {
+    const teks = document.getElementById("output").textContent;
+    navigator.clipboard.writeText(teks).then(() => {
+      document.getElementById("status").textContent = "✔️ Disalin!";
+      setTimeout(() => {
+        document.getElementById("status").textContent = "";
+      }, 2000);
+    });
+  }
+</script>
+
+
+
+
+
+    </body>
+
+    </html>
