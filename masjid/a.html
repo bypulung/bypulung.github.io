@@ -171,72 +171,80 @@ pre {
   <label for="tanggal">Tanggal:</label>
   <input type="date" id="tanggal">
 
-  <label for="keterangan">Keterangan:</label>
-  <input type="text" id="keterangan">
+  <label for="description">Keterangan</label>
+<input type="text" id="description" placeholder="Contoh: Penjualan es">
 
-  <label for="jenis">Jenis:</label>
-  <select id="jenis">
-    <option value="pemasukan">Pemasukan</option>
-    <option value="pengeluaran">Pengeluaran</option>
-  </select>
+<label for="type">Jenis</label>
+<select id="type">
+  <option value="pemasukan">Pemasukan</option>
+  <option value="pengeluaran">Pengeluaran</option>
+</select>
 
-  <label for="jumlah">Jumlah (angka):</label>
-  <input type="number" id="jumlah">
+<label for="amount">Jumlah (angka saja): 
+  <button type="button" onclick="tambahNol()">+000</button>
+</label>
+<input type="number" id="amount" placeholder="Contoh: 20000">
 
-  <label for="catatan">Catatan (opsional):</label>
-  <textarea id="catatan" rows="3"></textarea>
+<label for="note">Catatan Tambahan</label>
+<textarea id="note" placeholder="Opsional, bisa dikosongkan"></textarea>
 
-  <button onclick="tambahKas()">Tambah Riwayat</button>
-</div>
+<button onclick="generateCode()">Buat & Tampilkan Kode</button>
 
-<div class="output-container">
-  <h3>Riwayat Kas Terbaru</h3>
-  <pre id="output">{  
-  date: "",  
-  description: "",  
-  type: "",  
-  amount: 0,  
-  note: ""  
-},</pre>
-  <button onclick="salinKode()">Salin Kode</button><span id="status" class="copied"></span>
-</div>
+<div id="result" class="result-container" style="display:none;"></div>
+<button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" style="display:none;">Salin Kode</button>
 
 <script>
-  function tambahKas() {
-    const tanggal = document.getElementById("tanggal").value;
-    const keterangan = document.getElementById("keterangan").value;
-    const jenis = document.getElementById("jenis").value;
-    const jumlah = parseInt(document.getElementById("jumlah").value);
-    const catatan = document.getElementById("catatan").value;
+  function formatTanggal(tanggal) {
+    const bulanSingkat = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    const tgl = tanggal.getDate();
+    const bln = bulanSingkat[tanggal.getMonth()];
+    const thn = tanggal.getFullYear();
+    return `${tgl} ${bln} ${thn}`;
+  }
 
-    if (!tanggal || !keterangan || !jenis || isNaN(jumlah)) {
-      alert("Harap lengkapi semua kolom wajib.");
+  function tambahNol() {
+    const amountInput = document.getElementById("amount");
+    let val = amountInput.value.trim();
+    if (!val) val = "0";
+    amountInput.value = parseInt(val + "000");
+  }
+
+  function generateCode() {
+    const description = document.getElementById("description").value.trim();
+    const type = document.getElementById("type").value;
+    const amount = parseInt(document.getElementById("amount").value);
+    const note = document.getElementById("note").value.trim();
+
+    if (!description || isNaN(amount)) {
+      alert("Mohon isi keterangan dan jumlah dengan benar.");
       return;
     }
 
-    const hasil = `{
-  date: "${tanggal}",
-  description: "${keterangan}",
-  type: "${jenis}",
-  amount: ${jumlah},
-  note: "${catatan}"
+    const now = new Date();
+    const formattedDate = formatTanggal(now);
+
+    const output = `{
+  date: "${formattedDate}",
+  description: "${description}",
+  type: "${type}",
+  amount: ${amount},
+  note: "${note}"
 },`;
 
-    document.getElementById("output").textContent = hasil;
-    document.getElementById("status").textContent = "";
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerText = output;
+    resultDiv.style.display = "block";
+
+    document.getElementById("copyBtn").style.display = "block";
   }
 
-  function salinKode() {
-    const teks = document.getElementById("output").textContent;
-    navigator.clipboard.writeText(teks).then(() => {
-      document.getElementById("status").textContent = "✔️ Disalin!";
-      setTimeout(() => {
-        document.getElementById("status").textContent = "";
-      }, 2000);
+  function copyToClipboard() {
+    const resultText = document.getElementById("result").innerText;
+    navigator.clipboard.writeText(resultText).then(() => {
+      alert("Kode berhasil disalin!");
     });
   }
 </script>
-
 
 
 
