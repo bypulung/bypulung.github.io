@@ -156,7 +156,22 @@
   document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
 </script>
 
+<div class="saldo-wrapper">
+  <div class="saldo-card">
+    <div class="saldo-label">Saldo Saat Ini</div>
+    <div id="saldoNow" class="saldo-amount">Rp 0</div>
+  </div>
+</div>
 
+<script>
+  // Tunggu sampai semua fungsi tersedia
+  document.addEventListener("DOMContentLoaded", () => {
+    const saldo = summary().net;
+    const saldoEl = document.getElementById("saldoNow");
+    saldoEl.textContent = formatRupiah(saldo);
+    if (saldo < 0) saldoEl.classList.add("negative");
+  });
+</script>
     
 <center>
   <br>
