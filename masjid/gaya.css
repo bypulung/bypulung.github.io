@@ -442,3 +442,41 @@ h1, h2 {
   background: rgba(255,255,255,0.04);
   border-radius: 6px;
 }
+
+
+//saldo saat ini
+.saldo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30px 0;
+}
+
+.saldo-card {
+  background: linear-gradient(135deg, #1f2937, #374151);
+  color: #fff;
+  padding: 24px 36px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+}
+
+.saldo-label {
+  font-size: 20px;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.saldo-amount {
+  font-size: 48px;
+  font-weight: bold;
+  color: #10b981; /* hijau */
+  transition: all 0.3s ease;
+}
+
+.saldo-amount.negative {
+  color: #ef4444; /* merah */
+}
