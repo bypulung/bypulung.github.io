@@ -234,30 +234,33 @@ h1, h2 {
 }
 
 /* Tombol chat WhatsApp - terang/berisi */
+
+.chat-wa-btn img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  background: #ffffff;
+  padding: 2px; /* dikurangi agar tidak membesar */
+  box-sizing: content-box;
+  border: 2px solid #25D366;
+}
+
 .chat-wa-btn {
+  /* bisa tetap ada drop-shadow ringan */
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 1000;
   cursor: pointer;
-  filter: drop-shadow(0 15px 40px rgba(0,0,0,0.15));
-}
-
-.chat-wa-btn img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-  background: #ffffff; /* latar terang */
-  padding: 8px;
-  box-sizing: content-box;
-  border: 2px solid #25D366; /* aksen hijau WA */
+  filter: drop-shadow(0 10px 25px rgba(0,0,0,0.15));
 }
 
 .chat-wa-btn:hover img {
   transform: scale(1.08);
-  box-shadow: 0 12px 30px rgba(37,211,102,0.35);
+  box-shadow: 0 10px 25px rgba(37,211,102,0.35);
 }
+
 
 /* Popup Bantuan - terang */
 .bantuan-popup {
