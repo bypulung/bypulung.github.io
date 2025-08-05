@@ -47,6 +47,7 @@ function summary() {
 }
 
 // Popup untuk transaksi pada tanggal tertentu
+
 function showDatePopup(date, transactionsForDate, anchorElement) {
   // Hapus popup lama jika ada
   const existing = document.getElementById("datePopup");
@@ -58,7 +59,7 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
 
   const header = document.createElement("div");
   header.className = "popup-header";
-  header.innerHTML = `<strong>${date}</strong> - Riwayat Transaksi <span class="close-btn">&times;</span>`;
+  header.innerHTML = `<strong>Riwayat Transaksi</strong> <span class="close-btn" style="cursor:pointer;">&times;</span>`;
   popup.appendChild(header);
 
   if (transactionsForDate.length === 0) {
@@ -70,15 +71,16 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
     transactionsForDate.forEach(tx => {
       const item = document.createElement("div");
       item.className = "popup-item";
+      item.style.padding = "10px 0";
+      item.style.borderBottom = "1px solid rgba(255,255,255,0.08)";
       item.innerHTML = `
-        <div style="margin-bottom:6px;"><strong>${tx.date}</strong> - ${tx.description}</div>
-        <div class="note" style="margin-bottom:8px;">${tx.note || "-"}</div>
-        <div class="small-details" style="display:flex; gap:12px; flex-wrap:wrap; font-size:0.85rem; color: var(--muted);">
+        <div style="font-weight:bold; margin-bottom:6px;">${tx.date} - ${tx.description}</div>
+        <div style="margin-bottom:6px; font-size:0.9rem; color: var(--muted);">${tx.note || "-"}</div>
+        <div style="font-size:0.9rem; color: var(--muted);">
           <div><strong>Tipe:</strong> ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"}</div>
           <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
-          <div><strong>Saldo setelah:</strong> ${formatRupiah(tx.balanceAfter)}</div>
+          <div><strong>Saldo Setelah:</strong> ${formatRupiah(tx.balanceAfter)}</div>
         </div>
-        <hr />
       `;
       popup.appendChild(item);
     });
@@ -87,26 +89,28 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
   // close handler
   const closeBtn = header.querySelector(".close-btn");
   if (closeBtn) {
-    closeBtn.style.cursor = "pointer";
     closeBtn.addEventListener("click", () => {
       popup.remove();
     });
   }
 
   document.body.appendChild(popup);
-  // position near anchor
+
+  // Positioning near anchor
   const rect = anchorElement.getBoundingClientRect();
   const top = rect.bottom + window.scrollY + 6;
   let left = rect.left + window.scrollX;
-  // pastikan tidak overflow kanan
   const popupRect = popup.getBoundingClientRect();
   if (left + popupRect.width > window.innerWidth - 10) {
     left = window.innerWidth - popupRect.width - 10;
   }
+
   popup.style.position = "absolute";
   popup.style.top = `${top}px`;
   popup.style.left = `${left}px`;
+  popup.style.zIndex = 9999;
 }
+
 
 // Render summary table (tanggal | masuk | keluar | saldo)
 function renderSummaryTable() {
