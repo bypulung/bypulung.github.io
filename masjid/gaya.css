@@ -67,7 +67,7 @@ h1, h2 {
 }
 
 .kas-table {
-  width: 98%; /* hampir penuh, sesuaikan container sehingga muat satu layar */
+  width: 100%; /* hampir penuh, sesuaikan container sehingga muat satu layar */
   border-collapse: collapse;
   font-size: 0.9rem;
   background: transparent;
