@@ -21,7 +21,7 @@ function getRawTransactions() {
   return [];
 }
 
-// Compute running balance
+// Compute running balance (kronologis naik)
 function computeLedger(startingBalance = 0) {
   const raw = getRawTransactions();
   const sorted = raw.slice().sort(sortByDate);
@@ -46,10 +46,69 @@ function summary() {
   return { income, expense, net };
 }
 
-// Render summary table (tanggal | masuk | keluar | saldo)
-// Tanggal jadi link untuk filter history
-let activeFilterDate = null; // "YYYY-MM-DD" string
+// Popup untuk transaksi pada tanggal tertentu
+function showDatePopup(date, transactionsForDate, anchorElement) {
+  // Hapus popup lama jika ada
+  const existing = document.getElementById("datePopup");
+  if (existing) existing.remove();
 
+  const popup = document.createElement("div");
+  popup.id = "datePopup";
+  popup.className = "date-popup";
+
+  const header = document.createElement("div");
+  header.className = "popup-header";
+  header.innerHTML = `<strong>${date}</strong> - Riwayat Transaksi <span class="close-btn">&times;</span>`;
+  popup.appendChild(header);
+
+  if (transactionsForDate.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "popup-empty";
+    empty.textContent = `Tidak ada transaksi di tanggal ${date}.`;
+    popup.appendChild(empty);
+  } else {
+    transactionsForDate.forEach(tx => {
+      const item = document.createElement("div");
+      item.className = "popup-item";
+      item.innerHTML = `
+        <div style="margin-bottom:6px;"><strong>${tx.date}</strong> - ${tx.description}</div>
+        <div class="note" style="margin-bottom:8px;">${tx.note || "-"}</div>
+        <div class="small-details" style="display:flex; gap:12px; flex-wrap:wrap; font-size:0.85rem; color: var(--muted);">
+          <div><strong>Tipe:</strong> ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"}</div>
+          <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
+          <div><strong>Saldo setelah:</strong> ${formatRupiah(tx.balanceAfter)}</div>
+        </div>
+        <hr />
+      `;
+      popup.appendChild(item);
+    });
+  }
+
+  // close handler
+  const closeBtn = header.querySelector(".close-btn");
+  if (closeBtn) {
+    closeBtn.style.cursor = "pointer";
+    closeBtn.addEventListener("click", () => {
+      popup.remove();
+    });
+  }
+
+  document.body.appendChild(popup);
+  // position near anchor
+  const rect = anchorElement.getBoundingClientRect();
+  const top = rect.bottom + window.scrollY + 6;
+  let left = rect.left + window.scrollX;
+  // pastikan tidak overflow kanan
+  const popupRect = popup.getBoundingClientRect();
+  if (left + popupRect.width > window.innerWidth - 10) {
+    left = window.innerWidth - popupRect.width - 10;
+  }
+  popup.style.position = "absolute";
+  popup.style.top = `${top}px`;
+  popup.style.left = `${left}px`;
+}
+
+// Render summary table (tanggal | masuk | keluar | saldo)
 function renderSummaryTable() {
   const ledger = computeLedger();
   const tbody = document.querySelector("#summary-body");
@@ -59,25 +118,24 @@ function renderSummaryTable() {
   ledger.forEach(row => {
     const tr = document.createElement("tr");
 
-    // Tanggal (link)
+    // Tanggal (klik memunculkan popup)
     const dateTd = document.createElement("td");
-    const a = document.createElement("a");
-    a.href = "#";
-    a.textContent = row.date;
-    a.dataset.date = row.date;
-    a.style.color = "var(--text)";
-    a.style.textDecoration = "underline";
-    a.addEventListener("click", e => {
-      e.preventDefault();
-      activeFilterDate = e.currentTarget.dataset.date;
-      renderHistoryList(); // re-render history filtered
+    const span = document.createElement("span");
+    span.textContent = row.date;
+    span.className = "clickable-date";
+    span.style.cursor = "pointer";
+    span.style.textDecoration = "underline";
+    span.addEventListener("click", e => {
+      const ledgerFull = computeLedger();
+      const sameDate = ledgerFull.filter(tx => tx.date === row.date);
+      showDatePopup(row.date, sameDate, span);
     });
-    dateTd.appendChild(a);
+    dateTd.appendChild(span);
 
     // Masuk
     const incomeTd = document.createElement("td");
     if (row.type === "income") {
-      incomeTd.textContent = row.amount.toLocaleString("id-ID"); // tanpa "Rp"
+      incomeTd.textContent = row.amount.toLocaleString("id-ID"); // tanpa Rp
       incomeTd.classList.add("income");
     } else {
       incomeTd.textContent = "-";
@@ -86,7 +144,7 @@ function renderSummaryTable() {
     // Keluar
     const expenseTd = document.createElement("td");
     if (row.type === "expense") {
-      expenseTd.textContent = row.amount.toLocaleString("id-ID"); // tanpa "Rp"
+      expenseTd.textContent = row.amount.toLocaleString("id-ID");
       expenseTd.classList.add("expense");
     } else {
       expenseTd.textContent = "-";
@@ -94,7 +152,7 @@ function renderSummaryTable() {
 
     // Saldo
     const balanceTd = document.createElement("td");
-    balanceTd.textContent = row.balanceAfter.toLocaleString("id-ID"); // tanpa "Rp"
+    balanceTd.textContent = row.balanceAfter.toLocaleString("id-ID");
 
     tr.append(dateTd, incomeTd, expenseTd, balanceTd);
     tbody.appendChild(tr);
@@ -114,31 +172,28 @@ function renderSummaryTable() {
   `;
 }
 
-// Render history with detailed format and filter
+// Render full history (terbaru dulu)
 function renderHistoryList() {
   const historyContainer = document.querySelector("#history");
   if (!historyContainer) return;
   historyContainer.innerHTML = "";
 
   const ledger = computeLedger();
-  const filtered = activeFilterDate
-    ? ledger.filter(tx => tx.date === activeFilterDate)
-    : ledger;
-
-  if (filtered.length === 0) {
+  if (ledger.length === 0) {
     const msg = document.createElement("div");
     msg.style.opacity = "0.9";
     msg.style.padding = "12px";
     msg.style.borderRadius = "8px";
     msg.style.background = "rgba(255,255,255,0.05)";
-    msg.textContent = activeFilterDate
-      ? `Tidak ada transaksi di tanggal ${activeFilterDate}.`
-      : "Belum ada transaksi.";
+    msg.textContent = "Belum ada transaksi.";
     historyContainer.appendChild(msg);
     return;
   }
 
-  filtered.forEach(tx => {
+  // tampilkan dari terbaru: reverse tanpa mengubah original
+  const reversed = ledger.slice().reverse();
+
+  reversed.forEach(tx => {
     const wrapper = document.createElement("div");
     wrapper.className = "history-item";
 
@@ -149,7 +204,7 @@ function renderHistoryList() {
 
     // Catatan
     const noteDiv = document.createElement("div");
-    noteDiv.style.margin = "6px 0";
+    noteDiv.className = "note";
     noteDiv.textContent = tx.note || "-";
 
     // Detail block
@@ -173,21 +228,10 @@ function renderHistoryList() {
   });
 }
 
-// Clear filter button
-function setupClearFilter() {
-  const btn = document.getElementById("clearFilter");
-  if (!btn) return;
-  btn.addEventListener("click", e => {
-    activeFilterDate = null;
-    renderHistoryList();
-  });
-}
-
 // Init UI
 function initUI() {
   renderSummaryTable();
   renderHistoryList();
-  setupClearFilter();
 }
 
 // Auto init
