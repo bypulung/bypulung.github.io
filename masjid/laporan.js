@@ -1,143 +1,113 @@
-function formatAngka(num) {
-  return num.toLocaleString("id-ID");
-}
+    const bulanSelect = document.getElementById("bulan");
+    const checklist = document.getElementById("checklist");
+    const output = document.getElementById("reportOutput");
 
-function getMonthName(month) {
-  const bulan = [
-    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-  ];
-  return bulan[month];
-}
-
-// Ambil laporan bulanan
-function generateMonthlyReport(month, year) {
-  const data = getRawTransactions().filter(tx => {
-    const d = new Date(tx.date);
-    return d.getFullYear() === year && d.getMonth() === month;
-  });
-
-  if (data.length === 0) return "*Tidak ada transaksi pada bulan ini.*";
-
-  const bulanNama = getMonthName(month);
-  const periodeTanggal = data.map(tx => tx.date).sort();
-  const saldoAwal = hitungSaldoSebelum(month, year);
-  let saldoAkhir = saldoAwal;
-
-  let pemasukan = [];
-  let pengeluaran = [];
-  let totalMasuk = 0;
-  let totalKeluar = 0;
-
-  data.forEach(tx => {
-    if (tx.type === "income") {
-      pemasukan.push(`- ${tx.description}: ${formatAngka(tx.amount)}`);
-      totalMasuk += tx.amount;
-      saldoAkhir += tx.amount;
-    } else {
-      pengeluaran.push(`- ${tx.description}: ${formatAngka(tx.amount)}`);
-      totalKeluar += tx.amount;
-      saldoAkhir -= tx.amount;
+    function getMonthName(monthIndex) {
+      return new Date(2025, monthIndex, 1).toLocaleString("id-ID", { month: "long" });
     }
-  });
 
-  const laporan = [
-    `🕌 *Laporan Kas Masjid Al-Huda Bulan ${bulanNama} ${year}*`,
-    ``,
-    `💰 *Saldo Awal Bulan:* ${formatAngka(saldoAwal)}`,
-    ``,
-    `📥 *Pemasukan:*`,
-    pemasukan.length > 0 ? pemasukan.join("\n") : "_(Tidak ada)_",
-    ``,
-    `*Total Pemasukan:* ${formatAngka(totalMasuk)}`,
-    ``,
-    `📤 *Pengeluaran:*`,
-    pengeluaran.length > 0 ? pengeluaran.join("\n") : "_(Tidak ada)_",
-    ``,
-    `*Total Pengeluaran:* ${formatAngka(totalKeluar)}`,
-    ``,
-    `💰 *Saldo Akhir Bulan:* ${formatAngka(saldoAkhir)}`,
-    ``,
-    `📅 *Periode:* ${periodeTanggal[0]} s.d. ${periodeTanggal.at(-1)}`,
-    ``,
-    `📌 Info: https://tanjungbulan.my.id/masjid`
-  ];
-
-  return laporan.join("\n");
-}
-
-// Ambil saldo sebelum bulan tertentu
-function hitungSaldoSebelum(month, year) {
-  const raw = getRawTransactions();
-  let saldo = 0;
-  raw.forEach(tx => {
-    const d = new Date(tx.date);
-    if (d.getFullYear() < year || (d.getFullYear() === year && d.getMonth() < month)) {
-      if (tx.type === "income") saldo += tx.amount;
-      else saldo -= tx.amount;
+    function populateMonthOptions() {
+      for (let i = 0; i < 12; i++) {
+        const option = document.createElement("option");
+        option.value = i + 1;
+        option.textContent = getMonthName(i);
+        bulanSelect.appendChild(option);
+      }
     }
-  });
-  return saldo;
-}
 
-// Laporan tahunan saat Idul Fitri (Hijriah tahun input)
-function generateAnnualReport(hijriYear, labelPeriode = "1 Syawal") {
-  const data = getRawTransactions(); // semua
-  if (data.length === 0) return "*Belum ada transaksi.*";
-
-  // Estimasi: ambil transaksi setahun terakhir (365 hari terakhir dari hari ini)
-  const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - 365);
-
-  const transaksi = data.filter(tx => new Date(tx.date) >= cutoffDate);
-
-  let saldoAwal = 0;
-  data.forEach(tx => {
-    const d = new Date(tx.date);
-    if (d < cutoffDate) {
-      saldoAwal += (tx.type === "income" ? tx.amount : -tx.amount);
+    function populateChecklist() {
+      const txs = getRawTransactions();
+      checklist.innerHTML = "";
+      txs.forEach((t, i) => {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = i;
+        label.appendChild(checkbox);
+        label.append(` ${t.date} - ${t.description}`);
+        checklist.appendChild(label);
+        checklist.appendChild(document.createElement("br"));
+      });
     }
-  });
 
-  let pemasukan = [];
-  let pengeluaran = [];
-  let totalMasuk = 0;
-  let totalKeluar = 0;
-  let saldoAkhir = saldoAwal;
+    function generateMonthlyReport() {
+      const month = parseInt(bulanSelect.value);
+      const year = 2025;
+      const txs = getRawTransactions().filter(t => new Date(t.date).getMonth() + 1 === month);
+      const bulanNama = getMonthName(month - 1);
 
-  transaksi.forEach(tx => {
-    if (tx.type === "income") {
-      pemasukan.push(`+ ${tx.description}: ${formatAngka(tx.amount)}`);
-      totalMasuk += tx.amount;
-      saldoAkhir += tx.amount;
-    } else {
-      pengeluaran.push(`- ${tx.description}: ${formatAngka(tx.amount)}`);
-      totalKeluar += tx.amount;
-      saldoAkhir -= tx.amount;
+      const pemasukan = txs.filter(t => t.type === "income");
+      const pengeluaran = txs.filter(t => t.type === "expense");
+      const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0);
+      const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0);
+
+      let saldoAwal = 0;
+      const all = computeLedger();
+      const firstOfMonth = all.find(t => new Date(t.date).getMonth() + 1 === month);
+      if (firstOfMonth) {
+        saldoAwal = firstOfMonth.balanceAfter - (firstOfMonth.type === "income" ? firstOfMonth.amount : -firstOfMonth.amount);
+      }
+      const saldoAkhir = saldoAwal + totalIn - totalOut;
+
+      const lines = [
+        `🕌 Laporan Kas Masjid Al-Huda Bulan ${bulanNama} ${year}`,
+        `\n💰 Saldo Awal Bulan: ${saldoAwal.toLocaleString("id-ID")}`,
+        `\n📥 Pemasukan:`
+      ];
+      pemasukan.forEach(p => lines.push(`- ${p.description}: ${p.amount.toLocaleString("id-ID")}`));
+      lines.push(`\nTotal Pemasukan : ${totalIn.toLocaleString("id-ID")}`);
+      lines.push(`\n📤 Pengeluaran:`);
+      pengeluaran.forEach(p => lines.push(`- ${p.description}: ${p.amount.toLocaleString("id-ID")}`));
+      lines.push(`\nTotal pengeluaran: ${totalOut.toLocaleString("id-ID")}`);
+      lines.push(`\n💰 Saldo akhir bulan: ${saldoAkhir.toLocaleString("id-ID")}`);
+      lines.push(`\n📅Periode: ${bulanNama} ${year}`);
+      lines.push(`\n📌 Info: https://tanjungbulan.my.id/masjid`);
+
+      output.value = lines.join("\n");
     }
-  });
 
-  const laporan = [
-    `📢 *Laporan Tahunan Kas Masjid Al-Huda ${hijriYear} H*`,
-    ``,
-    `💰 *Saldo Awal:* ${formatAngka(saldoAwal)}`,
-    ``,
-    `🟢 *Pemasukan:*`,
-    pemasukan.length > 0 ? pemasukan.join("\n") : "_(Tidak ada)_",
-    ``,
-    `*Total Pemasukan:* ${formatAngka(totalMasuk)}`,
-    ``,
-    `🔴 *Pengeluaran:*`,
-    pengeluaran.length > 0 ? pengeluaran.join("\n") : "_(Tidak ada)_",
-    ``,
-    `*Total Pengeluaran:* ${formatAngka(totalKeluar)}`,
-    ``,
-    `💳 *Saldo Akhir:* ${formatAngka(saldoAkhir)}`,
-    ``,
-    `📅 *Periode:* ${labelPeriode} ${hijriYear} H`,
-    ``,
-    `📌 Info: https://tanjungbulan.my.id/masjid`
-  ];
+    function generateYearlyReport() {
+      const checked = Array.from(checklist.querySelectorAll("input:checked"))
+        .map(cb => parseInt(cb.value));
+      const all = getRawTransactions();
+      const selected = checked.map(i => all[i]);
+      const pemasukan = selected.filter(t => t.type === "income");
+      const pengeluaran = selected.filter(t => t.type === "expense");
+      const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0);
+      const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0);
+      const saldoAwal = 0;
+      const saldoAkhir = saldoAwal + totalIn - totalOut;
 
-  return laporan.join("\n");
-}
+      const lines = [
+        `📢 Laporan Tahunan Kas Masjid Al-Huda 1448 H`,
+        `\n💰Saldo Awal: ${saldoAwal.toLocaleString("id-ID")}`,
+        `\n🟢 Pemasukan:`
+      ];
+      pemasukan.forEach(p => lines.push(`+ ${p.description}: ${p.amount.toLocaleString("id-ID")}`));
+      lines.push(`\nTotal Pemasukan: ${totalIn.toLocaleString("id-ID")}`);
+      lines.push(`\n🔴 Pengeluaran:`);
+      pengeluaran.forEach(p => lines.push(`- ${p.description}: ${p.amount.toLocaleString("id-ID")}`));
+      lines.push(`\nTotal pengeluaran: ${totalOut.toLocaleString("id-ID")}`);
+      lines.push(`\n💳 Saldo akhir: ${saldoAkhir.toLocaleString("id-ID")}`);
+      lines.push(`\n📅Periode : [tanggal hijriah]`);
+      lines.push(`\n📌Info: https://tanjungbulan.my.id/masjid`);
+
+      output.value = lines.join("\n");
+    }
+
+    function copyReport() {
+      output.select();
+      document.execCommand("copy");
+      alert("Teks laporan disalin ke clipboard.");
+    }
+
+    function sendToWhatsApp() {
+      const text = encodeURIComponent(output.value);
+      const url = `https://wa.me/?text=${text}`;
+      window.open(url, '_blank');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      populateMonthOptions();
+      populateChecklist();
+    });
