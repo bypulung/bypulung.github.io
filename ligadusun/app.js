@@ -220,7 +220,6 @@ function buildShareText() {
   if (!Array.isArray(klasemen) || !klasemen.length) return "";
 
   const lines = [];
-  lines.push("----");
   lines.push("*Klasemen LigaDusun*");
   klasemen.forEach((tim, i) => {
     const nomor = i + 1;
@@ -231,7 +230,6 @@ function buildShareText() {
   });
   lines.push("");
   lines.push("Info selengkapnya 👉 https://tanjungbulan.my.id/ligadusun");
-  lines.push("----");
   return lines.join("\n");
 }
 
