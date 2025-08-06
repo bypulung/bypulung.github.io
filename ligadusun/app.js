@@ -160,56 +160,71 @@
 
 
   function renderRoster() {
-    const container = document.getElementById("roster-container");
-    if (!container) return;
-    container.innerHTML = "";
+  const container = document.getElementById("roster-container");
+  if (!container) return;
+  container.innerHTML = "";
 
-    const listTeams = Array.isArray(teams) ? teams : [];
-    if (!listTeams.length) {
-      container.innerHTML = `<div class="no-players">Tidak ada data tim.</div>`;
-      return;
-    }
-
-    listTeams.forEach(team => {
-      const name = team.nama || team.name || "Unnamed Team";
-      const players = Array.isArray(team.pemain) ? team.pemain : [];
-
-      const card = document.createElement("div");
-      card.className = "team-card";
-
-      const header = document.createElement("div");
-      header.className = "team-header";
-      header.innerHTML = `
-        <h3 class="team-name-title">${name}</h3>
-        <div class="player-count">${players.length} Pemain</div>
-      `;
-
-      const listWrapper = document.createElement("ul");
-      listWrapper.className = "player-list";
-      if (players.length) {
-        players.forEach(p => {
-          const li = document.createElement("li");
-          li.innerHTML = `<div class="player-bullet"></div><div>${p}</div>`;
-          listWrapper.appendChild(li);
-        });
-      } else {
-        const no = document.createElement("div");
-        no.className = "no-players";
-        no.textContent = "Belum ada pemain.";
-        listWrapper.appendChild(no);
-      }
-
-      const meta = document.createElement("div");
-      meta.className = "team-meta";
-      meta.textContent = " ";
-
-      card.appendChild(header);
-      card.appendChild(listWrapper);
-      card.appendChild(meta);
-      container.appendChild(card);
-    });
+  const listTeams = Array.isArray(teams) ? teams : [];
+  if (!listTeams.length) {
+    container.innerHTML = `<div class="no-players">Tidak ada data tim.</div>`;
+    return;
   }
 
+  listTeams.forEach(team => {
+    const name = team.nama || team.name || "Unnamed Team";
+    const players = Array.isArray(team.pemain) ? team.pemain : [];
+
+    const card = document.createElement("div");
+    card.className = "team-card";
+
+    const header = document.createElement("div");
+    header.className = "team-header";
+    header.innerHTML = `
+      <h3 class="team-name-title">${name}</h3>
+      <div class="player-count">${players.length} Pemain</div>
+    `;
+
+    const listWrapper = document.createElement("ul");
+    listWrapper.className = "player-list";
+    if (players.length) {
+      players.forEach(p => {
+        const li = document.createElement("li");
+        li.innerHTML = `<div class="player-bullet"></div><div>${p}</div>`;
+        listWrapper.appendChild(li);
+      });
+    } else {
+      const no = document.createElement("div");
+      no.className = "no-players";
+      no.textContent = "Belum ada pemain.";
+      listWrapper.appendChild(no);
+    }
+
+    // 🔘 Tombol Salin
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-team-btn";
+    copyBtn.innerHTML = "📋 Salin Nama";
+    copyBtn.onclick = () => {
+      const text = `📌 ${name}\n` + players.map((p, i) => `${i + 1}. ${p}`).join("\n");
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          copyBtn.textContent = "✅ Tersalin!";
+          setTimeout(() => copyBtn.textContent = "📋 Salin Nama", 2000);
+        })
+        .catch(() => {
+          copyBtn.textContent = "⚠️ Gagal menyalin";
+        });
+    };
+
+    const meta = document.createElement("div");
+    meta.className = "team-meta";
+    meta.appendChild(copyBtn);
+
+    card.appendChild(header);
+    card.appendChild(listWrapper);
+    card.appendChild(meta);
+    container.appendChild(card);
+  });
+}
 
 
 function buildShareText() {
