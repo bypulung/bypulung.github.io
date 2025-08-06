@@ -229,7 +229,7 @@ function buildShareText() {
     lines.push(`${nomor}. ${nama}  ${setText} ${poinText}`);
   });
   lines.push("");
-  lines.push("Info selengkapnya 👉 https://tanjungbulan.my.id/ligadusun");
+  lines.push("Info selengkapnya: https://tanjungbulan.my.id/ligadusun");
   return lines.join("\n");
 }
 
