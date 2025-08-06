@@ -148,13 +148,6 @@
 
 
 
-<p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
-
-<script>
-  const updatedAt = new Date(document.lastModified);
-  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
-  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
-</script>
 
 <div class="saldo-wrapper">
   <div class="saldo-card">
@@ -172,8 +165,19 @@
     if (saldo < 0) saldoEl.classList.add("negative");
   });
 </script>
+
+<p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
+
+<script>
+  const updatedAt = new Date(document.lastModified);
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
+  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
+</script><br>
+
+
+<h2>Arus Kas</h2>
     
-<center>
+
   <br>
 <p class="sub">Klik tanggal di tabel untuk melihat detail.</p>
     
