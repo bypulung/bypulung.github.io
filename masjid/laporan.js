@@ -4,7 +4,7 @@ function getMonthName(monthIndex) { return new Date(2025, monthIndex, 1).toLocal
 
 function populateMonthOptions() { const txs = getRawTransactions(); const bulanUnik = new Set();
 
-txs.forEach(t => { const d = new Date(t.date); const key = ${d.getFullYear()}-${d.getMonth() + 1}; // format: 2025-8 bulanUnik.add(key); });
+txs.forEach(t => { const d = new Date(t.date); const key = ${d.getFullYear()}-${d.getMonth() + 1}; bulanUnik.add(key); });
 
 const sortedKeys = Array.from(bulanUnik).sort((a, b) => { const [y1, m1] = a.split("-").map(Number); const [y2, m2] = b.split("-").map(Number); return y2 !== y1 ? y2 - y1 : m2 - m1; });
 
@@ -16,17 +16,31 @@ function generateMonthlyReport() { const [year, month] = bulanSelect.value.split
 
 const pemasukan = txs.filter(t => t.type === "income"); const pengeluaran = txs.filter(t => t.type === "expense"); const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0); const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0);
 
-let saldoAwal = 0; const all = computeLedger(); const firstOfMonth = all.find(t => { const d = new Date(t.date); return d.getFullYear() === year && d.getMonth() + 1 === month; }); if (firstOfMonth) { saldoAwal = firstOfMonth.balanceAfter - (firstOfMonth.type === "income" ? firstOfMonth.amount : -firstOfMonth.amount); } const saldoAkhir = saldoAwal + totalIn - totalOut;
+let saldoAwal = 0; const all = computeLedger(); const firstOfMonthIndex = all.findIndex(t => { const d = new Date(t.date); return d.getFullYear() === year && d.getMonth() + 1 === month; }); if (firstOfMonthIndex > 0) { saldoAwal = all[firstOfMonthIndex - 1].balanceAfter; }
 
-const lines = [ *📢 Laporan Kas Masjid Al-Huda Bulan ${bulanNama} ${year}*, \n💰 *Saldo Awal Bulan:* ${saldoAwal.toLocaleString("id-ID")}, \n📥 *Pemasukan:* ]; pemasukan.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pemasukan:* ${totalIn.toLocaleString("id-ID")}); lines.push(\n📤 *Pengeluaran:*); pengeluaran.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pengeluaran:* ${totalOut.toLocaleString("id-ID")}); lines.push(\n💰 *Saldo Akhir Bulan:* ${saldoAkhir.toLocaleString("id-ID")}); lines.push(\n📅 *Periode:* ${bulanNama} ${year}); lines.push(\n📌 Info: https://tanjungbulan.my.id/masjid);
+const saldoAkhir = saldoAwal + totalIn - totalOut;
+
+const lines = [ *📢 Laporan Kas Masjid Al-Huda Bulan ${bulanNama} ${year}*, \n💰 *Saldo Awal Bulan:* ${saldoAwal.toLocaleString("id-ID")}, \n📥 *Pemasukan:* ];
+
+pemasukan.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pemasukan:* ${totalIn.toLocaleString("id-ID")});
+
+lines.push(\n📤 *Pengeluaran:*); pengeluaran.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pengeluaran:* ${totalOut.toLocaleString("id-ID")});
+
+lines.push(\n💰 *Saldo Akhir Bulan:* ${saldoAkhir.toLocaleString("id-ID")}); lines.push(\n📅 *Periode:* ${bulanNama} ${year}); lines.push(\n📌 Info: https://tanjungbulan.my.id/masjid);
 
 output.value = lines.join("\n"); }
 
-function generateYearlyReport() { const checked = Array.from(checklist.querySelectorAll("input:checked")) .map(cb => parseInt(cb.value)); const all = getRawTransactions(); const selected = checked.map(i => all[i]); const pemasukan = selected.filter(t => t.type === "income"); const pengeluaran = selected.filter(t => t.type === "expense"); const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0); const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0); const saldoAwal = 0; const saldoAkhir = saldoAwal + totalIn - totalOut;
+function generateYearlyReport() { const checked = Array.from(checklist.querySelectorAll("input:checked")).map(cb => parseInt(cb.value)); const all = getRawTransactions(); const selected = checked.map(i => all[i]);
+
+const pemasukan = selected.filter(t => t.type === "income"); const pengeluaran = selected.filter(t => t.type === "expense"); const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0); const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0); const saldoAwal = 0; const saldoAkhir = saldoAwal + totalIn - totalOut;
 
 const sortedDates = selected.map(t => new Date(t.date)).sort((a, b) => a - b); const periode = sortedDates.length ? ${getMonthName(sortedDates[0].getMonth())} ${sortedDates[0].getFullYear()} - ${getMonthName(sortedDates.at(-1).getMonth())} ${sortedDates.at(-1).getFullYear()} : "-";
 
-const lines = [ *📢 Laporan Tahunan Kas Masjid Al-Huda  \n\n🟢 *Pemasukan:* ]; pemasukan.forEach(p => lines.push(+ ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pemasukan:* ${totalIn.toLocaleString("id-ID")}); lines.push(\n🔴 *Pengeluaran:*); pengeluaran.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pengeluaran:* ${totalOut.toLocaleString("id-ID")}); lines.push(\n💳 *Saldo Akhir:* ${saldoAkhir.toLocaleString("id-ID")}); lines.push(\n📅 *Periode:* ${periode}); lines.push(\n📌 Info: https://tanjungbulan.my.id/masjid);
+const lines = [ *📢 Laporan Tahunan Kas Masjid Al-Huda* \n\n🟢 *Pemasukan:* ]; pemasukan.forEach(p => lines.push(+ ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pemasukan:* ${totalIn.toLocaleString("id-ID")});
+
+lines.push(\n🔴 *Pengeluaran:*); pengeluaran.forEach(p => lines.push(- ${p.description}: ${p.amount.toLocaleString("id-ID")})); lines.push(\n*Total Pengeluaran:* ${totalOut.toLocaleString("id-ID")});
+
+lines.push(\n💰 *Saldo Akhir:* ${saldoAkhir.toLocaleString("id-ID")}); lines.push(\n📅 *Periode:* ${periode}); lines.push(\n📌 Info: https://tanjungbulan.my.id/masjid);
 
 output.value = lines.join("\n"); }
 
