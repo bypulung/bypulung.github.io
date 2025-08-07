@@ -2,32 +2,7 @@
 // Penyimpanan data arus kas per tahun Hijriah
 
 const kasData = {
-
-"1448H": [
-{
-date: "2026/08/07",
-description: "Infak jumat",
-type: "pemasukan",
-amount: 200000,
-note: "Infak jumat selama 1 bulan"
-},
-{
-date: "2026/09/04",
-description: "Infak jumat",
-type: "pemasukan",
-amount: 500000,
-note: "Infak jumat selama 1 bulan"
-},
-{
-date: "2026/08/20",
-description: "Syukuran",
-type: "pengeluaran",
-amount: 300000,
-note: "Syukuran bersama satu dusun Tanjung bulan"
-}
-],
-
-  "1447H": [
+"1447H": [
     {
       date: "2025-08-01",
       description: "Setoran awal kas",
@@ -56,7 +31,32 @@ note: "Syukuran bersama satu dusun Tanjung bulan"
       amount: 50000,
       note: "Konsumsi pengajian malam"
     }
-  ]
+  ],
+
+"1448H": [
+{
+date: "2026/08/07",
+description: "Infak jumat",
+type: "pemasukan",
+amount: 200000,
+note: "Infak jumat selama 1 bulan"
+},
+{
+date: "2026/09/04",
+description: "Infak jumat",
+type: "pemasukan",
+amount: 500000,
+note: "Infak jumat selama 1 bulan"
+},
+{
+date: "2026/08/20",
+description: "Syukuran",
+type: "pengeluaran",
+amount: 300000,
+note: "Syukuran bersama satu dusun Tanjung bulan"
+}
+]
+
 };
 
 // Fungsi bantu: Mengubah tanggal ke tahun Hijriah (menggunakan Intl API)
