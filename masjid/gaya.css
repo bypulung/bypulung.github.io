@@ -489,3 +489,18 @@ h1, h2 {
   line-height: 1.2;
   text-align: center;
 }
+
+// memaksa tabel kas rata tengah
+.kas-table td:nth-child(1),
+.kas-table th:nth-child(1) {
+  text-align: center; /* Tanggal */
+}
+
+.kas-table td:nth-child(2),
+.kas-table td:nth-child(3),
+.kas-table td:nth-child(4),
+.kas-table th:nth-child(2),
+.kas-table th:nth-child(3),
+.kas-table th:nth-child(4) {
+  text-align: right; /* Masuk, Keluar, Saldo */
+}
