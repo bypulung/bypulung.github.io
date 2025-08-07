@@ -85,10 +85,11 @@ h1, h2 {
 .kas-table thead th {
   position: sticky;
   top: 0;
-  background: rgba(255,255,255,0.06);
+  background: #111; /* warna gelap elegan, tidak transparan */
   font-weight: 600;
   text-align: left;
-  color: var(--text);
+  color: #f0f0f0; /* teks terang agar kontras */
+  z-index: 1; /* pastikan sticky bekerja di atas baris lain */
 }
 
 .kas-table tbody tr:nth-child(odd) {
