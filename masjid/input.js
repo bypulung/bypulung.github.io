@@ -13,20 +13,21 @@ function formatTanggal(tanggal) {
   }
 
   function generateCode() {
-    const description = document.getElementById("description").value.trim();
-    const type = document.getElementById("type").value;
-    const amount = parseInt(document.getElementById("amount").value);
-    const note = document.getElementById("note").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const type = document.getElementById("type").value;
+  const amount = parseInt(document.getElementById("amount").value);
+  const note = document.getElementById("note").value.trim();
+  const dateInput = document.getElementById("tanggal").value;
 
-    if (!description || isNaN(amount)) {
-      alert("Mohon isi keterangan dan jumlah dengan benar.");
-      return;
-    }
+  if (!description || isNaN(amount) || !dateInput) {
+    alert("Mohon isi tanggal, keterangan, dan jumlah dengan benar.");
+    return;
+  }
 
-    const now = new Date();
-    const formattedDate = formatTanggal(now);
+  const date = new Date(dateInput);
+  const formattedDate = formatTanggal(date);
 
-    const output = `{
+  const output = `{
   date: "${formattedDate}",
   description: "${description}",
   type: "${type}",
@@ -34,12 +35,12 @@ function formatTanggal(tanggal) {
   note: "${note}"
 },`;
 
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerText = output;
-    resultDiv.style.display = "block";
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerText = output;
+  resultDiv.style.display = "block";
 
-    document.getElementById("copyBtn").style.display = "block";
-  }
+  document.getElementById("copyBtn").style.display = "block";
+}
 
   function copyToClipboard() {
     const resultText = document.getElementById("result").innerText;
