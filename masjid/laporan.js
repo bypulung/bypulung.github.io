@@ -53,14 +53,14 @@ function generateReport() {
   const currentIndex = allYears.indexOf(periode);
   let saldoAwal = 0;
 
-  // Hitung saldo akhir tahun-tahun sebelum periode terpilih
+  // Hitung saldo akhir dari tahun-tahun sebelum tahun terpilih
   for (let i = 0; i < currentIndex; i++) {
     const txsSebelumnya = kas.raw[allYears[i]];
     saldoAwal += txsSebelumnya.reduce((s, t) =>
       s + (t.type === "income" ? t.amount : (t.type === "expense" ? -t.amount : 0)), 0);
   }
 
-  // Tambahkan transaksi dalam periode saat ini sebelum tanggal awal transaksi yang dipilih
+  // Tambahkan transaksi dalam periode sekarang sebelum tanggal pertama transaksi terpilih
   saldoAwal += txs
     .filter(t => new Date(t.date) < startDate)
     .reduce((s, t) =>
@@ -100,7 +100,14 @@ function generateReport() {
   lines.push(`\n*Total Pengeluaran:* ${totalOut.toLocaleString("id-ID")}`);
 
   lines.push(`\n💰 *Saldo Akhir:* *${saldoAkhir.toLocaleString("id-ID")}*`);
-  lines.push(`\n📅 *Periode:* ${formatDate(startDate)} - ${formatDate(endDate)}`);
+
+  // 🆕 Bagian ini menentukan format tanggal sesuai jumlah transaksi
+  if (sortedSelected.length === 1) {
+    lines.push(`\n📅 ${formatDate(startDate)}`);
+  } else {
+    lines.push(`\n📅 ${formatDate(startDate)} - ${formatDate(endDate)}`);
+  }
+
   lines.push(`\n📌 Info: https://tanjungbulan.my.id/masjid`);
 
   output.value = lines.join("\n");
