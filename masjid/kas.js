@@ -37,21 +37,21 @@ const kasData = {
 {
 date: "2026/08/07",
 description: "Infak jumat",
-type: "pemasukan",
+type: "income",
 amount: 200000,
 note: "Infak jumat selama 1 bulan"
 },
 {
 date: "2026/09/04",
 description: "Infak jumat",
-type: "pemasukan",
+type: "income",
 amount: 500000,
 note: "Infak jumat selama 1 bulan"
 },
 {
 date: "2026/08/20",
 description: "Syukuran",
-type: "pengeluaran",
+type: "expense",
 amount: 300000,
 note: "Syukuran bersama satu dusun Tanjung bulan"
 }
