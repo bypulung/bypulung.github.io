@@ -267,58 +267,7 @@ pre {
 <div id="result" class="result-container" style="display:none;"></div>
 <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()" style="display:none;">Salin Kode</button>
 
-<script>
-  function formatTanggal(tanggal) {
-    const bulanSingkat = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-    const tgl = tanggal.getDate();
-    const bln = bulanSingkat[tanggal.getMonth()];
-    const thn = tanggal.getFullYear();
-    return `${tgl} ${bln} ${thn}`;
-  }
-
-  function tambahNol() {
-    const amountInput = document.getElementById("amount");
-    let val = amountInput.value.trim();
-    if (!val) val = "0";
-    amountInput.value = parseInt(val + "000");
-  }
-
-  function generateCode() {
-    const description = document.getElementById("description").value.trim();
-    const type = document.getElementById("type").value;
-    const amount = parseInt(document.getElementById("amount").value);
-    const note = document.getElementById("note").value.trim();
-
-    if (!description || isNaN(amount)) {
-      alert("Mohon isi keterangan dan jumlah dengan benar.");
-      return;
-    }
-
-    const now = new Date();
-    const formattedDate = formatTanggal(now);
-
-    const output = `{
-  date: "${formattedDate}",
-  description: "${description}",
-  type: "${type}",
-  amount: ${amount},
-  note: "${note}"
-},`;
-
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerText = output;
-    resultDiv.style.display = "block";
-
-    document.getElementById("copyBtn").style.display = "block";
-  }
-
-  function copyToClipboard() {
-    const resultText = document.getElementById("result").innerText;
-    navigator.clipboard.writeText(resultText).then(() => {
-      alert("Kode berhasil disalin!");
-    });
-  }
-</script>
+<script src="input.js"></script>
 
 
 
