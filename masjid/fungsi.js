@@ -15,6 +15,15 @@ function sortByDate(a, b) {
   return toDate(a.date) - toDate(b.date);
 }
 
+// Format tanggal pendek dua baris (untuk tabel)
+function formatTanggalPendekHTML(dateStr) {
+  const date = new Date(dateStr);
+  const day = date.getDate();
+  const month = date.toLocaleString("id-ID", { month: "short" });
+  const year = date.getFullYear();
+  return `${day} ${month}<br>${year}`;
+}
+
 // Ambil semua transaksi
 function getRawTransactions() {
   if (window.kas && typeof window.kas.getAllTransactions === "function") {
@@ -95,7 +104,6 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
     });
   }
 
-  // close
   const closeBtn = header.querySelector(".close-btn");
   if (closeBtn) closeBtn.addEventListener("click", () => popup.remove());
 
@@ -127,7 +135,7 @@ function renderSummaryTable() {
 
     const dateTd = document.createElement("td");
     const span = document.createElement("span");
-    span.textContent = row.date;
+    span.innerHTML = formatTanggalPendekHTML(row.date);
     span.className = "clickable-date";
     span.style.cursor = "pointer";
     span.style.textDecoration = "underline";
