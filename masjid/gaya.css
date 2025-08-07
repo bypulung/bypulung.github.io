@@ -480,3 +480,11 @@ h1, h2 {
 .saldo-amount.negative {
   color: #ef4444; /* merah */
 }
+
+
+//tanggal di tabel
+.clickable-date {
+  display: inline-block;
+  line-height: 1.2;
+  text-align: center;
+}
