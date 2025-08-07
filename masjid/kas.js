@@ -2,7 +2,32 @@
 // Penyimpanan data arus kas per tahun Hijriah
 
 const kasData = {
-  "1446H": [
+
+"1448H": [
+{
+date: "2026/08/07",
+description: "Infak jumat",
+type: "pemasukan",
+amount: 200000,
+note: "Infak jumat selama 1 bulan"
+},
+{
+date: "2026/09/04",
+description: "Infak jumat",
+type: "pemasukan",
+amount: 500000,
+note: "Infak jumat selama 1 bulan"
+},
+{
+date: "2026/08/20",
+description: "Syukuran",
+type: "pengeluaran",
+amount: 300000,
+note: "Syukuran bersama satu dusun Tanjung bulan"
+},
+]
+
+  "1447H": [
     {
       date: "2025-08-01",
       description: "Setoran awal kas",
