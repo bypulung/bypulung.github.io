@@ -24,7 +24,7 @@ description: "Syukuran",
 type: "pengeluaran",
 amount: 300000,
 note: "Syukuran bersama satu dusun Tanjung bulan"
-},
+}
 ],
 
   "1447H": [
