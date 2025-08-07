@@ -45,17 +45,28 @@ function generateReport() {
 
   // Urutkan berdasarkan tanggal
   const sortedSelected = [...selected].sort((a, b) => new Date(a.date) - new Date(b.date));
-  const startDate = sortedSelected[0].date;
-  const endDate = sortedSelected.at(-1).date;
+  const startDate = new Date(sortedSelected[0].date);
+  const endDate = new Date(sortedSelected.at(-1).date);
 
-  // Hitung saldo awal (semua transaksi sebelum transaksi terpilih pertama)
-  const saldoAwal = txs
-    .filter(t => new Date(t.date) < new Date(startDate))
-    .reduce((s, t) => {
-      return s + (t.type === "income" ? t.amount : -t.amount);
-    }, 0);
+  // Ambil semua transaksi dari tahun-tahun sebelumnya
+  const allYears = Object.keys(kas.raw).sort(); // urutkan "1447H", "1448H", dst
+  const currentIndex = allYears.indexOf(periode);
+  let saldoAwal = 0;
 
-  // Hitung transaksi yang dipilih
+  // Hitung saldo akhir tahun-tahun sebelum periode terpilih
+  for (let i = 0; i < currentIndex; i++) {
+    const txsSebelumnya = kas.raw[allYears[i]];
+    saldoAwal += txsSebelumnya.reduce((s, t) =>
+      s + (t.type === "income" ? t.amount : (t.type === "expense" ? -t.amount : 0)), 0);
+  }
+
+  // Tambahkan transaksi dalam periode saat ini sebelum tanggal awal transaksi yang dipilih
+  saldoAwal += txs
+    .filter(t => new Date(t.date) < startDate)
+    .reduce((s, t) =>
+      s + (t.type === "income" ? t.amount : (t.type === "expense" ? -t.amount : 0)), 0);
+
+  // Hitung pemasukan dan pengeluaran yang dipilih
   const pemasukan = selected.filter(t => t.type === "income");
   const pengeluaran = selected.filter(t => t.type === "expense");
   const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0);
@@ -94,6 +105,7 @@ function generateReport() {
 
   output.value = lines.join("\n");
 }
+
 
 function copyReport() {
   output.select();
