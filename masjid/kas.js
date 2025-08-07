@@ -42,19 +42,19 @@ amount: 200000,
 note: "Infak jumat selama 1 bulan"
 },
 {
+date: "2026/08/20",
+description: "Syukuran",
+type: "expense",
+amount: 300000,
+note: "Syukuran bersama satu dusun Tanjung bulan"
+},
+{
 date: "2026/09/04",
 description: "Infak jumat",
 type: "income",
 amount: 500000,
 note: "Infak jumat selama 1 bulan"
 },
-{
-date: "2026/08/20",
-description: "Syukuran",
-type: "expense",
-amount: 300000,
-note: "Syukuran bersama satu dusun Tanjung bulan"
-}
 ]
 
 };
