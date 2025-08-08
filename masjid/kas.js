@@ -4,60 +4,32 @@
 const kasData = {
 "1447H": [
     {
-      date: "2025-08-01",
-      description: "Setoran awal kas",
-      type: "income",
-      amount: 500000,
-      note: "Kas awal untuk operasional bulan Agustus"
-    },
-    {
-      date: "2025-08-02",
-      description: "Pembelian bola voli",
-      type: "expense",
-      amount: 150000,
-      note: "Untuk kegiatan pemuda minggu ini"
-    },
-    {
-      date: "2025-08-03",
-      description: "Iuran anggota",
-      type: "income",
-      amount: 200000,
-      note: "Iuran bulanan 10 anggota"
-    },
-    {
-      date: "2025-08-04",
-      description: "Beli air minum",
-      type: "expense",
-      amount: 50000,
-      note: "Konsumsi pengajian malam"
-    }
-  ],
-
-"1448H": [
-{
-date: "2026/08/07",
-description: "Infak jumat",
+date: "2025/08/08",
+description: "Panen jagung",
 type: "income",
-amount: 200000,
-note: "Infak jumat selama 1 bulan"
+amount: 4000000,
+note: "Untung bersih ±7.300.000 dibagi 2 dengan pengelola lahan, pengelola membulatkan 4.000.000 untuk kas masjid (detailnya tanyakan kepada BPK. Nurman)."
 },
 {
-date: "2026/08/20",
-description: "Syukuran",
+date: "2025/08/08",
+description: "Sisa Infak Jumat",
+type: "income",
+amount: 825000,
+note: "Sisa uang infak dan sumbangan warga yang di pegang oleh bapak Suhdi selaku bendahara lama."
+},
+{
+date: "2025/08/08",
+description: "Pasang kaca",
 type: "expense",
-amount: 300000,
-note: "Syukuran bersama satu dusun Tanjung bulan"
+amount: 3000000,
+note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2"
 },
-{
-date: "2026/09/04",
-description: "Infak jumat",
-type: "income",
-amount: 500000,
-note: "Infak jumat selama 1 bulan"
-},
-]
+  ]
+
 
 };
+
+
 
 // Fungsi bantu: Mengubah tanggal ke tahun Hijriah (menggunakan Intl API)
 function getHijriYear(dateStr) {
