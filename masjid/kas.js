@@ -24,6 +24,13 @@ type: "expense",
 amount: 3000000,
 note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2"
 },
+{
+date: "2025/08/08",
+description: "Untuk RISMA",
+type: "expense",
+amount: 500000,
+note: "Bantuan 500 ribu untuk modal RISMA mengelola lahan 2 Rante."
+},
   ]
 
 
