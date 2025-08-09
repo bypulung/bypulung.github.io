@@ -472,7 +472,7 @@ h1, h2 {
 }
 
 .saldo-amount {
-  font-size: 48px;
+  font-size: 30px;
   font-weight: bold;
   color: #10b981; /* hijau */
   transition: all 0.3s ease;
