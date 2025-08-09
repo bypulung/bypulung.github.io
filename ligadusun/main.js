@@ -6,7 +6,7 @@ const matches = [
   { home: "Patriot Ngamuk", away: "Pejuang Santuy", setHome: 2, setAway: 0 },
 
   // 9 Agustus: Banteng Gaspol vs Patriot Ngamuk, Merdeka Ngacir vs Pejuang Santuy
-  { home: "Banteng Gaspol", away: "Patriot Ngamuk" },
+  { home: "Banteng Gaspol", away: "Patriot Ngamuk", setHome: 1, setAway: 2 },
   { home: "Merdeka Ngacir", away: "Pejuang Santuy" },
 
   // 10 Agustus: Banteng Gaspol vs Pejuang Santuy, Merdeka Ngacir vs Patriot Ngamuk
