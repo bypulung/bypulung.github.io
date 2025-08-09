@@ -251,6 +251,27 @@ function initUI() {
   renderHistoryList();  
 }
 
-document.addEventListener("DOMContentLoaded", () => {  
-  initUI();  
+document.addEventListener("DOMContentLoaded", () => {
+  // Hitung saldo sekarang
+  const saldo = summary().net;
+  const saldoEl = document.getElementById("saldoNow");
+  saldoEl.textContent = formatRupiah(saldo);
+  if (saldo < 0) saldoEl.classList.add("negative");
+
+  // Ambil transaksi terbaru dari kas.js
+  const allTransactions = getRawTransactions();
+  if (allTransactions.length > 0) {
+    const latest = allTransactions
+      .slice()
+      .sort((a, b) => toDate(b.date) - toDate(a.date))[0]; // Transaksi terbaru
+    document.getElementById("last-updated").innerText =
+      "Terakhir diperbarui: " + formatTanggalPanjang(latest.date);
+  } else {
+    document.getElementById("last-updated").innerText =
+      "Terakhir diperbarui: -";
+  }
+
+  // Render tabel & riwayat
+  renderSummaryTable();
+  renderHistoryList();
 });
