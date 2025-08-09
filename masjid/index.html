@@ -35,52 +35,49 @@
         $('img.img-fluid.profile').attr('src', $('#profile img').attr('src'));
       });
     });
-  </script>  <center>
-    <div class="saldo-wrapper">
-      <div class="saldo-card">
-        <div class="saldo-label">Saldo Saat Ini</div>
-        <div id="saldoNow" class="saldo-amount">Rp 0</div>
-      </div>
-    </div><p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
+  </script> 
 
-<hr>
-<h2>Arus Kas</h2>
-<p class="sub">Klik tanggal di tabel untuk melihat detail.</p>
+<center>
+  <div class="saldo-wrapper">
+    <div class="saldo-card">
+      <div class="saldo-label">Saldo Saat Ini</div>
+      <div id="saldoNow" class="saldo-amount">Rp 0</div>
+    </div>
+  </div>
+  <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
 
+  <hr>
+  <h2>Arus Kas</h2>
+  <p class="sub">Klik tanggal di tabel untuk melihat detail.</p>
 
   <table class="kas-table" aria-label="Ringkasan keuangan">  
-  <thead>  
-    <tr>  
-      <th>Tanggal</th>  
-      <th>Masuk<br>(Ribu)</th>  
-      <th>Keluar<br>(Ribu)</th>  
-      <th>Saldo<br>(Ribu)</th>  
-    </tr>  
-  </thead>  
-  <tbody id="summary-body"></tbody>  
-  <tfoot id="summary-foot"></tfoot>  
-</table>
+    <thead>  
+      <tr>  
+        <th>Tanggal</th>  
+        <th>Masuk<br>(Ribu)</th>  
+        <th>Keluar<br>(Ribu)</th>  
+        <th>Saldo<br>(Ribu)</th>  
+      </tr>  
+    </thead>  
+    <tbody id="summary-body"></tbody>  
+    <tfoot id="summary-foot"></tfoot>  
+  </table>
+
+  <br><br>
+
+  <div class="card">
+    <h2>Riwayat Transaksi</h2><br>
+    <div id="history"></div>
+  </div>
+</center>
+
+<!-- Script -->
+<script src="kas.js"></script>
+<script src="fungsi.js"></script>
 
 
-<br><br>
-
-<div class="card">
-  <h2>Riwayat Transaksi</h2><br>
-  <div id="history"></div>
-</div>
-
-  </center>  <!-- script kas dan fungsi -->  <script src="kas.js"></script>  <script src="fungsi.js"></script>  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const saldo = summary().net;
-      const saldoEl = document.getElementById("saldoNow");
-      saldoEl.textContent = formatRupiah(saldo);
-      if (saldo < 0) saldoEl.classList.add("negative");
-
-      const updatedAt = new Date(document.lastModified);
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
-    });
-  </script>  <!-- WA support -->  <div class="chat-wa-btn" onclick="toggleForm()">
+<!-- WA support -->
+<div class="chat-wa-btn" onclick="toggleForm()">
     <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Chat WA">
   </div>  <div class="bantuan-popup" id="bantuanPopup" onclick="toggleForm()">
     <img src="/risma/img/pulung.png" alt="Profil Admin" class="bantuan-img">
@@ -105,7 +102,15 @@
       </div>
       <button class="kirim-btn" onclick="sendWA()">Kirim via WhatsApp</button>
     </div>
-  </div>  <script src="wa.js"></script>  <br>
+  </div>
+
+<script src="wa.js"></script>  <br>
+
   <center>Made in RISMA</center>
-  <br><br><br><br>  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script></body>
+
+  <br><br><br><br>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
             </html>
