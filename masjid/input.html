@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Input Kas dengan Foto Bukti</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #121212;
+    color: #fff;
+    padding: 20px;
+  }
+  h2 {
+    text-align: center;
+    color: #4CAF50;
+  }
+  .form-container, .output-container {
+    background: #1E1E1E;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #2C2C2C;
+    color: #fff;
+  }
+  button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  pre {
+    background: #2C2C2C;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    color: #9CDCFE;
+  }
+  .copy-btn {
+    background-color: #2196F3;
+  }
+  .copy-btn:hover {
+    background-color: #1976D2;
+  }
+  .preview-img {
+    max-width: 150px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Input Kas</h2>
+
+<div class="form-container">
+  <label for="description">Keterangan</label>
+  <input type="text" id="description" placeholder="Contoh: Penjualan es">
+
+  <label for="type">Jenis</label>
+  <select id="type">
+    <option value="income">Pemasukan</option>
+    <option value="expense">Pengeluaran</option>
+  </select>
+
+  <label for="amount">Jumlah (angka saja) 
+    <button type="button" onclick="tambahNol()">+000</button>
+  </label>
+  <input type="number" id="amount" placeholder="Contoh: 20000">
+
+  <label for="note">Catatan Tambahan</label>
+  <textarea id="note" placeholder="Opsional, bisa dikosongkan"></textarea>
+
+  <label for="receipt">Foto Bukti (Opsional)</label>
+  <input type="file" id="receipt" accept="image/*">
+
+  <button onclick="generateCode()">Buat & Tampilkan Kode</button>
+</div>
+
+<div class="output-container" style="display:none;" id="outputBox">
+  <h3>Preview Riwayat Kas</h3>
+  <div id="preview"></div>
+  
+  <h3>Kode Transaksi</h3>
+  <pre id="result"></pre>
+  <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">Salin Kode</button>
+</div>
+
+<script>
+function formatTanggal(tanggal) {
+  const bulanSingkat = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  const tgl = tanggal.getDate();
+  const bln = bulanSingkat[tanggal.getMonth()];
+  const thn = tanggal.getFullYear();
+  return `${tgl} ${bln} ${thn}`;
+}
+
+function tambahNol() {
+  const amountInput = document.getElementById("amount");
+  amountInput.value = (amountInput.value || 0) + "000";
+}
+
+function generateCode() {
+  const description = document.getElementById("description").value.trim();
+  const type = document.getElementById("type").value;
+  const amount = parseInt(document.getElementById("amount").value);
+  const note = document.getElementById("note").value.trim();
+  const receiptFile = document.getElementById("receipt").files[0];
+
+  if (!description || isNaN(amount)) {
+    alert("Mohon isi keterangan dan jumlah dengan benar.");
+    return;
+  }
+
+  const now = new Date();
+  const formattedDate = formatTanggal(now);
+
+  let receiptURL = "";
+  if (receiptFile) {
+    receiptURL = URL.createObjectURL(receiptFile);
+  }
+
+  const output = `{
+  date: "${formattedDate}",
+  description: "${description}",
+  type: "${type}",
+  amount: ${amount},
+  note: "${note}",
+  receipt: "${receiptFile ? receiptFile.name : ''}"
+},`;
+
+  // Tampilkan output
+  document.getElementById("result").innerText = output;
+  document.getElementById("outputBox").style.display = "block";
+
+  // Tampilkan preview riwayat
+  let previewHTML = `<strong>${formattedDate}</strong> - ${description}<br>`;
+  if (note) previewHTML += `<small>${note}</small><br>`;
+  previewHTML += `<strong>Tipe:</strong> ${type === "income" ? "Pemasukan" : "Pengeluaran"}<br>`;
+  previewHTML += `<strong>Nominal:</strong> ${amount.toLocaleString("id-ID")}<br>`;
+  if (receiptURL) {
+    previewHTML += `<img src="${receiptURL}" alt="Bukti" class="preview-img">`;
+  }
+  document.getElementById("preview").innerHTML = previewHTML;
+}
+
+function copyToClipboard() {
+  const resultText = document.getElementById("result").innerText;
+  navigator.clipboard.writeText(resultText).then(() => {
+    alert("Kode berhasil disalin!");
+  });
+}
+</script>
+
+</body>
+</html>
