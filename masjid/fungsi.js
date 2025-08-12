@@ -13,7 +13,7 @@ function sortByDate(a, b) {
   return toDate(a.date) - toDate(b.date);
 }
 
-// Format tanggal pendek dua baris (untuk tabel)
+// Format tanggal pendek dua baris
 function formatTanggalPendekHTML(dateStr) {
   const date = new Date(dateStr);
   const day = date.getDate();
@@ -22,7 +22,7 @@ function formatTanggalPendekHTML(dateStr) {
   return `${day} ${month}<br>${year}`;
 }
 
-// Format tanggal panjang (untuk popup dan riwayat)
+// Format tanggal panjang
 function formatTanggalPanjang(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleDateString("id-ID", {
@@ -41,14 +41,6 @@ function getRawTransactions() {
   return [];
 }
 
-// Ambil transaksi untuk tahun Hijriah tertentu
-function getTransactionsForHijriYear(hijriYear) {
-  if (window.kas && window.kas.raw && window.kas.raw[hijriYear]) {
-    return window.kas.raw[hijriYear];
-  }
-  return [];
-}
-
 // Hitung saldo berjalan
 function computeLedger(startingBalance = 0) {
   const raw = getRawTransactions();
@@ -58,29 +50,19 @@ function computeLedger(startingBalance = 0) {
   return sorted.map(tx => {
     if (tx.type === "income") balance += tx.amount;
     else balance -= tx.amount;
-
-    return {
-      ...tx,
-      balanceAfter: balance
-    };
+    return { ...tx, balanceAfter: balance };
   });
 }
 
 // Ringkasan total
 function summary() {
   const raw = getRawTransactions();
-  const income = raw
-    .filter(t => t.type === "income")
-    .reduce((s, t) => s + t.amount, 0);
-  const expense = raw
-    .filter(t => t.type === "expense")
-    .reduce((s, t) => s + t.amount, 0);
-  const net = income - expense;
-
-  return { income, expense, net };
+  const income = raw.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
+  const expense = raw.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+  return { income, expense, net: income - expense };
 }
 
-// Fungsi perbesar gambar
+// Modal gambar dengan animasi zoom & tombol ❌
 function showImageModal(src) {
   const existing = document.getElementById("imageModal");
   if (existing) existing.remove();
@@ -97,17 +79,32 @@ function showImageModal(src) {
   overlay.style.alignItems = "center";
   overlay.style.justifyContent = "center";
   overlay.style.zIndex = 10000;
-  overlay.style.cursor = "zoom-out";
+  overlay.style.animation = "fadeIn 0.2s ease";
+
+  const imgWrapper = document.createElement("div");
+  imgWrapper.style.position = "relative";
+  imgWrapper.style.animation = "zoomIn 0.25s ease";
+
+  const closeBtn = document.createElement("span");
+  closeBtn.textContent = "❌";
+  closeBtn.style.position = "absolute";
+  closeBtn.style.top = "-30px";
+  closeBtn.style.right = "-30px";
+  closeBtn.style.fontSize = "24px";
+  closeBtn.style.cursor = "pointer";
+  closeBtn.style.color = "#fff";
+  closeBtn.addEventListener("click", () => overlay.remove());
 
   const img = document.createElement("img");
   img.src = src;
-  img.style.maxWidth = "90%";
-  img.style.maxHeight = "90%";
+  img.style.maxWidth = "90vw";
+  img.style.maxHeight = "90vh";
   img.style.borderRadius = "8px";
   img.style.boxShadow = "0 0 20px rgba(0,0,0,0.5)";
 
-  overlay.appendChild(img);
-  overlay.addEventListener("click", () => overlay.remove());
+  imgWrapper.appendChild(img);
+  imgWrapper.appendChild(closeBtn);
+  overlay.appendChild(imgWrapper);
   document.body.appendChild(overlay);
 }
 
@@ -122,7 +119,7 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
 
   const header = document.createElement("div");
   header.className = "popup-header";
-  header.innerHTML = `<strong>Riwayat Transaksi</strong> <span class="close-btn" style="cursor:pointer;">&times;</span>`;
+  header.innerHTML = `<strong>Riwayat Transaksi</strong> <span class="close-btn" style="cursor:pointer;">❌</span>`;
   popup.appendChild(header);
 
   if (transactionsForDate.length === 0) {
@@ -189,7 +186,7 @@ function showDatePopup(date, transactionsForDate, anchorElement) {
   popup.style.zIndex = 9999;
 }
 
-// Ringkasan tabel
+// Render tabel & riwayat
 function renderSummaryTable() {
   const ledger = computeLedger();
   const tbody = document.querySelector("#summary-body");
@@ -205,7 +202,7 @@ function renderSummaryTable() {
     span.className = "clickable-date";
     span.style.cursor = "pointer";
     span.style.textDecoration = "underline";
-    span.addEventListener("click", e => {
+    span.addEventListener("click", () => {
       const ledgerFull = computeLedger();
       const sameDate = ledgerFull.filter(tx => tx.date === row.date);
       showDatePopup(row.date, sameDate, span);
@@ -241,11 +238,9 @@ function renderSummaryTable() {
   `;
 }
 
-// Render riwayat transaksi
 function renderHistoryList() {
   const historyContainer = document.querySelector("#history");
   if (!historyContainer) return;
-
   historyContainer.innerHTML = "";
 
   const ledger = computeLedger();
@@ -261,7 +256,6 @@ function renderHistoryList() {
   }
 
   const reversed = ledger.slice().reverse();
-
   reversed.forEach(tx => {
     const wrapper = document.createElement("div");
     wrapper.className = "history-item";
@@ -282,7 +276,8 @@ function renderHistoryList() {
       <div><strong>Saldo setelah:</strong> ${formatRupiah(tx.balanceAfter)}</div>
     `;
 
-    // Tambah foto bukti jika ada
+    wrapper.append(header, noteDiv, detail);
+
     if (tx.receipt) {
       const img = document.createElement("img");
       img.src = tx.receipt;
@@ -301,15 +296,9 @@ function renderHistoryList() {
     sep.style.background = "rgba(255,255,255,0.08)";
     sep.style.margin = "10px 0";
 
-    wrapper.append(header, noteDiv, detail, sep);
+    wrapper.appendChild(sep);
     historyContainer.appendChild(wrapper);
   });
-}
-
-// Inisialisasi UI
-function initUI() {
-  renderSummaryTable();
-  renderHistoryList();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -320,14 +309,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const allTransactions = getRawTransactions();
   if (allTransactions.length > 0) {
-    const latest = allTransactions
-      .slice()
-      .sort((a, b) => toDate(b.date) - toDate(a.date))[0];
-    document.getElementById("last-updated").innerText =
-      "Terakhir diperbarui: " + formatTanggalPanjang(latest.date);
+    const latest = allTransactions.slice().sort((a, b) => toDate(b.date) - toDate(a.date))[0];
+    document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + formatTanggalPanjang(latest.date);
   } else {
-    document.getElementById("last-updated").innerText =
-      "Terakhir diperbarui: -";
+    document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
   }
 
   renderSummaryTable();
