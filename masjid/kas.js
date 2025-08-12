@@ -15,14 +15,16 @@ date: "2025/08/08",
 description: "Sisa Infak Jumat",
 type: "income",
 amount: 825000,
-note: "Sisa uang infak dan sumbangan warga yang di pegang oleh bapak Suhdi selaku bendahara lama."
+note: "Sisa uang infak dan sumbangan warga yang di pegang oleh bapak Suhdi selaku bendahara lama, sisa 824 RB digenapkan 825.",
+receipt: "/masjid/bukti/IMG_20250812_171022_375.jpg"
 },
 {
 date: "2025/08/08",
 description: "Pasang kaca",
 type: "expense",
 amount: 3000000,
-note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2"
+note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2",
+receipt: "/masjid/bukti/IMG-20250811-WA0006.jpg"
 },
 {
 date: "2025/08/08",
