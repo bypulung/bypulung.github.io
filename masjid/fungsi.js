@@ -62,7 +62,7 @@ function summary() {
   return { income, expense, net: income - expense };
 }
 
-// Modal gambar dengan animasi zoom & tombol ❌
+// Modal gambar klik di mana saja untuk tutup
 function showImageModal(src) {
   const existing = document.getElementById("imageModal");
   if (existing) existing.remove();
@@ -79,21 +79,7 @@ function showImageModal(src) {
   overlay.style.alignItems = "center";
   overlay.style.justifyContent = "center";
   overlay.style.zIndex = 10000;
-  overlay.style.animation = "fadeIn 0.2s ease";
-
-  const imgWrapper = document.createElement("div");
-  imgWrapper.style.position = "relative";
-  imgWrapper.style.animation = "zoomIn 0.25s ease";
-
-  const closeBtn = document.createElement("span");
-  closeBtn.textContent = "❌";
-  closeBtn.style.position = "absolute";
-  closeBtn.style.top = "-30px";
-  closeBtn.style.right = "-30px";
-  closeBtn.style.fontSize = "24px";
-  closeBtn.style.cursor = "pointer";
-  closeBtn.style.color = "#fff";
-  closeBtn.addEventListener("click", () => overlay.remove());
+  overlay.style.animation = "fadeIn 0.25s ease";
 
   const img = document.createElement("img");
   img.src = src;
@@ -101,10 +87,12 @@ function showImageModal(src) {
   img.style.maxHeight = "90vh";
   img.style.borderRadius = "8px";
   img.style.boxShadow = "0 0 20px rgba(0,0,0,0.5)";
+  img.style.animation = "zoomIn 0.3s ease";
 
-  imgWrapper.appendChild(img);
-  imgWrapper.appendChild(closeBtn);
-  overlay.appendChild(imgWrapper);
+  overlay.addEventListener("click", () => overlay.remove());
+  img.addEventListener("click", e => e.stopPropagation());
+
+  overlay.appendChild(img);
   document.body.appendChild(overlay);
 }
 
