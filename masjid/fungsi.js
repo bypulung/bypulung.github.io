@@ -62,7 +62,7 @@ function summary() {
   return { income, expense, net: income - expense };
 }
 
-// Modal gambar klik di mana saja untuk tutup
+// Modal gambar klik di mana saja untuk tutup (termasuk gambar)
 function showImageModal(src) {
   const existing = document.getElementById("imageModal");
   if (existing) existing.remove();
@@ -89,8 +89,9 @@ function showImageModal(src) {
   img.style.boxShadow = "0 0 20px rgba(0,0,0,0.5)";
   img.style.animation = "zoomIn 0.3s ease";
 
+  // Klik di mana saja termasuk gambar akan menutup modal
   overlay.addEventListener("click", () => overlay.remove());
-  img.addEventListener("click", e => e.stopPropagation());
+  img.addEventListener("click", () => overlay.remove());
 
   overlay.appendChild(img);
   document.body.appendChild(overlay);
