@@ -2,7 +2,7 @@ function formatTanggal(tanggal) {
   const tahun = tanggal.getFullYear();
   const bulan = String(tanggal.getMonth() + 1).padStart(2, "0");
   const hari = String(tanggal.getDate()).padStart(2, "0");
-  return `${tahun}/${bulan}/${hari}`;
+  return `${tahun}-${bulan}-${hari}`;
 }
 
 function tambahNol() {
