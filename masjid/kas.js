@@ -33,6 +33,14 @@ type: "expense",
 amount: 500000,
 note: "Bantuan 500 ribu untuk modal RISMA mengelola lahan 2 Rante."
 },
+{
+date: "2025/08/15",
+description: "Infak Jumat",
+type: "income",
+amount: 30000,
+note: "",
+receipt: ""
+},
   ]
 
 
