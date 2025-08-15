@@ -4,14 +4,14 @@
 const kasData = {
 "1447H": [
     {
-date: "2025/08/08",
+date: "2025-08-08",
 description: "Panen jagung",
 type: "income",
 amount: 4000000,
 note: "Untung bersih ±7.300.000 dibagi 2 dengan pengelola lahan, pengelola membulatkan 4.000.000 untuk kas masjid (detailnya tanyakan kepada BPK. Nurman)."
 },
 {
-date: "2025/08/08",
+date: "2025-08-08",
 description: "Sisa Infak Jumat",
 type: "income",
 amount: 825000,
@@ -19,7 +19,7 @@ note: "Sisa uang infak dan sumbangan warga yang di pegang oleh bapak Suhdi selak
 receipt: "/masjid/bukti/IMG_20250812_171022_375.jpg"
 },
 {
-date: "2025/08/08",
+date: "2025-08-08",
 description: "Pasang kaca",
 type: "expense",
 amount: 3000000,
@@ -27,14 +27,14 @@ note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2",
 receipt: "/masjid/bukti/IMG-20250811-WA0006.jpg"
 },
 {
-date: "2025/08/08",
+date: "2025-08-08",
 description: "Untuk RISMA",
 type: "expense",
 amount: 500000,
 note: "Bantuan 500 ribu untuk modal RISMA mengelola lahan 2 Rante."
 },
 {
-date: "2025/08/15",
+date: "2025-08-15",
 description: "Infak Jumat",
 type: "income",
 amount: 30000,
