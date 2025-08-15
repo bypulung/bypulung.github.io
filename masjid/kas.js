@@ -41,6 +41,14 @@ amount: 30000,
 note: "",
 receipt: ""
 },
+{
+date: "2025-08-15",
+description: "Kotak infak karet",
+type: "income",
+amount: 150000,
+note: "Kotak infak ditempat ibu eli",
+receipt: ""
+},
   ]
 
 
