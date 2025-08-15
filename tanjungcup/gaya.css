@@ -1,0 +1,392 @@
+/* Background gelap untuk seluruh halaman */
+body {
+  font-family: system-ui, sans-serif;
+  padding: 16px;
+  max-width: 1024px;
+  margin: auto;
+  background-color: #1e1e1e; /* gelap */
+  color: #f0f0f0; /* teks default putih */
+}
+
+/* Kartu */
+.card {
+  flex: 1 1 300px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px;
+  background-color: #2a2a2a; /* gelap */
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
+  margin-bottom: 16px;
+}
+
+/* Tabel */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 6px;
+  background-color: #2a2a2a; /* latar tabel gelap */
+  color: #f0f0f0; /* teks putih */
+}
+
+th, td {
+  border: 1px solid #555; /* border abu terang */
+  padding: 6px;
+  text-align: center;
+}
+
+th {
+  background: #333; /* header sedikit lebih gelap */
+  color: #fff; /* teks header putih */
+}
+
+/* Status pertandingan */
+.upcoming {
+  color: #bbb; /* abu-abu terang */
+  font-style: italic;
+}
+.win {
+  font-weight: bold;
+  color: #4caf50; /* hijau kemenangan */
+}
+
+/* Catatan kecil */
+.note, .small {
+  font-size: 0.8em;
+  color: #ccc;
+}    
+
+
+:root {
+  --bg:#0f111f;
+  --card:#1f2442;
+  --muted:#8f99b2;
+  --radius:12px;
+  --shadow:0 20px 40px -10px rgba(0,0,0,.6);
+  --gradient:linear-gradient(135deg,#5f6dfa,#b36bf0);
+  --border:1px solid rgba(255,255,255,.08);
+}
+*{box-sizing:border-box;}
+body {
+  margin:0;
+  background: var(--bg);
+  color:#eceff9;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  line-height:1.4;
+  padding:24px;
+}
+h1 {
+  margin:0 0 6px;
+  font-size:1.8rem;
+  letter-spacing:0.5px;
+}
+.subtitle {
+  margin:0 0 20px;
+  color: var(--muted);
+  font-size:.95rem;
+}
+.days {
+  display:grid;
+  gap:24px;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  margin-top:16px;
+}
+.day-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding:18px 20px 16px;
+  position:relative;
+  overflow:hidden;
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+.day-card::before {
+  content: attr(data-day);
+  position:absolute;
+  top:12px;
+  right:12px;
+  background: var(--gradient);
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#fff;
+}
+.day-header {
+  font-size:1.1rem;
+  margin-bottom:12px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+}
+.date-label { font-weight:600; }
+.small { font-size:.75rem; color: var(--muted); }
+
+.match {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:14px 16px;
+  background: rgba(255,255,255,.03);
+  border-radius:10px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.08);
+}
+.time { font-size:.9rem; color: #b8c2ff; font-weight:600; margin-bottom:4px; }
+.teams {
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap: nowrap;
+}
+.team { flex:1; text-align:center; }
+.team-name { font-weight:700; font-size:1rem; margin-bottom:4px; }
+.vs { font-size:.9rem; color: var(--muted); flex:0 0 40px; text-align:center; }
+.result { margin-top:6px; display:flex; justify-content:center; gap:12px; font-size:.85rem; align-items:center; flex-wrap:wrap; }
+.badge { padding:5px 12px; border-radius:999px; font-size:.65rem; text-transform:uppercase; letter-spacing:1px; background:#2c3255; }
+.status { font-size:.75rem; padding:4px 10px; border-radius:999px; background:#202c4f; display:inline-block; }
+@media (min-width:800px){
+  .match { flex-direction: row; align-items: center; }
+  .teams { gap:6px; }
+  .time { width:90px; }
+  .result { justify-content:flex-end; margin-top:0; }
+}
+
+
+/* === Roster Tim Elegan, Dark Theme === */
+#roster-container {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  padding-top: 8px;
+}
+
+.team-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(30,34,60,.95), rgba(40,44,80,.95));
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 14px;
+  padding: 16px 18px 14px;
+  box-shadow: 0 30px 60px -10px rgba(0,0,0,.7);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+  color: #e8ecff;
+}
+.team-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 45px 80px -5px rgba(0,0,0,.8);
+}
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+.team-name-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: .5px;
+}
+.player-count {
+  font-size: .65rem;
+  background: rgba(255,255,255,.08);
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #c1cfff;
+}
+.player-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  /* max-height: 160px; */
+  /* overflow-y: auto; */
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+.player-list li {
+  display: flex;
+  align-items: center;
+  margin: 6px 0;
+  font-size: .9rem;
+  gap: 8px;
+}
+.player-bullet {
+  width: 8px;
+  height: 8px;
+  background: #7ed957;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.no-players {
+  font-size: .85rem;
+  color: #8f99b2;
+  padding: 6px 0;
+}
+.team-meta {
+  margin-top: 8px;
+  font-size: .65rem;
+  color: #a3aed0;
+}
+
+.copy-team-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.copy-team-btn:hover {
+  background-color: #e3e3e3;
+}
+
+
+
+/* === Penekanan pemenang/kalah di jadwal === */
+.match {
+  position: relative;
+  transition: transform .2s ease, background .2s ease;
+}
+.match.played {
+  background: linear-gradient(135deg, rgba(126,217,87,.05), rgba(255,255,255,0)); /* lembut kalau sudah dimainkan */
+}
+.match {
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+  min-width: 100px;
+  position: relative;
+  transition: all .2s ease;
+}
+
+/* Nama tim di jadwal: pastikan benar-benar ter-center */
+.team-name {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  min-width: 120px;
+  transition: all .2s ease;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  text-align: center;
+}
+
+/* Winner / loser */
+.team-name.winner {
+  background: rgba(126,217,87,.15);
+  color: #7ed957;
+  box-shadow: 0 0 15px rgba(126,217,87,.4);
+}
+.team-name.winner::after {
+  content: "";
+  margin-left: 6px;
+  font-size: .85em;
+}
+
+.team-name.loser {
+  background: rgba(255,107,107,.1);
+  color: #ff6b6b;
+  opacity: .9;
+}
+
+/* Hasil pertandingan */
+.badge.result-done {
+  background: #2a2f6f;
+  background: linear-gradient(135deg, #5f6dfa, #b36bf0);
+  color: #fff;
+  font-weight: 600;
+}
+.badge.unplayed {
+  background: rgba(255,255,255,.05);
+  color: #b8c2ff;
+}
+
+/* Status label */
+.status {
+  background: rgba(255,255,255,.08);
+  color: #d1d6f0;
+  font-weight: 500;
+}
+.match .status {
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+
+/* Penambahan garis pemisah halus antara home/away ketika ada pemenang */
+.teams {
+  gap: 12px;
+}
+.vs {
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  position: relative;
+}
+
+
+/* responsive */
+@media (min-width: 800px) {
+  .match { flex-direction: row; align-items: center; }
+  .time { width: 80px; margin-right: 12px; }
+  .teams { flex:1; }
+  .result { justify-content:flex-end; margin-top:0; }
+}
+
+
+
+.share-controls {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center; /* rata tengah */
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#btn-share-whatsapp {
+  background: #25D366;
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: .95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 15px 40px -10px rgba(37,211,102,.6);
+  transition: transform .15s ease, filter .15s ease;
+  text-decoration: none;
+}
+
+#btn-share-whatsapp .icon { width: 16px; height: 16px; }
+
+#btn-share-whatsapp:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+#btn-share-whatsapp:active {
+  transform: translateY(1px);
+}
+#btn-share-whatsapp .icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: invert(1); /* buat ikon putih agar kontras di background hijau */
+}
+.small {
+  font-size: .75rem;
+  color: #c1cfff;
+}
