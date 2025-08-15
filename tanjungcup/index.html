@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.1.1/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" /> -->
+
+<script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="/ligadusun/gaya.css">
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <title>Klasemen • Jadwal • Hasil • Susunan Pemain | LigaDusun Tanjung Bulan</title>
+</head>
+
+<body class="bg-dark text-light">
+   <!-- <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100vh;">
+     -->   <div class="col-lg-3 d-flex flex-column align-items-center justify-content-center border-custom py-4">
+            <div class="d-block border-light border border-2 rounded-circle overflow-hidden" style="width: 8em;"
+                data-bs-toggle="modal" data-bs-target="#showImage" id="profile">
+                <img class="img-fluid">
+            </div>
+            <div class="pt-3 text-center">
+                <h5>Tanjung Bulan Squad <span style="color:#00BFFF;"><i class="fa-solid fa-circle-check"></i></span></h5><br/>
+
+                <p id="last-updated" style="font-style: italic; font-size: 14px;"></p>
+
+<script>
+  const updatedAt = new Date(document.lastModified);
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' };
+  document.getElementById("last-updated").innerText = "Terakhir diperbarui: " + updatedAt.toLocaleDateString('id-ID', options);
+</script>
+
+            </div>
+
+    </div> 
+
+    <!-- Modal -->
+    <div class="modal fade" id="showImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="showImageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showImageLabel">Tanjung Bulan Squad</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid img-thumbnail profile">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // * img position
+        const position = '/img/tbsquad.jpg';
+
+        // ! Don't change this line
+        $(document).ready(() => {
+            $('#profile img').attr('src', position);
+        });
+    </script>
+
+
+
+
+    <script>
+        $(document).ready(() => {
+            $('#profile').on('click', () => {
+                $('img.img-fluid.profile').attr('src',
+                    $('#profile img').attr('src')
+                );
+            })
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+
+
+<div class="wrapper">
+
+<!-- <div class="controls">
+    <button id="btn-refresh">🔄 Refresh Semua</button>
+  </div> -->
+
+
+
+
+
+<div class="card">
+      <center><h2>Klasemen LigaDusun</h2></center>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
+          </tr>
+        </thead>
+        <tbody id="klasemen-body">
+          <!-- diisi oleh klasemen.js -->
+        </tbody>
+      </table>
+<br>
+<div class="share-controls">
+  <button id="btn-share-whatsapp">
+  <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+  <span class="label">Bagikan ke WhatsApp</span>
+</button>
+  <span id="share-feedback" class="small" aria-live="polite"></span>
+</div>
+
+</div>
+  </div> 
+
+
+
+
+
+
+<hr>
+<main>
+  <div style="text-align:center; margin-bottom:12px;">
+    <h2>Jadwal & Hasil Tanding</h2>
+  </div>
+  <div id="schedule-wrapper" class="days">
+    <!-- jadwal card akan dirender di sini -->
+  </div>
+</main>
+<br>
+
+<div class="layout">
+    <div class="card">
+      <center><h2>Susunan Pemain</h2></center>
+      <div id="roster-container">Memuat...</div>
+    </div>
+ </div>
+
+
+  <!-- muat data dan script -->
+  <script src="tim.js"></script>
+  <script src="main.js"></script>
+  <script src="app.js"></script>
+
+
+<br/><br/>
+<center>Server by ® RISMA AL-HUDA</center>
+<br></body>
+
+    </html>
