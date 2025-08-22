@@ -60,7 +60,7 @@ receipt: ""
 {
 date: "2025-08-22",
 description: "Beli mic + bensin",
-type: "income",
+type: "expense",
 amount: 235000,
 note: "Harga mic 225.000 dan untuk beli bensin motor bapak RT Suhdi 10.000",
 receipt: "/masjid/bukti/Screenshot_20250822-170932.jpg"
