@@ -65,6 +65,14 @@ amount: 235000,
 note: "Harga mic 225.000 dan untuk beli bensin motor bapak RT Suhdi 10.000",
 receipt: "/masjid/bukti/Screenshot_20250822-170932.jpg"
 },
+{
+date: "2025-08-23",
+description: "Beli ampli",
+type: "expense",
+amount: 514000,
+note: "Pembelian amplifier 2000watt 4 channel",
+receipt: "/masjid/bukti/beli-ampli-masjid-2000watt-4channel.jpg"
+},
   ]
 
 
