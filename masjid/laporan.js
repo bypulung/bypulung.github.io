@@ -87,8 +87,22 @@ function generateReport() {
   const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0);
   const saldoAkhir = saldoAwal + totalIn - totalOut;
 
+  const startMonthYear = formatMonthYear(startDate);
+  const endMonthYear = formatMonthYear(endDate);
+
   const lines = [];
-  lines.push(`*📢 Laporan Kas Masjid Al-Huda*`);
+  // 🆕 Tentukan judul sesuai periode
+  if (startMonthYear === endMonthYear) {
+    lines.push(`*📢 Laporan Bulanan Kas Masjid Al-Huda*`);
+    lines.push(`📅 ${startMonthYear}`);
+  } else {
+    lines.push(`*📢 Laporan Tahunan Kas Masjid Al-Huda*`);
+    lines.push(`📅 ${startMonthYear} - ${endMonthYear}`);
+  }
+
+  // 🆕 Garis pemisah
+  lines.push(`-------------------------`);
+
   lines.push(`\n💰 *Saldo Awal:* *${saldoAwal.toLocaleString("id-ID")}*`);
 
   lines.push(`\n🟢 *Pemasukan:*`);
@@ -115,12 +129,6 @@ function generateReport() {
 
   lines.push(`\n💰 *Saldo Akhir:* *${saldoAkhir.toLocaleString("id-ID")}*`);
 
-  if (sortedSelected.length === 1) {
-    lines.push(`\n📅 ${formatDate(startDate)}`);
-  } else {
-    lines.push(`\n📅 ${formatDate(startDate)} - ${formatDate(endDate)}`);
-  }
-
   lines.push(`\n📌 Info: https://tanjungbulan.my.id/masjid`);
 
   output.value = lines.join("\n");
@@ -138,10 +146,8 @@ function sendToWhatsApp() {
   window.open(url, '_blank');
 }
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("id-ID", {
-    day: "numeric",
+function formatMonthYear(dateObj) {
+  return dateObj.toLocaleDateString("id-ID", {
     month: "long",
     year: "numeric"
   });
