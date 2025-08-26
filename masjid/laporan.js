@@ -131,7 +131,7 @@ function generateReport() {
 
   lines.push(`\n📌Info: 👉https://tanjungbulan.my.id/masjid`);
 
-  lines.push(`\n>> *laporan dibuat otomatis oleh sistem`);
+  lines.push(`\n> dibuat otomatis oleh sistem`);
 
   output.value = lines.join("\n");
 }
