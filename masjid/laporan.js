@@ -129,7 +129,9 @@ function generateReport() {
 
   lines.push(`\n💰 *Saldo Akhir:* *${saldoAkhir.toLocaleString("id-ID")}*`);
 
-  lines.push(`\n📌 Info: https://tanjungbulan.my.id/masjid`);
+  lines.push(`\n📌Info: 👉https://tanjungbulan.my.id/masjid`);
+
+  lines.push(`\n>> *laporan dibuat otomatis oleh sistem`);
 
   output.value = lines.join("\n");
 }
