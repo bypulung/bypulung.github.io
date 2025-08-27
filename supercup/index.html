@@ -96,44 +96,48 @@
 
 <div class="wrapper">
 
-<!-- <div class="controls">
-    <button id="btn-refresh">🔄 Refresh Semua</button>
-  </div> -->
+  <div class="card">
+    <center><h2>Klasemen Tanjung SuperCup - Grup A</h2></center>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
+        </tr>
+      </thead>
+      <tbody id="klasemen-body-A">
+        <!-- diisi oleh klasemen.js untuk Grup A -->
+      </tbody>
+    </table>
+  </div>
 
+  <br>
 
+  <div class="card">
+    <center><h2>Klasemen Tanjung SuperCup - Grup B</h2></center>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
+        </tr>
+      </thead>
+      <tbody id="klasemen-body-B">
+        <!-- diisi oleh klasemen.js untuk Grup B -->
+      </tbody>
+    </table>
+  </div>
 
-
-
-<div class="card">
-      <center><h2>Klasemen Tanjung SuperCup</h2></center>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
-          </tr>
-        </thead>
-        <tbody id="klasemen-body">
-          <!-- diisi oleh klasemen.js -->
-        </tbody>
-      </table>
-<br>
-<div class="share-controls">
-  <button id="btn-share-whatsapp">
-  <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-  <span class="label">Bagikan ke WhatsApp</span>
-</button>
-  <span id="share-feedback" class="small" aria-live="polite"></span>
-</div>
-
-</div>
-  </div> 
-
-
-
-
-
+  <br>
+  <div class="share-controls">
+    <button id="btn-share-whatsapp">
+      <img class="icon" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+      <span class="label">Bagikan ke WhatsApp</span>
+    </button>
+    <span id="share-feedback" class="small" aria-live="polite"></span>
+  </div>
+</div> 
 
 <hr>
+
 <main>
   <div style="text-align:center; margin-bottom:12px;">
     <h2>Jadwal & Hasil Tanding</h2>
@@ -142,20 +146,20 @@
     <!-- jadwal card akan dirender di sini -->
   </div>
 </main>
+
 <br>
 
 <div class="layout">
-    <div class="card">
-      <center><h2>Susunan Pemain</h2></center>
-      <div id="roster-container">Memuat...</div>
-    </div>
- </div>
+  <div class="card">
+    <center><h2>Susunan Pemain</h2></center>
+    <div id="roster-container">Memuat...</div>
+  </div>
+</div>
 
-
-  <!-- muat data dan script -->
-  <script src="tim.js"></script>
-  <script src="main.js"></script>
-  <script src="app.js"></script>
+<!-- muat data dan script -->
+<script src="tim.js"></script>
+<script src="main.js"></script>
+<script src="app.js"></script>
 
 
 <br/><br/>
