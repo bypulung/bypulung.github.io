@@ -1,5 +1,5 @@
 // ===================================
-// KLASMEN + ROSTER + JADWAL (6 Tim, 2 Grup)
+// KLASMEN + ROSTER + JADWAL + HASIL (6 Tim, 2 Grup)
 // ===================================
 (function () {
   const MAX_WAIT = 5;
@@ -26,7 +26,6 @@
       };
     });
 
-    // Proses matches hanya yg melibatkan tim group ini
     matchesList.forEach(match => {
       const { home, away, setHome = null, setAway = null } = match;
       if (!groupTeams.includes(home) || !groupTeams.includes(away)) return;
@@ -63,7 +62,6 @@
       }
     });
 
-    // Sortir
     return Object.values(klasemen).sort((a, b) => {
       if (b.poin !== a.poin) return b.poin - a.poin;
       const diffA = a.setMenang - a.setKalah;
@@ -174,7 +172,6 @@
         listWrapper.appendChild(no);
       }
 
-      // Tombol salin
       const copyBtn = document.createElement("button");
       copyBtn.className = "copy-team-btn";
       copyBtn.innerHTML = "📋 Salin Nama";
@@ -202,7 +199,7 @@
   }
 
   // --------------------------
-  // Render Jadwal (6 tim, 2 grup)
+  // Render Jadwal + Hasil (6 tim, 2 grup, rotasi adil)
   // --------------------------
   (function () {
     const teamNames = Array.isArray(window.teams)
@@ -214,18 +211,19 @@
 
     function roundRobin(group) {
       return [
-        { home: group[0], away: group[1] },
-        { home: group[0], away: group[2] },
-        { home: group[1], away: group[2] }
+        { home: group[0], away: group[1], group: group },
+        { home: group[0], away: group[2], group: group },
+        { home: group[1], away: group[2], group: group }
       ];
     }
 
     const matchupsA = roundRobin(grupA);
     const matchupsB = roundRobin(grupB);
 
+    // Pola rotasi: hari 1 Grup A dulu, hari 2 Grup B dulu, hari 3 Grup A lagi
     const dailyMatchups = [
       [ matchupsA[0], matchupsB[0] ],
-      [ matchupsA[1], matchupsB[1] ],
+      [ matchupsB[1], matchupsA[1] ],
       [ matchupsA[2], matchupsB[2] ]
     ];
 
@@ -273,6 +271,7 @@
             time: times[mi],
             home: pair.home,
             away: pair.away,
+            groupName: pair.group === grupA ? "A" : "B",
             played,
             result
           };
@@ -324,7 +323,7 @@
           left.style.flex = "1";
           const timeEl = document.createElement("div");
           timeEl.className = "time";
-          timeEl.textContent = m.time;
+          timeEl.textContent = m.time + ` (Grup ${m.groupName})`;
 
           const teamsEl = document.createElement("div");
           teamsEl.className = "teams";
