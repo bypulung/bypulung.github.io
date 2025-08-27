@@ -1,20 +1,20 @@
 // main.js
-// Jadwal: 8-10 Agustus 2025, pairing tiap hari sekali (tanpa hasil awal)
+// Jadwal: 30 Agustus - 1 September 2025, 2 pertandingan per hari (Grup A & B)
 const matches = [
-  // 8 Agustus: Banteng Gaspol vs Merdeka Ngacir, Patriot Ngamuk vs Pejuang Santuy
-  { home: "Banteng Gaspol", away: "Merdeka Ngacir", setHome: 1, setAway: 2 },
-  { home: "Patriot Ngamuk", away: "Pejuang Santuy", setHome: 2, setAway: 0 },
+  // 30 Agustus 2025
+  { home: "Tanjung Bulan A", away: "Tanjung Sari 1A" },
+  { home: "Tanjung Bulan B", away: "Tanjung Sari 1B" },
 
-  // 9 Agustus: Banteng Gaspol vs Patriot Ngamuk, Merdeka Ngacir vs Pejuang Santuy
-  { home: "Banteng Gaspol", away: "Patriot Ngamuk", setHome: 1, setAway: 2 },
-  { home: "Merdeka Ngacir", away: "Pejuang Santuy", setHome: 2, setAway: 0 },
+  // 31 Agustus 2025
+  { home: "Tanjung Bulan A", away: "Tanjung Sari 2A" },
+  { home: "Tanjung Bulan B", away: "Tanjung Sari 2B" },
 
-  // 10 Agustus: Banteng Gaspol vs Pejuang Santuy, Merdeka Ngacir vs Patriot Ngamuk
-  { home: "Banteng Gaspol", away: "Pejuang Santuy", setHome: 2, setAway: 0 },
-  { home: "Merdeka Ngacir", away: "Patriot Ngamuk", setHome: 1, setAway: 2 }
+  // 1 September 2025
+  { home: "Tanjung Sari 1A", away: "Tanjung Sari 2A" },
+  { home: "Tanjung Sari 1B", away: "Tanjung Sari 2B" }
 ];
 
 // Kalau nanti ingin menambahkan skor, tambahkan properti setHome dan setAway:
-// contoh: { home: "Banteng Gaspol", away: "Merdeka Ngacir", setHome: , setAway:  }
+// contoh: { home: "Tanjung Bulan A", away: "Tanjung Sari 1A", setHome: 2, setAway: 1 }
 
 window.matches = matches;
