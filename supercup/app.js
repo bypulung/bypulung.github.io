@@ -71,8 +71,8 @@
   }
 
   // --------------------------
-  // Render Klasemen Per Grup
-  // --------------------------
+  // Render Klasemen Per Grup (langsung ke #klasemen-grup-a dan #klasemen-grup-b)
+// --------------------------
   function renderKlasemen() {
     const teamsList = Array.isArray(window.teams) ? window.teams : [];
     const matchesList = Array.isArray(window.matches) ? window.matches : [];
@@ -81,25 +81,11 @@
     const grupA = teamNames.slice(0, 3);
     const grupB = teamNames.slice(3, 6);
 
-    const container = document.getElementById("klasemen-container");
-    if (!container) return;
-    container.innerHTML = "";
-
-    function buatTable(groupName, groupTeams) {
+    function isiTabel(tbodyId, groupTeams) {
       const data = computeKlasemen(teamsList, matchesList, groupTeams);
-
-      const table = document.createElement("table");
-      table.className = "klasemen-table";
-      table.innerHTML = `
-        <thead>
-          <tr>
-            <th>No</th><th>Tim</th><th>Main</th><th>M</th><th>K</th><th>Set</th><th>Poin</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      `;
-
-      const tbody = table.querySelector("tbody");
+      const tbody = document.getElementById(tbodyId);
+      if (!tbody) return;
+      tbody.innerHTML = "";
       data.forEach((tim, i) => {
         const tr = document.createElement("tr");
         let pemainTooltip = "";
@@ -117,16 +103,10 @@
         `;
         tbody.appendChild(tr);
       });
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "klasemen-group";
-      wrapper.innerHTML = `<h3>Klasemen Grup ${groupName}</h3>`;
-      wrapper.appendChild(table);
-      return wrapper;
     }
 
-    container.appendChild(buatTable("A", grupA));
-    container.appendChild(buatTable("B", grupB));
+    isiTabel("klasemen-grup-a", grupA);
+    isiTabel("klasemen-grup-b", grupB);
   }
 
   // --------------------------
@@ -137,7 +117,7 @@
     if (!container) return;
     container.innerHTML = "";
 
-    const listTeams = Array.isArray(teams) ? teams : [];
+    const listTeams = Array.isArray(window.teams) ? window.teams : [];
     if (!listTeams.length) {
       container.innerHTML = `<div class="no-players">Tidak ada data tim.</div>`;
       return;
@@ -293,7 +273,7 @@
         dayCard.className = "day-card";
         dayCard.setAttribute("data-day", dayName);
 
-        // HEADER: hanya hari & tanggal, rata tengah
+        // HEADER
         const header = document.createElement("div");
         header.className = "day-header";
         header.innerHTML = `<div class="date-label" style="text-align:center;font-weight:bold;">${dayName}, ${dateShort}</div>`;
@@ -316,7 +296,6 @@
             }
           }
 
-          // Konten tengah: jam + tim
           const content = document.createElement("div");
           content.style.textAlign = "center";
 
@@ -376,11 +355,12 @@
   window.refreshAll = refreshAll;
 
   function tryInit(attempt = 1) {
-    const hasKlasemen = !!document.getElementById("klasemen-container");
     const hasRoster = !!document.getElementById("roster-container");
     const hasSchedule = !!document.getElementById("schedule-wrapper");
+    const hasKlasemenA = !!document.getElementById("klasemen-grup-a");
+    const hasKlasemenB = !!document.getElementById("klasemen-grup-b");
 
-    if (!hasKlasemen || !hasRoster || !hasSchedule) {
+    if (!hasRoster || !hasSchedule || !hasKlasemenA || !hasKlasemenB) {
       if (attempt <= MAX_WAIT) {
         setTimeout(() => tryInit(attempt + 1), INTERVAL_MS);
       } else {
