@@ -130,7 +130,7 @@
   }
 
   // --------------------------
-  // Render Roster (tidak diubah)
+  // Render Roster
   // --------------------------
   function renderRoster() {
     const container = document.getElementById("roster-container");
@@ -199,7 +199,7 @@
   }
 
   // --------------------------
-  // Render Jadwal + Hasil (6 tim, 2 grup, rotasi adil)
+  // Render Jadwal + Hasil
   // --------------------------
   (function () {
     const teamNames = Array.isArray(window.teams)
@@ -220,7 +220,6 @@
     const matchupsA = roundRobin(grupA);
     const matchupsB = roundRobin(grupB);
 
-    // Pola rotasi: hari 1 Grup A dulu, hari 2 Grup B dulu, hari 3 Grup A lagi
     const dailyMatchups = [
       [ matchupsA[0], matchupsB[0] ],
       [ matchupsB[1], matchupsA[1] ],
@@ -294,12 +293,10 @@
         dayCard.className = "day-card";
         dayCard.setAttribute("data-day", dayName);
 
+        // HEADER: hanya hari & tanggal, rata tengah
         const header = document.createElement("div");
         header.className = "day-header";
-        header.innerHTML = `
-          <div class="date-label">${dayName}, ${dateShort}</div>
-          <div class="small">2 pertandingan (Grup A & Grup B)</div>
-        `;
+        header.innerHTML = `<div class="date-label" style="text-align:center;font-weight:bold;">${dayName}, ${dateShort}</div>`;
         dayCard.appendChild(header);
 
         block.matches.forEach(m => {
@@ -319,32 +316,36 @@
             }
           }
 
-          const left = document.createElement("div");
-          left.style.flex = "1";
+          // Konten tengah: jam + tim
+          const content = document.createElement("div");
+          content.style.textAlign = "center";
+
           const timeEl = document.createElement("div");
           timeEl.className = "time";
           timeEl.textContent = m.time + ` (Grup ${m.groupName})`;
+          timeEl.style.fontWeight = "bold";
+          content.appendChild(timeEl);
 
           const teamsEl = document.createElement("div");
           teamsEl.className = "teams";
           teamsEl.innerHTML = `
-            <div class="team"><div class="team-name ${homeClass}">${m.home}</div></div>
+            <div class="team-name ${homeClass}">${m.home}</div>
             <div class="vs">vs</div>
-            <div class="team"><div class="team-name ${awayClass}">${m.away}</div></div>
+            <div class="team-name ${awayClass}">${m.away}</div>
           `;
-          left.appendChild(timeEl);
-          left.appendChild(teamsEl);
+          content.appendChild(teamsEl);
 
-          const right = document.createElement("div");
-          right.className = "result";
+          const resultEl = document.createElement("div");
+          resultEl.style.marginTop = "4px";
           if (m.played && m.result) {
-            right.innerHTML = `<div class="badge result-done">Hasil: ${m.result.home} - ${m.result.away}</div><div class="status">Selesai</div>`;
+            resultEl.innerHTML = `<div class="badge result-done">Hasil: ${m.result.home} - ${m.result.away}</div>`;
           } else {
-            right.innerHTML = `<div class="badge unplayed">Belum dimainkan</div>`;
+            resultEl.innerHTML = `<div class="badge unplayed">Belum dimainkan</div>`;
           }
 
-          matchEl.appendChild(left);
-          matchEl.appendChild(right);
+          content.appendChild(resultEl);
+
+          matchEl.appendChild(content);
           dayCard.appendChild(matchEl);
         });
 
