@@ -228,11 +228,11 @@
     ];
 
     const dates = [
-      new Date("2025-08-08"),
-      new Date("2025-08-09"),
-      new Date("2025-08-10")
+      new Date("2025-08-30"),
+      new Date("2025-08-31"),
+      new Date("2025-09-01")
     ];
-    const times = ["15:30", "16:30"];
+    const times = ["16:15", "17:00"];
 
     function findMatch(home, away) {
       if (!Array.isArray(window.matches)) return null;
