@@ -194,30 +194,32 @@ function buildShareText() {
 
   const lines = [];
 
+lines.push("*Klasemen Tanjung SuperCup*\n");
   // Grup A
-  lines.push("*Klasemen Tanjung SuperCup - Grup A*");
+  lines.push("*Grup A*");
   klasemenA.forEach((tim, i) => {
     const nomor = i + 1;
     const nama = tim.nama || "—";
     const setText = `(${tim.setMenang}-${tim.setKalah})`;
     const poinText = `${tim.poin}`;
-    lines.push(`${nomor}. ${nama} ${setText} ${poinText}`);
+    lines.push(`${nomor}. ${nama} ${setText} *${poinText}*`);
   });
   lines.push("");
 
   // Grup B
-  lines.push("*Klasemen Tanjung SuperCup - Grup B*");
+  lines.push("*Grup B*");
   klasemenB.forEach((tim, i) => {
     const nomor = i + 1;
     const nama = tim.nama || "—";
     const setText = `(${tim.setMenang}-${tim.setKalah})`;
     const poinText = `${tim.poin}`;
-    lines.push(`${nomor}. ${nama} ${setText} ${poinText}`);
+    lines.push(`${nomor}. ${nama} ${setText} *${poinText}*`);
   });
   lines.push("");
 
   // Tambahkan link info
-  lines.push("Info selengkapnya: https://tanjungbulan.my.id/ligadusun");
+  lines.push("Info selengkapnya: https://tanjungbulan.my.id/supercup");
+lines.push("> dibuat otomatis oleh sistem");
 
   return lines.join("\n");
 }
