@@ -79,26 +79,25 @@ h1 { margin:0 0 6px; font-size:1.8rem; letter-spacing:0.5px; }
   box-shadow: var(--shadow);
   border: var(--border);
 }
+
 .day-card::before {
-  content: attr(data-day);
-  position:absolute;
-  top:12px;
-  right:12px;
-  background: var(--gradient);
-  padding:6px 14px;
-  border-radius:999px;
-  font-size:.65rem;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  color:#fff;
+  content: none !important; /* hapus label hari di pojok */
 }
-/* header tanggal rata tengah */
+
 .day-header {
-  font-size:1.1rem;
-  margin-bottom:12px;
-  text-align:center;
-  font-weight:600;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gradient);
+  padding: 8px 14px;
+  border-radius: 999px;
+  display: inline-block;
+  box-shadow: 0 4px 10px rgba(0,0,0,.4);
 }
+
+
 .date-label { font-weight:600; }
 .small { font-size:.75rem; color: var(--muted); }
 
