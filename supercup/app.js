@@ -354,4 +354,39 @@
   } else {  
     tryInit();  
   }  
+
+  // --------------------------  
+  // SHARE WHATSAPP KLASMEN  
+  // --------------------------  
+  document.addEventListener("DOMContentLoaded", function () {  
+    const btn = document.getElementById("shareBtn");  
+    if (!btn) return;  
+
+    btn.addEventListener("click", function () {  
+      const teamsList = Array.isArray(window.teams) ? window.teams : [];  
+      const matchesList = Array.isArray(window.matches) ? window.matches : [];  
+
+      const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);  
+      const grupA = teamNames.slice(0, 3);  
+      const grupB = teamNames.slice(3, 6);  
+
+      function formatGroup(title, groupTeams) {  
+        const data = computeKlasemen(teamsList, matchesList, groupTeams);  
+        let lines = [`*Klasemen Tanjung SuperCup - ${title}*`];  
+        data.forEach((t, i) => {  
+          const selisih = `${t.setMenang}-${t.setKalah}`;  
+          lines.push(`${i + 1}. ${t.nama} (${selisih}) ${t.poin}`);  
+        });  
+        return lines.join("\n");  
+      }  
+
+      const shareText =  
+        formatGroup("Grup A", grupA) + "\n\n" +  
+        formatGroup("Grup B", grupB);  
+
+      const url = "https://wa.me/?text=" + encodeURIComponent(shareText);  
+      window.open(url, "_blank");  
+    });  
+  });  
+
 })();
