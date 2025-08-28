@@ -91,10 +91,15 @@ h1 { margin:0 0 6px; font-size:1.8rem; letter-spacing:0.5px; }
   font-weight: 700;
   color: #fff;
   background: var(--gradient);
-  padding: 8px 14px;
+  padding: 8px 20px;
   border-radius: 999px;
-  display: inline-block;
+  display: flex;
+  justify-content: center;   /* rata tengah horizontal */
+  align-items: center;       /* rata tengah vertical */
   box-shadow: 0 4px 10px rgba(0,0,0,.4);
+  width: max-content;
+  margin-left: auto;
+  margin-right: auto;        /* supaya benar-benar center */
 }
 
 
