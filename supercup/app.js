@@ -6,7 +6,8 @@
   // --------------------------    
   // Hitung klasemen 1 grup    
   // --------------------------    
-  function computeKlasemen(teamsList, matchesList, groupTeams) {  
+  function computeKlasemen(teamsList, matchesList, groupName) {  
+    const groupTeams = teamsList.filter(t => t.grup === groupName).map(t => t.nama);  
     const klasemen = {};  
     groupTeams.forEach(name => {  
       const t = teamsList.find(tt => (tt.nama || tt.name) === name) || {};  
@@ -52,15 +53,8 @@
     const teamsList = Array.isArray(window.teams) ? window.teams : [];  
     const matchesList = Array.isArray(window.matches) ? window.matches : [];  
 
-    // Ambil nama tim unik dari matches  
-    const teamNames = Array.from(new Set(matchesList.flatMap(m => [m.home, m.away]))).slice(0, 6);  
-
-    // Bagi jadi 2 grup (3 tim tiap grup)  
-    const grupA = teamNames.slice(0, 3);  
-    const grupB = teamNames.slice(3, 6);  
-
-    function isiTabel(tbodyId, groupTeams) {  
-      const data = computeKlasemen(teamsList, matchesList, groupTeams);  
+    function isiTabel(tbodyId, groupName) {  
+      const data = computeKlasemen(teamsList, matchesList, groupName);  
       const tbody = document.getElementById(tbodyId);  
       if (!tbody) return;  
       tbody.innerHTML = "";  
@@ -79,8 +73,8 @@
       });  
     }  
 
-    isiTabel("klasemen-grup-a", grupA);  
-    isiTabel("klasemen-grup-b", grupB);  
+    isiTabel("klasemen-grup-a", "A");  
+    isiTabel("klasemen-grup-b", "B");  
   }  
 
   // --------------------------    
@@ -105,7 +99,7 @@
       card.className = "team-card";  
       card.innerHTML = `  
         <div class="team-header">  
-          <h3 class="team-name-title">${name}</h3>  
+          <h3 class="team-name-title">${name} <span class="badge">Grup ${team.grup || "-"}</span></h3>  
           <div class="player-count">${players.length} Pemain</div>  
         </div>  
         <ul class="player-list">  
@@ -137,6 +131,7 @@
   // --------------------------    
   (function () {  
     const matchesList = Array.isArray(window.matches) ? window.matches : [];  
+    const teamsList = Array.isArray(window.teams) ? window.teams : [];  
     const dates = [  
       new Date("2025-08-31"), new Date("2025-08-31"),  
       new Date("2025-09-01"), new Date("2025-09-01"),  
@@ -144,15 +139,12 @@
     ];  
     const times = ["16:15", "17:00"];  
 
-    // ambil grup A & B  
-    const teamNames = Array.from(new Set(matchesList.flatMap(m => [m.home, m.away]))).slice(0, 6);  
-    const grupA = teamNames.slice(0, 3);  
-    const grupB = teamNames.slice(3, 6);  
-
     function getGroupName(home, away) {  
-      if (grupA.includes(home) && grupA.includes(away)) return "Grup A";  
-      if (grupB.includes(home) && grupB.includes(away)) return "Grup B";  
-      return "";  
+      const homeTeam = teamsList.find(t => t.nama === home);  
+      const awayTeam = teamsList.find(t => t.nama === away);  
+      if (!homeTeam || !awayTeam) return "";  
+      if (homeTeam.grup === awayTeam.grup) return "Grup " + homeTeam.grup;  
+      return "Cross-Grup";  
     }  
 
     function render() {  
@@ -162,7 +154,7 @@
 
       let currentDateKey = "";  
       matchesList.forEach((m, i) => {  
-        const d = new Date(dates[i]); // clone  
+        const d = new Date(dates[i]);  
         const [hh, mm] = times[i % 2].split(":").map(Number);  
         d.setHours(hh, mm, 0, 0);  
 
@@ -218,12 +210,8 @@
     const matchesList = Array.isArray(window.matches) ? window.matches : [];  
     if (!matchesList.length) return "";  
 
-    const teamNames = Array.from(new Set(matchesList.flatMap(m => [m.home, m.away]))).slice(0, 6);  
-    const grupA = teamNames.slice(0, 3);  
-    const grupB = teamNames.slice(3, 6);  
-
-    const klasemenA = computeKlasemen(window.teams || [], matchesList, grupA);  
-    const klasemenB = computeKlasemen(window.teams || [], matchesList, grupB);  
+    const klasemenA = computeKlasemen(window.teams || [], matchesList, "A");  
+    const klasemenB = computeKlasemen(window.teams || [], matchesList, "B");  
 
     const lines = [];  
     lines.push("*Klasemen Tanjung SuperCup*");  
