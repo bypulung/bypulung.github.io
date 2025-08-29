@@ -295,9 +295,9 @@ if (document.readyState === "loading") {
     ];  
 
     const dates = [  
-      new Date("2025-08-30"),  
       new Date("2025-08-31"),  
-      new Date("2025-09-01")  
+      new Date("2025-09-01"),  
+      new Date("2025-09-02")  
     ];  
     const times = ["16:15", "17:00"];  
 
