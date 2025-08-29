@@ -8,11 +8,11 @@ const matches = [
 
   // 1 September 2025
   { home: "Tanjung Bulan A", away: "Tanjung Sari 2B", },
-  { home: "Tanjung Bulan B", away: "Tanjung Sari 1A", },
+  { home: "Tanjung Sari 2A", away: "Tanjung Sari 1A", },
 
   // 2 September 2025
   { home: "Tanjung Sari 1 B", away: "Tanjung Sari 2B", },
-  { home: "Tanjung Sari 2A", away: "Tanjung Sari 1A", }
+{ home: "Tanjung Bulan B", away: "Tanjung Sari 1A", }
 ];
 
 // Kalau nanti ingin menambahkan skor, tinggal isi properti setHome dan setAway
