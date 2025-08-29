@@ -1,4 +1,3 @@
-
 // ===================================  
 // KLASMEN + ROSTER + JADWAL + HASIL (6 Tim, 2 Grup)  
 // ===================================  
@@ -53,7 +52,10 @@
     const teamsList = Array.isArray(window.teams) ? window.teams : [];
     const matchesList = Array.isArray(window.matches) ? window.matches : [];
 
-    const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
+    // Ambil nama tim unik dari matches
+    const teamNames = Array.from(new Set(matchesList.flatMap(m => [m.home, m.away]))).slice(0, 6);
+
+    // Bagi jadi 2 grup (3 tim tiap grup)
     const grupA = teamNames.slice(0, 3);
     const grupB = teamNames.slice(3, 6);
 
@@ -200,16 +202,15 @@
   // SHARE WHATSAPP KLASMEN  
   // --------------------------  
   function buildShareText() {
-    const teamsList = Array.isArray(window.teams) ? window.teams : [];
     const matchesList = Array.isArray(window.matches) ? window.matches : [];
-    if (!teamsList.length) return "";
+    if (!matchesList.length) return "";
 
-    const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
+    const teamNames = Array.from(new Set(matchesList.flatMap(m => [m.home, m.away]))).slice(0, 6);
     const grupA = teamNames.slice(0, 3);
     const grupB = teamNames.slice(3, 6);
 
-    const klasemenA = computeKlasemen(teamsList, matchesList, grupA);
-    const klasemenB = computeKlasemen(teamsList, matchesList, grupB);
+    const klasemenA = computeKlasemen(window.teams || [], matchesList, grupA);
+    const klasemenB = computeKlasemen(window.teams || [], matchesList, grupB);
 
     const lines = [];
     lines.push("*Klasemen Tanjung SuperCup*");
