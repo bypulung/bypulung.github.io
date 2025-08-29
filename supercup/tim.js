@@ -5,6 +5,7 @@ const teams = [
   // =======================
   {
     nama: "Tanjung Sari 1B",
+    grup: "A"
     pemain: [
       "Pemain 1B1",
       "Pemain 1B2",
@@ -20,6 +21,7 @@ const teams = [
   },
   {
     nama: "Tanjung Bulan A",
+    grup: "A"
     pemain: [
       "Pulung",
       "Ris",
@@ -35,6 +37,7 @@ const teams = [
   },
   {
     nama: "Tanjung Sari 2B",
+    grup: "A"
     pemain: [
       "Pemain 2B1",
       "Pemain 2B2",
@@ -54,6 +57,7 @@ const teams = [
   // =======================
   {
     nama: "Tanjung Sari 2A",
+    grup: "B"
     pemain: [
       "Pemain 1A1",
       "Pemain 1A2",
@@ -69,6 +73,7 @@ const teams = [
   },
   {
     nama: "Tanjung Bulan B",
+    grup: "B"
     pemain: [
       "Om Boby",
       "Om Heri",
@@ -84,6 +89,7 @@ const teams = [
   },
   {
     nama: "Tanjung Sari 1A",
+    grup: "B"
     pemain: [
       "Pemain 2A1",
       "Pemain 2A2",
