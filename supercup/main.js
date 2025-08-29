@@ -3,16 +3,16 @@
 
 const matches = [
   // 31 Agustus 2025
-  { home: "Tanjung Sari 1 B", away: "Tanjung Bulan A", setHome: 0, setAway: 0 },
-  { home: "Tanjung Sari 2A", away: "Tanjung Bulan B", setHome: 0, setAway: 0 },
+  { home: "Tanjung Sari 1 B", away: "Tanjung Bulan A", },
+  { home: "Tanjung Sari 2A", away: "Tanjung Bulan B", },
 
   // 1 September 2025
-  { home: "Tanjung Bulan A", away: "Tanjung Sari 2B", setHome: 0, setAway: 0 },
-  { home: "Tanjung Bulan B", away: "Tanjung Sari 1A", setHome: 0, setAway: 0 },
+  { home: "Tanjung Bulan A", away: "Tanjung Sari 2B", },
+  { home: "Tanjung Bulan B", away: "Tanjung Sari 1A", },
 
   // 2 September 2025
-  { home: "Tanjung Sari 1 B", away: "Tanjung Sari 2B", setHome: 0, setAway: 0 },
-  { home: "Tanjung Sari 2A", away: "Tanjung Sari 1A", setHome: 0, setAway: 0 }
+  { home: "Tanjung Sari 1 B", away: "Tanjung Sari 2B", },
+  { home: "Tanjung Sari 2A", away: "Tanjung Sari 1A", }
 ];
 
 // Kalau nanti ingin menambahkan skor, tinggal isi properti setHome dan setAway
