@@ -134,91 +134,6 @@
   }  
 
 
-function buildShareText() {
-const teamsList = Array.isArray(window.teams) ? window.teams : [];
-const matchesList = Array.isArray(window.matches) ? window.matches : [];
-
-if (!teamsList.length) return "";
-
-const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
-const grupA = teamNames.slice(0, 3);
-const grupB = teamNames.slice(3, 6);
-
-const klasemenA = computeKlasemen(teamsList, matchesList, grupA);
-const klasemenB = computeKlasemen(teamsList, matchesList, grupB);
-
-const lines = [];
-
-lines.push("Klasemen Tanjung SuperCup\n");
-// Grup A
-lines.push("Grup A");
-klasemenA.forEach((tim, i) => {
-const nomor = i + 1;
-const nama = tim.nama || "—";
-const setText = (${tim.setMenang}-${tim.setKalah});
-const poinText = ${tim.poin};
-lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
-});
-lines.push("");
-
-// Grup B
-lines.push("Grup B");
-klasemenB.forEach((tim, i) => {
-const nomor = i + 1;
-const nama = tim.nama || "—";
-const setText = (${tim.setMenang}-${tim.setKalah});
-const poinText = ${tim.poin};
-lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
-});
-lines.push("");
-
-// Tambahkan link info
-lines.push("Info selengkapnya: https://tanjungbulan.my.id/supercup");
-lines.push("> dibuat otomatis oleh sistem");
-
-return lines.join("\n");
-}
-
-function setupWhatsappShareButton() {
-const btn = document.getElementById("btn-share-whatsapp");
-const feedback = document.getElementById("share-feedback");
-if (!btn) return;
-
-btn.addEventListener("click", () => {
-const text = buildShareText();
-if (!text) {
-if (feedback) {
-feedback.textContent = "Klasemen kosong, tidak bisa dibagikan.";
-setTimeout(() => (feedback.textContent = ""), 1500);
-}
-return;
-}
-
-const encoded = encodeURIComponent(text);  
-const url = `https://wa.me/?text=${encoded}`;  
-window.open(url, "_blank");  
-
-if (feedback) {  
-  feedback.textContent = "Membuka WhatsApp...";  
-  setTimeout(() => (feedback.textContent = ""), 1500);  
-}
-
-});
-}
-
-// Integrasi dengan refreshAll
-const prevRefresh = window.refreshAll;
-window.refreshAll = function () {
-prevRefresh?.();
-setupWhatsappShareButton();
-};
-
-// Init awal
-if (document.readyState === "loading") {
-document.addEventListener("DOMContentLoaded", setupWhatsappShareButton);
-} else {
-setupWhatsappShareButton();
-}
 
 
 
@@ -308,31 +223,90 @@ setupWhatsappShareButton();
   // --------------------------  
   // SHARE WHATSAPP KLASMEN  
   // --------------------------  
-  document.addEventListener("DOMContentLoaded", function () {  
-    const btn = document.getElementById("shareBtn");  
-    if (!btn) return;  
+  function buildShareText() {
+const teamsList = Array.isArray(window.teams) ? window.teams : [];
+const matchesList = Array.isArray(window.matches) ? window.matches : [];
 
-    btn.addEventListener("click", function () {  
-      const teamsList = Array.isArray(window.teams) ? window.teams : [];  
-      const matchesList = Array.isArray(window.matches) ? window.matches : [];  
+if (!teamsList.length) return "";
 
-      const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);  
-      const grupA = teamNames.slice(0, 3);  
-      const grupB = teamNames.slice(3, 6);  
+const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
+const grupA = teamNames.slice(0, 3);
+const grupB = teamNames.slice(3, 6);
 
-      function formatGroup(title, groupTeams) {  
-        const data = computeKlasemen(teamsList, matchesList, groupTeams);  
-        let lines = [`*Klasemen Tanjung SuperCup - ${title}*`];  
-        data.forEach((t, i) => lines.push(`${i + 1}. ${t.nama} (${t.setMenang}-${t.setKalah}) ${t.poin}`));  
-        return lines.join("\n");  
-      }  
+const klasemenA = computeKlasemen(teamsList, matchesList, grupA);
+const klasemenB = computeKlasemen(teamsList, matchesList, grupB);
 
-      const shareText = formatGroup("Grup A", grupA) + "\n\n" + formatGroup("Grup B", grupB);  
-      window.open("https://wa.me/?text=" + encodeURIComponent(shareText), "_blank");  
-    });  
-  });  
+const lines = [];
 
-  // Init  
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => refreshAll());  
-  else refreshAll();  
+lines.push("Klasemen Tanjung SuperCup\n");
+// Grup A
+lines.push("Grup A");
+klasemenA.forEach((tim, i) => {
+const nomor = i + 1;
+const nama = tim.nama || "—";
+const setText = (${tim.setMenang}-${tim.setKalah});
+const poinText = ${tim.poin};
+lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
+});
+lines.push("");
+
+// Grup B
+lines.push("Grup B");
+klasemenB.forEach((tim, i) => {
+const nomor = i + 1;
+const nama = tim.nama || "—";
+const setText = (${tim.setMenang}-${tim.setKalah});
+const poinText = ${tim.poin};
+lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
+});
+lines.push("");
+
+// Tambahkan link info
+lines.push("Info selengkapnya: https://tanjungbulan.my.id/supercup");
+lines.push("> dibuat otomatis oleh sistem");
+
+return lines.join("\n");
+}
+
+function setupWhatsappShareButton() {
+const btn = document.getElementById("btn-share-whatsapp");
+const feedback = document.getElementById("share-feedback");
+if (!btn) return;
+
+btn.addEventListener("click", () => {
+const text = buildShareText();
+if (!text) {
+if (feedback) {
+feedback.textContent = "Klasemen kosong, tidak bisa dibagikan.";
+setTimeout(() => (feedback.textContent = ""), 1500);
+}
+return;
+}
+
+const encoded = encodeURIComponent(text);  
+const url = `https://wa.me/?text=${encoded}`;  
+window.open(url, "_blank");  
+
+if (feedback) {  
+  feedback.textContent = "Membuka WhatsApp...";  
+  setTimeout(() => (feedback.textContent = ""), 1500);  
+}
+
+});
+}
+
+// Integrasi dengan refreshAll
+const prevRefresh = window.refreshAll;
+window.refreshAll = function () {
+prevRefresh?.();
+setupWhatsappShareButton();
+};
+
+// Init awal
+if (document.readyState === "loading") {
+document.addEventListener("DOMContentLoaded", setupWhatsappShareButton);
+} else {
+setupWhatsappShareButton();
+}
+
 })();
