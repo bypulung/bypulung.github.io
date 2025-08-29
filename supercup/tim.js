@@ -53,7 +53,7 @@ const teams = [
   // Grup B
   // =======================
   {
-    nama: "Tanjung Sari 1A",
+    nama: "Tanjung Sari 2A",
     pemain: [
       "Pemain 1A1",
       "Pemain 1A2",
@@ -83,7 +83,7 @@ const teams = [
     ]
   },
   {
-    nama: "Tanjung Sari 2A",
+    nama: "Tanjung Sari 1A",
     pemain: [
       "Pemain 2A1",
       "Pemain 2A2",
