@@ -221,92 +221,93 @@
   window.refreshAll = refreshAll;  
 
   // --------------------------  
-  // SHARE WHATSAPP KLASMEN  
-  // --------------------------  
-  function buildShareText() {
-const teamsList = Array.isArray(window.teams) ? window.teams : [];
-const matchesList = Array.isArray(window.matches) ? window.matches : [];
+// SHARE WHATSAPP KLASMEN  
+// --------------------------  
+function buildShareText() {
+  const teamsList = Array.isArray(window.teams) ? window.teams : [];
+  const matchesList = Array.isArray(window.matches) ? window.matches : [];
 
-if (!teamsList.length) return "";
+  if (!teamsList.length) return "";
 
-const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
-const grupA = teamNames.slice(0, 3);
-const grupB = teamNames.slice(3, 6);
+  const teamNames = teamsList.map(t => t.nama || t.name).filter(Boolean).slice(0, 6);
+  const grupA = teamNames.slice(0, 3);
+  const grupB = teamNames.slice(3, 6);
 
-const klasemenA = computeKlasemen(teamsList, matchesList, grupA);
-const klasemenB = computeKlasemen(teamsList, matchesList, grupB);
+  const klasemenA = computeKlasemen(teamsList, matchesList, grupA);
+  const klasemenB = computeKlasemen(teamsList, matchesList, grupB);
 
-const lines = [];
+  const lines = [];
+  lines.push("*Klasemen Tanjung SuperCup*");
 
-lines.push("Klasemen Tanjung SuperCup\n");
-// Grup A
-lines.push("Grup A");
-klasemenA.forEach((tim, i) => {
-const nomor = i + 1;
-const nama = tim.nama || "—";
-const setText = (${tim.setMenang}-${tim.setKalah});
-const poinText = ${tim.poin};
-lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
-});
-lines.push("");
+  // Grup A
+  lines.push("");
+  lines.push("*Grup A*");
+  klasemenA.forEach((tim, i) => {
+    const nomor = i + 1;
+    const nama = tim.nama || "—";
+    const setText = `(${tim.setMenang}-${tim.setKalah})`;
+    const poinText = `${tim.poin}`;
+    lines.push(`${nomor}. ${nama} ${setText} *${poinText}*`);
+  });
 
-// Grup B
-lines.push("Grup B");
-klasemenB.forEach((tim, i) => {
-const nomor = i + 1;
-const nama = tim.nama || "—";
-const setText = (${tim.setMenang}-${tim.setKalah});
-const poinText = ${tim.poin};
-lines.push(${nomor}. ${nama} ${setText} *${poinText}*);
-});
-lines.push("");
+  // Grup B
+  lines.push("");
+  lines.push("*Grup B*");
+  klasemenB.forEach((tim, i) => {
+    const nomor = i + 1;
+    const nama = tim.nama || "—";
+    const setText = `(${tim.setMenang}-${tim.setKalah})`;
+    const poinText = `${tim.poin}`;
+    lines.push(`${nomor}. ${nama} ${setText} *${poinText}*`);
+  });
 
-// Tambahkan link info
-lines.push("Info selengkapnya: https://tanjungbulan.my.id/supercup");
-lines.push("> dibuat otomatis oleh sistem");
+  lines.push("");
+  lines.push("Info selengkapnya: https://tanjungbulan.my.id/supercup");
+  lines.push("> dibuat otomatis oleh sistem");
 
-return lines.join("\n");
+  return lines.join("\n");
 }
 
 function setupWhatsappShareButton() {
-const btn = document.getElementById("btn-share-whatsapp");
-const feedback = document.getElementById("share-feedback");
-if (!btn) return;
+  const btn = document.getElementById("btn-share-whatsapp");
+  const feedback = document.getElementById("share-feedback");
+  if (!btn) return;
 
-btn.addEventListener("click", () => {
-const text = buildShareText();
-if (!text) {
-if (feedback) {
-feedback.textContent = "Klasemen kosong, tidak bisa dibagikan.";
-setTimeout(() => (feedback.textContent = ""), 1500);
+  btn.onclick = () => {
+    const text = buildShareText();
+    if (!text) {
+      if (feedback) {
+        feedback.textContent = "Klasemen kosong, tidak bisa dibagikan.";
+        setTimeout(() => (feedback.textContent = ""), 1500);
+      }
+      return;
+    }
+
+    const encoded = encodeURIComponent(text);
+    const url = `https://wa.me/?text=${encoded}`;
+    window.open(url, "_blank");
+
+    if (feedback) {
+      feedback.textContent = "Membuka WhatsApp...";
+      setTimeout(() => (feedback.textContent = ""), 1500);
+    }
+  };
 }
-return;
+
+// --------------------------  
+// Refresh All  
+// --------------------------  
+function refreshAll() {
+  renderRoster();
+  renderKlasemen();
+  if (typeof window.renderScheduleUI === "function") window.renderScheduleUI();
+  setupWhatsappShareButton();
 }
-
-const encoded = encodeURIComponent(text);  
-const url = `https://wa.me/?text=${encoded}`;  
-window.open(url, "_blank");  
-
-if (feedback) {  
-  feedback.textContent = "Membuka WhatsApp...";  
-  setTimeout(() => (feedback.textContent = ""), 1500);  
-}
-
-});
-}
-
-// Integrasi dengan refreshAll
-const prevRefresh = window.refreshAll;
-window.refreshAll = function () {
-prevRefresh?.();
-setupWhatsappShareButton();
-};
+window.refreshAll = refreshAll;
 
 // Init awal
 if (document.readyState === "loading") {
-document.addEventListener("DOMContentLoaded", setupWhatsappShareButton);
+  document.addEventListener("DOMContentLoaded", () => refreshAll());
 } else {
-setupWhatsappShareButton();
+  refreshAll();
 }
-
-})();
