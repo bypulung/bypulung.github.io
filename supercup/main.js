@@ -16,6 +16,6 @@ const matches = [
 ];
 
 // Kalau nanti ingin menambahkan skor, tinggal isi properti setHome dan setAway
-// contoh: { home: "Tanjung Bulan A", away: "Tanjung Sari 2B", setHome: 2, setAway: 1 }
+// contoh: { home: "Tanjung Bulan A", away: "Tanjung Sari 2B", setHome: , setAway:  }
 
 window.matches = matches;
