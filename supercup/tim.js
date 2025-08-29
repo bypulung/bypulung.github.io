@@ -21,16 +21,16 @@ const teams = [
   {
     nama: "Tanjung Bulan A",
     pemain: [
-      "Pemain A1",
-      "Pemain A2",
-      "Pemain A3",
-      "Pemain A4",
-      "Pemain A5",
-      "Pemain A6",
-      "Pemain A7",
-      "Pemain A8",
-      "Pemain A9",
-      "Pemain A10"
+      "Pulung",
+      "Ris",
+      "Paisol",
+      "Tama",
+      "Repai",
+      "Tio",
+      "Mul",
+      "Wahyu",
+      "Rifki",
+      "Miswanto"
     ]
   },
   {
@@ -70,16 +70,16 @@ const teams = [
   {
     nama: "Tanjung Bulan B",
     pemain: [
-      "Pemain B1",
-      "Pemain B2",
-      "Pemain B3",
-      "Pemain B4",
-      "Pemain B5",
-      "Pemain B6",
-      "Pemain B7",
-      "Pemain B8",
-      "Pemain B9",
-      "Pemain B10"
+      "Om Boby",
+      "Om Heri",
+      "Om Wiwit",
+      "Om Yudi",
+      "Om Sartok",
+      "Om Mitro",
+      "Om Topeng",
+      "Om Asep",
+      "Om Supri",
+      "Om Ucok"
     ]
   },
   {
