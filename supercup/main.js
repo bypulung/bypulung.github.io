@@ -3,7 +3,7 @@
 
 const matches = [
   // 31 Agustus 2025
-  { home: "Tanjung Sari 1 B", away: "Tanjung Bulan A", },
+  { home: "Tanjung Sari 1B", away: "Tanjung Bulan A", },
   { home: "Tanjung Sari 2A", away: "Tanjung Bulan B", },
 
   // 1 September 2025
@@ -11,7 +11,7 @@ const matches = [
   { home: "Tanjung Sari 2A", away: "Tanjung Sari 1A", },
 
   // 2 September 2025
-  { home: "Tanjung Sari 1 B", away: "Tanjung Sari 2B", },
+  { home: "Tanjung Sari 1B", away: "Tanjung Sari 2B", },
 { home: "Tanjung Bulan B", away: "Tanjung Sari 1A", }
 ];
 
