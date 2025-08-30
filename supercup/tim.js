@@ -75,13 +75,15 @@ const teams = [
       "Om Boby",
       "Om Heri",
       "Om Wiwit",
-      "Om Yudi",
-      "Om Sartok",
-      "Om Mitro",
-      "Om Topeng",
+      "RT Yudi",
+      "Lek Carto",
+      "Lek Mitro",
+      "Cak Topeng",
       "Om Asep",
       "Om Supri",
-      "Om Ucok"
+      "RT Ucok",
+      "Lek Nur",
+      "RT Suhdi"
     ]
   },
   {
