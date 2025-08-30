@@ -7,16 +7,13 @@ const teams = [
     nama: "Tanjung Sari 1B",
     grup: "A",
     pemain: [
-      "Pemain 1B1",
-      "Pemain 1B2",
-      "Pemain 1B3",
-      "Pemain 1B4",
-      "Pemain 1B5",
-      "Pemain 1B6",
-      "Pemain 1B7",
-      "Pemain 1B8",
-      "Pemain 1B9",
-      "Pemain 1B10"
+      "Usup",
+      "Budi",
+      "Ibnu",
+      "Hendri",
+      "Beta",
+      "Gun",
+      "Lana"
     ]
   },
   {
@@ -91,16 +88,12 @@ const teams = [
     nama: "Tanjung Sari 1A",
     grup: "B",
     pemain: [
-      "Pemain 2A1",
-      "Pemain 2A2",
-      "Pemain 2A3",
-      "Pemain 2A4",
-      "Pemain 2A5",
-      "Pemain 2A6",
-      "Pemain 2A7",
-      "Pemain 2A8",
-      "Pemain 2A9",
-      "Pemain 2A10"
+      "Simon",
+      "Nandar",
+      "Reno",
+      "Bejo",
+      "Yayan",
+      "Habib"
     ]
   }
 ];
