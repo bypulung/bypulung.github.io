@@ -73,6 +73,14 @@ amount: 514000,
 note: "Pembelian amplifier 2000watt 4 channel",
 receipt: "/masjid/bukti/beli-ampli-masjid-2000watt-4channel.jpg"
 },
+{
+date: "2025-08-29",
+description: "Infak Jumat",
+type: "income",
+amount: 15000,
+note: "",
+receipt: ""
+},
   ]
 
 
